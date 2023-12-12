@@ -92,6 +92,10 @@ MERGED from [lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transform
 MERGED from [lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/dfbfdba9e92150856c2193b772c7b29f/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:14:5-81
 	android:name
 		ADDED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:15:22-78
+uses-permission#com.sunmi.permission.ELECTRONIC_SCALE
+ADDED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:16:5-76
+	android:name
+		ADDED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:16:22-74
 uses-feature#android.hardware.camera
 ADDED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:17:5-60
 	android:name

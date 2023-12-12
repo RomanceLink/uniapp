@@ -98,6 +98,13 @@ public class Electronic {
     //获取称重信息
 
     public void getResult(final UniJSCallback jsCallback) {
+
+        // 在这里检查连接状态
+        if (!isServiceConnected) {
+            handleNotConnectedError(jsCallback);
+            return; // 不再执行后面的代码
+        }
+
         try {
             scaleManager.getData(new ScaleResult() {
                 @Override
@@ -124,14 +131,6 @@ public class Electronic {
 
             });
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    // 在这里检查连接状态
-                    handleNotConnectedError(jsCallback);
-                }
-            }, 6000); // 2000毫秒延迟示例
-
         } catch (RemoteException e) {
             handleNotConnectedError(jsCallback);
         }
@@ -139,6 +138,12 @@ public class Electronic {
     //获取称重状态
 
     public void getStatus(final UniJSCallback jsCallback) {
+        // 在这里检查连接状态
+        if (!isServiceConnected) {
+            handleNotConnectedError(jsCallback);
+            return; // 不再执行后面的代码
+        }
+
         try {
             scaleManager.getData(new ScaleResult() {
 
@@ -168,14 +173,6 @@ public class Electronic {
 
             });
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    // 在这里检查连接状态
-                    handleNotConnectedError(jsCallback);
-                }
-            }, 6000); // 2000毫秒延迟示例
-
         } catch (RemoteException e) {
             handleNotConnectedError(jsCallback);
         }
@@ -184,6 +181,11 @@ public class Electronic {
     //获取称重状态
     public void getPrice(final UniJSCallback jsCallback) {
 
+        // 在这里检查连接状态
+        if (!isServiceConnected) {
+            handleNotConnectedError(jsCallback);
+            return; // 不再执行后面的代码
+        }
 
         try {
             scaleManager.getData(new ScaleResult() {
@@ -216,14 +218,6 @@ public class Electronic {
                 }
 
             });
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    // 在这里检查连接状态
-                    handleNotConnectedError(jsCallback);
-                }
-            }, 6000); // 2000毫秒延迟示例
 
         } catch (RemoteException e) {
             handleNotConnectedError(jsCallback);

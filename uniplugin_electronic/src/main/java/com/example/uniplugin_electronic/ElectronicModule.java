@@ -35,7 +35,7 @@ public class ElectronicModule extends UniModule {
                 data1.put("pnet", pnet);
                 data1.put("status", status);
 
-                data.put("msg", "初始化连接成功");
+                data.put("msg", "获取称重信息成功");
                 data.put("data", data1);
 
                 if (callback != null) {

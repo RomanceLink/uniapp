@@ -9,7 +9,6 @@ import io.dcloud.feature.uniapp.common.UniModule;
 public class ElectronicModule extends UniModule {
 
     private static final String TAG = "ElectronicModule";
-
     private Electronic electronic;
 
     //连接服务
@@ -38,6 +37,13 @@ public class ElectronicModule extends UniModule {
     public void getPrice(UniJSCallback callback) {
         Log.e(TAG, "getPrice");
         electronic.getPrice(callback);
+    }
+
+    //去皮
+    @UniJSMethod(uiThread = true)
+    public void tare(UniJSCallback callback) {
+        Log.e(TAG, "getResult");
+        electronic.tare(callback);
     }
 
 }

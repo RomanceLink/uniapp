@@ -12,51 +12,57 @@ import com.sunmi.electronicscaleservice.ScaleCallback;
 import com.sunmi.scalelibrary.ScaleManager;
 import com.sunmi.scalelibrary.ScaleResult;
 
-import java.text.DecimalFormat;
-
 import io.dcloud.feature.uniapp.bridge.UniJSCallback;
 
 public class Electronic {
 
     private static final String TAG = "Electronic";
-    private Context mContext;
+    Context mContext;
     private ScaleManager scaleManager;
+    private ScaleManager.ScaleServiceConnection scaleServiceConnection;
 
-    private boolean isScaleSuccess;
-
-    public ScalePresenterCallback callback;
-
-    private DecimalFormat decimalFormat = new DecimalFormat("0.000");
-    private DecimalFormat meonyFormat = new DecimalFormat("0.00");
-    private int status = -1;
-
-    private float price = 0;
-
-    private GvBeans gvBeans;
-    public static int net;
-    public int pnet;//皮重
+    // 添加一个标志来指示连接状态
+    private boolean isServiceConnected = false;
 
     public Electronic(@NonNull Context context, final UniJSCallback jsCallback) {
         mContext = context;
         scaleManager = ScaleManager.getInstance(context);
-        scaleManager.connectService(new ScaleManager.ScaleServiceConnection() {
+
+        Log.e(TAG, "scaleManager");
+
+        scaleServiceConnection = new ScaleManager.ScaleServiceConnection() {
             @Override
             public void onServiceConnected() {
-                getScaleData(jsCallback);
+                Log.e(TAG, "onServiceConnected");
+
+                // 设置连接状态为true
+                isServiceConnected = true;
+                if (jsCallback != null) {
+                    JSONObject data = new JSONObject();
+                    data.put("code", "初始化连接成功");
+                    jsCallback.invoke(data);
+                }
             }
 
             @Override
             public void onServiceDisconnect() {
-                isScaleSuccess = false;
-                callback.isScaleCanUse(false);
+                Log.e(TAG, "onServiceDisconnect");
                 // 设置连接状态为false
+                isServiceConnected = false;
                 if (jsCallback != null) {
                     JSONObject data = new JSONObject();
                     data.put("code", "断开连接");
                     jsCallback.invoke(data);
                 }
             }
-        });
+        };
+
+        // 明确调用 connectService 方法
+        if(!isServiceConnected){
+            scaleManager.connectService(scaleServiceConnection);
+        }
+
+        Log.e(TAG, "电子称未连接");
 
         // 添加一个延迟以确保 onServiceConnected 方法执行
         new Handler().postDelayed(new Runnable() {
@@ -69,57 +75,9 @@ public class Electronic {
 
     }
 
-    private void getScaleData(final UniJSCallback jsCallback) {
-        try {
-            scaleManager.getData(new ScaleCallback.Stub() {
-                @Override
-                public void getData(final int i, int i1, final int i2) {
-                    // i = 净重量 单位 克 ，i1 = 皮重量 单位 克 ，i2 = 稳定状态  1 为稳定。具体其他状态请参考商米开发者文档
-                    Log.d("SUNMI", "update: ----------------->" + decimalFormat.format(i * 1.0f / 1000));
-                    net = i;
-                    pnet = i1;
-                    status = i2;
-                    callback.getData(i, pnet, i2);
-                    if (isScaleSuccess) {
-                        return;
-                    }
-                    isScaleSuccess = true;
-                    callback.isScaleCanUse(true);
-
-                    // 设置连接状态为true
-                    if (jsCallback != null) {
-                        JSONObject data = new JSONObject();
-                        data.put("code", "初始化连接成功");
-                        jsCallback.invoke(data);
-                    }
-                }
-
-                @Override
-                public void error(int errorCode) throws RemoteException {
-
-                }
-
-                @Override
-                public void getPrice(int net, int tare, int unit, String unitPrice, String totalPrice, int status) throws RemoteException {
-
-                }
-            });
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public interface ScalePresenterCallback {
-        void getData(int net, int pnet, int statu);
-
-        void isScaleCanUse(boolean isCan);
-
-    }
-
     // 在服务连接成功后检查连接状态
     private void checkConnectionStatus(UniJSCallback jsCallback) {
-        if (!isScaleSuccess) {
+        if (!isServiceConnected) {
             Log.e(TAG, "电子称未连接");
             if (jsCallback != null) {
                 JSONObject data = new JSONObject();
@@ -146,7 +104,7 @@ public class Electronic {
     public void getResult(final UniJSCallback jsCallback) {
 
         // 在这里检查连接状态
-        if (!isScaleSuccess) {
+        if (!isServiceConnected) {
             handleNotConnectedError(jsCallback);
             return; // 不再执行后面的代码
         }
@@ -185,7 +143,7 @@ public class Electronic {
 
     public void getStatus(final UniJSCallback jsCallback) {
         // 在这里检查连接状态
-        if (!isScaleSuccess) {
+        if (!isServiceConnected) {
             handleNotConnectedError(jsCallback);
             return; // 不再执行后面的代码
         }
@@ -228,7 +186,7 @@ public class Electronic {
     public void getPrice(final UniJSCallback jsCallback) {
 
         // 在这里检查连接状态
-        if (!isScaleSuccess) {
+        if (!isServiceConnected) {
             handleNotConnectedError(jsCallback);
             return; // 不再执行后面的代码
         }
@@ -269,26 +227,6 @@ public class Electronic {
             handleNotConnectedError(jsCallback);
         }
 
-    }
-
-    /**
-     * 去皮
-     */
-    public void tare(final UniJSCallback jsCallback) {
-        try {
-            if (isScaleSuccess) {
-                scaleManager.tare();
-                JSONObject data = new JSONObject();
-                //这里返回计价结果
-                data.put("code", "去皮成功");
-                if (jsCallback != null) {
-                    //这里返回称重结果
-                    jsCallback.invoke(data);
-                }
-            }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
     }
 
 }

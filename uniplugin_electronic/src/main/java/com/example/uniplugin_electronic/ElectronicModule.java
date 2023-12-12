@@ -39,11 +39,4 @@ public class ElectronicModule extends UniModule {
         electronic.getPrice(callback);
     }
 
-    //去皮
-    @UniJSMethod(uiThread = true)
-    public void tare(UniJSCallback callback) {
-        Log.e(TAG, "getResult");
-        electronic.tare(callback);
-    }
-
 }

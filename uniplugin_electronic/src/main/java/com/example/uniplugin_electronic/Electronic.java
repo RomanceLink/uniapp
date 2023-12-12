@@ -82,7 +82,9 @@ public class Electronic {
                 isServiceConnected = true;
                 if (jsCallback != null) {
                     JSONObject data = new JSONObject();
-                    data.put("code", "初始化连接成功");
+                    data.put("code", true);
+                    data.put("msg", "初始化连接成功");
+                    data.put("data", null);
                     jsCallback.invoke(data);
                 }
             }
@@ -94,7 +96,9 @@ public class Electronic {
                 isServiceConnected = false;
                 if (jsCallback != null) {
                     JSONObject data = new JSONObject();
-                    data.put("code", "断开连接");
+                    data.put("code", false);
+                    data.put("msg", "断开连接");
+                    data.put("data", null);
                     jsCallback.invoke(data);
                 }
             }
@@ -122,7 +126,9 @@ public class Electronic {
             Log.e(TAG, "电子称未连接");
             if (jsCallback != null) {
                 JSONObject data = new JSONObject();
-                data.put("code", "初始化连接失败");
+                data.put("code", false);
+                data.put("msg", "初始化连接失败");
+                data.put("data", null);
                 jsCallback.invoke(data);
             }
         }
@@ -134,7 +140,9 @@ public class Electronic {
         Log.e(TAG, "电子称未连接");
         if (jsCallback != null) {
             JSONObject data = new JSONObject();
-            data.put("code", "电子称未连接");
+            data.put("code", false);
+            data.put("msg", "电子称未连接");
+            data.put("data", null);
             jsCallback.invoke(data);
         }
     }
@@ -184,9 +192,17 @@ public class Electronic {
                 @Override
                 public void getResult(int net, int tare, boolean isStable) {
                     JSONObject data = new JSONObject();
-                    data.put("net", net);
-                    data.put("tare", tare);
-                    data.put("isStable", isStable);
+
+                    data.put("code", true);
+
+                    JSONObject data1 = new JSONObject();
+                    data1.put("net", net);
+                    data1.put("tare", tare);
+                    data1.put("isStable", isStable);
+
+                    data.put("msg", "获取称重信息成功");
+                    data.put("data", data1);
+
                     if (jsCallback != null) {
                         //这里返回称重结果
                         jsCallback.invoke(data);
@@ -232,15 +248,24 @@ public class Electronic {
                 @Override
                 public void getStatus(boolean isLightWeight, boolean overload, boolean clearZeroErr, boolean calibrationErr) {
                     JSONObject data = new JSONObject();
+
+                    data.put("code", true);
+
+                    JSONObject data1 = new JSONObject();
                     //这里返回称重状态
-                    data.put("isLightWeight", isLightWeight);
-                    data.put("overload", overload);
-                    data.put("clearZeroErr", clearZeroErr);
-                    data.put("calibrationErr", calibrationErr);
+                    data1.put("isLightWeight", isLightWeight);
+                    data1.put("overload", overload);
+                    data1.put("clearZeroErr", clearZeroErr);
+                    data1.put("calibrationErr", calibrationErr);
+
+                    data.put("msg", "获取称重状态成功");
+                    data.put("data", data1);
+
                     if (jsCallback != null) {
                         //这里返回称重结果
                         jsCallback.invoke(data);
                     }
+                    cancelGetData(jsCallback);
                 }
 
                 @Override
@@ -281,18 +306,27 @@ public class Electronic {
                 @Override
                 public void getPrice(int net, int tare, int unit, String unitPrice, String totalPrice, boolean isStable, boolean isLightWeight) {
                     JSONObject data = new JSONObject();
+                    data.put("code", true);
+
+                    JSONObject data1 = new JSONObject();
                     //这里返回计价结果
-                    data.put("net", net);
-                    data.put("tare", tare);
-                    data.put("unit", unit);
-                    data.put("unitPrice", unitPrice);
-                    data.put("totalPrice", totalPrice);
-                    data.put("isStable", isStable);
-                    data.put("isLightWeight", isLightWeight);
+                    data1.put("net", net);
+                    data1.put("tare", tare);
+                    data1.put("unit", unit);
+                    data1.put("unitPrice", unitPrice);
+                    data1.put("totalPrice", totalPrice);
+                    data1.put("isStable", isStable);
+                    data1.put("isLightWeight", isLightWeight);
+
+
+                    data.put("msg", "获取价格成功");
+                    data.put("data", data1);
+
                     if (jsCallback != null) {
                         //这里返回称重结果
                         jsCallback.invoke(data);
                     }
+                    cancelGetData(jsCallback);
                 }
 
             });
@@ -313,7 +347,9 @@ public class Electronic {
         try {
             scaleManager.zero();
             JSONObject data = new JSONObject();
-            data.put("code", "归零成功");
+            data.put("code", true);
+            data.put("msg", "归零成功");
+            data.put("data", null);
             jsCallback.invoke(data);
         } catch (RemoteException e) {
             handleNotConnectedError(jsCallback);
@@ -329,6 +365,25 @@ public class Electronic {
         }
         try {
             scaleManager.cancelGetData();
+        } catch (RemoteException e) {
+            handleNotConnectedError(jsCallback);
+        }
+    }
+
+    public void tare(UniJSCallback jsCallback) {
+        // 在这里检查连接状态
+        if (!isServiceConnected) {
+            handleNotConnectedError(jsCallback);
+            connectScaleService(jsCallback);
+            return; // 不再执行后面的代码
+        }
+        try {
+            scaleManager.tare();
+            JSONObject data = new JSONObject();
+            data.put("code", true);
+            data.put("msg", "去皮成功");
+            data.put("data", null);
+            jsCallback.invoke(data);
         } catch (RemoteException e) {
             handleNotConnectedError(jsCallback);
         }

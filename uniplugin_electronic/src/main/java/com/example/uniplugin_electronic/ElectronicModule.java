@@ -25,12 +25,19 @@ public class ElectronicModule extends UniModule {
         Log.e(TAG, "getResult");
         electronic.getData(new Electronic.ScalePresenterCallback() {
             @Override
-            public void getData(int net, int pnet, int statu) {
+            public void getData(int net, int pnet, int status) {
                 JSONObject data = new JSONObject();
+                data.put("code", true);
+
+                JSONObject data1 = new JSONObject();
                 //这里返回称重状态
-                data.put("net", net);
-                data.put("pnet", pnet);
-                data.put("statu", statu);
+                data1.put("net", net);
+                data1.put("pnet", pnet);
+                data1.put("status", status);
+
+                data.put("msg", "初始化连接成功");
+                data.put("data", data1);
+
                 if (callback != null) {
                     //这里返回称重结果
                     callback.invoke(data);
@@ -61,17 +68,24 @@ public class ElectronicModule extends UniModule {
         electronic.getStatus(callback);
     }
 
-    //获取称重状态
+    //获取价格
     @UniJSMethod(uiThread = true)
     public void getPrice(UniJSCallback callback) {
         Log.e(TAG, "getPrice");
         electronic.getPrice(callback);
     }
 
-    //获取称重状态
+    //清零
     @UniJSMethod(uiThread = true)
     public void zero(UniJSCallback callback) {
         Log.e(TAG, "getPrice");
         electronic.zero(callback);
+    }
+
+    //去皮
+    @UniJSMethod(uiThread = true)
+    public void tare(UniJSCallback callback) {
+        Log.e(TAG, "getPrice");
+        electronic.tare(callback);
     }
 }

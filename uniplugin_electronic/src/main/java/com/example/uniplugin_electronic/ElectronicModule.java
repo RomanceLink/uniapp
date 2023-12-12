@@ -39,4 +39,10 @@ public class ElectronicModule extends UniModule {
         electronic.getPrice(callback);
     }
 
+    //获取称重状态
+    @UniJSMethod(uiThread = true)
+    public void zero(UniJSCallback callback) {
+        Log.e(TAG, "getPrice");
+        electronic.zero(callback);
+    }
 }

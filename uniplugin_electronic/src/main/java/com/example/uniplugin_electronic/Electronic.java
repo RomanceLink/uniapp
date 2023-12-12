@@ -19,18 +19,14 @@ public class Electronic {
     private static final String TAG = "Electronic";
     Context mContext;
     private ScaleManager scaleManager;
-    private ScaleManager.ScaleServiceConnection scaleServiceConnection;
 
     // 添加一个标志来指示连接状态
     private boolean isServiceConnected = false;
 
-    public Electronic(@NonNull Context context, final UniJSCallback jsCallback) {
-        mContext = context;
-        scaleManager = ScaleManager.getInstance(context);
-
-        Log.e(TAG, "scaleManager");
-
-        scaleServiceConnection = new ScaleManager.ScaleServiceConnection() {
+    //连接电子秤服务
+    private void connectScaleService(final UniJSCallback jsCallback) {
+        scaleManager = ScaleManager.getInstance(mContext);
+        scaleManager.connectService(new ScaleManager.ScaleServiceConnection() {
             @Override
             public void onServiceConnected() {
                 Log.e(TAG, "onServiceConnected");
@@ -55,13 +51,12 @@ public class Electronic {
                     jsCallback.invoke(data);
                 }
             }
-        };
+        });
+    }
 
-        // 明确调用 connectService 方法
-        if(!isServiceConnected){
-            scaleManager.connectService(scaleServiceConnection);
-        }
-
+    public Electronic(@NonNull Context context, final UniJSCallback jsCallback) {
+        mContext = context;
+        connectScaleService(jsCallback);
         Log.e(TAG, "电子称未连接");
 
         // 添加一个延迟以确保 onServiceConnected 方法执行
@@ -72,7 +67,6 @@ public class Electronic {
                 checkConnectionStatus(jsCallback);
             }
         }, 6000); // 2000毫秒延迟示例
-
     }
 
     // 在服务连接成功后检查连接状态
@@ -106,6 +100,7 @@ public class Electronic {
         // 在这里检查连接状态
         if (!isServiceConnected) {
             handleNotConnectedError(jsCallback);
+            connectScaleService(jsCallback);
             return; // 不再执行后面的代码
         }
 
@@ -145,6 +140,7 @@ public class Electronic {
         // 在这里检查连接状态
         if (!isServiceConnected) {
             handleNotConnectedError(jsCallback);
+            connectScaleService(jsCallback);
             return; // 不再执行后面的代码
         }
 
@@ -188,6 +184,7 @@ public class Electronic {
         // 在这里检查连接状态
         if (!isServiceConnected) {
             handleNotConnectedError(jsCallback);
+            connectScaleService(jsCallback);
             return; // 不再执行后面的代码
         }
 
@@ -229,4 +226,20 @@ public class Electronic {
 
     }
 
+    public void zero(UniJSCallback jsCallback) {
+        // 在这里检查连接状态
+        if (!isServiceConnected) {
+            handleNotConnectedError(jsCallback);
+            connectScaleService(jsCallback);
+            return; // 不再执行后面的代码
+        }
+        try {
+            scaleManager.zero();
+            JSONObject data = new JSONObject();
+            data.put("code", "归零成功");
+            jsCallback.invoke(data);
+        } catch (RemoteException e) {
+            handleNotConnectedError(jsCallback);
+        }
+    }
 }

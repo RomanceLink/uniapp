@@ -388,4 +388,197 @@ public class Electronic {
             handleNotConnectedError(jsCallback);
         }
     }
+
+    public void digitalTare(int num,UniJSCallback jsCallback) {
+        // 在这里检查连接状态
+        if (!isServiceConnected) {
+            handleNotConnectedError(jsCallback);
+            connectScaleService(jsCallback);
+            return; // 不再执行后面的代码
+        }
+        try {
+            scaleManager.digitalTare(num);
+            JSONObject data = new JSONObject();
+            data.put("code", true);
+            data.put("msg", "数字去皮成功");
+            data.put("data", null);
+            jsCallback.invoke(data);
+        } catch (RemoteException e) {
+            handleNotConnectedError(jsCallback);
+        }
+    }
+
+    public void cancelGetDataOne(UniJSCallback jsCallback) {
+        // 在这里检查连接状态
+        if (!isServiceConnected) {
+            handleNotConnectedError(jsCallback);
+            connectScaleService(jsCallback);
+            return; // 不再执行后面的代码
+        }
+        try {
+            scaleManager.cancelGetData();
+            JSONObject data = new JSONObject();
+            data.put("code", true);
+            data.put("msg", "取消获取数据成功");
+            data.put("data", null);
+            jsCallback.invoke(data);
+        } catch (RemoteException e) {
+            handleNotConnectedError(jsCallback);
+        }
+    }
+
+    public void readAcceleData(UniJSCallback jsCallback) {
+        // 在这里检查连接状态
+        if (!isServiceConnected) {
+            handleNotConnectedError(jsCallback);
+            connectScaleService(jsCallback);
+            return; // 不再执行后面的代码
+        }
+        try {
+            int[] ints = scaleManager.readAcceleData();
+            JSONObject data = new JSONObject();
+            data.put("code", true);
+            data.put("msg", "读取加速度数据成功");
+            data.put("data", ints);
+            jsCallback.invoke(data);
+        } catch (RemoteException e) {
+            handleNotConnectedError(jsCallback);
+        }
+    }
+
+    public void getCalStatus(UniJSCallback jsCallback) {
+        // 在这里检查连接状态
+        if (!isServiceConnected) {
+            handleNotConnectedError(jsCallback);
+            connectScaleService(jsCallback);
+            return; // 不再执行后面的代码
+        }
+        try {
+            scaleManager.getCalStatus();
+            JSONObject data = new JSONObject();
+            data.put("code", true);
+            data.put("msg", "读取标定按钮开关状态成功");
+            data.put("data", null);
+            jsCallback.invoke(data);
+        } catch (RemoteException e) {
+            handleNotConnectedError(jsCallback);
+        }
+    }
+
+    public void readSealState(UniJSCallback jsCallback) {
+        // 在这里检查连接状态
+        if (!isServiceConnected) {
+            handleNotConnectedError(jsCallback);
+            connectScaleService(jsCallback);
+            return; // 不再执行后面的代码
+        }
+        try {
+            scaleManager.readSealState();
+            JSONObject data = new JSONObject();
+            data.put("code", true);
+            data.put("msg", "获取铅封状态成功");
+            data.put("data", null);
+            jsCallback.invoke(data);
+        } catch (RemoteException e) {
+            handleNotConnectedError(jsCallback);
+        }
+    }
+
+    public void setUnitPrice(String unitPrice, UniJSCallback jsCallback) {
+        // 在这里检查连接状态
+        if (!isServiceConnected) {
+            handleNotConnectedError(jsCallback);
+            connectScaleService(jsCallback);
+            return; // 不再执行后面的代码
+        }
+        try {
+            scaleManager.setUnitPrice(unitPrice);
+            JSONObject data = new JSONObject();
+            data.put("code", true);
+            data.put("msg", "设置单价成功");
+            data.put("data", null);
+            jsCallback.invoke(data);
+        } catch (RemoteException e) {
+            handleNotConnectedError(jsCallback);
+        }
+    }
+
+
+    public void getUnitPrice(UniJSCallback jsCallback) {
+        // 在这里检查连接状态
+        if (!isServiceConnected) {
+            handleNotConnectedError(jsCallback);
+            connectScaleService(jsCallback);
+            return; // 不再执行后面的代码
+        }
+        try {
+            scaleManager.getUnitPrice();
+            JSONObject data = new JSONObject();
+            data.put("code", true);
+            data.put("msg", "获取当前已经设置的单价成功");
+            data.put("data", null);
+            jsCallback.invoke(data);
+        } catch (RemoteException e) {
+            handleNotConnectedError(jsCallback);
+        }
+    }
+
+    public void setUnit(int num,UniJSCallback jsCallback) {
+        // 在这里检查连接状态
+        if (!isServiceConnected) {
+            handleNotConnectedError(jsCallback);
+            connectScaleService(jsCallback);
+            return; // 不再执行后面的代码
+        }
+        try {
+            scaleManager.setUnit(num);
+            JSONObject data = new JSONObject();
+            data.put("code", true);
+            data.put("msg", "设置价格计算时的重量单位成功");
+            data.put("data", null);
+            jsCallback.invoke(data);
+        } catch (RemoteException e) {
+            handleNotConnectedError(jsCallback);
+        }
+    }
+
+
+    public void getUnit(UniJSCallback jsCallback) {
+        // 在这里检查连接状态
+        if (!isServiceConnected) {
+            handleNotConnectedError(jsCallback);
+            connectScaleService(jsCallback);
+            return; // 不再执行后面的代码
+        }
+        try {
+            scaleManager.getUnit();
+            JSONObject data = new JSONObject();
+            data.put("code", true);
+            data.put("msg", "获取当前价格计算的重量单位");
+            data.put("data", null);
+            jsCallback.invoke(data);
+        } catch (RemoteException e) {
+            handleNotConnectedError(jsCallback);
+        }
+    }
+
+
+    public void restart(UniJSCallback jsCallback) {
+        // 在这里检查连接状态
+        if (!isServiceConnected) {
+            handleNotConnectedError(jsCallback);
+            connectScaleService(jsCallback);
+            return; // 不再执行后面的代码
+        }
+        try {
+            scaleManager.restart();
+            JSONObject data = new JSONObject();
+            data.put("code", true);
+            data.put("msg", "重启成功");
+            data.put("data", null);
+            jsCallback.invoke(data);
+        } catch (RemoteException e) {
+            handleNotConnectedError(jsCallback);
+        }
+    }
 }

@@ -12,6 +12,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/uniplugin_camera" />
             <option value="$PROJECT_DIR$/uniplugin_component" />
             <option value="$PROJECT_DIR$/uniplugin_electronic" />
             <option value="$PROJECT_DIR$/uniplugin_module" />

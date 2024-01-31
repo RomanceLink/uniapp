@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
+    compileSdk 33
     buildToolsVersion '30.0.3'
     defaultConfig {
         applicationId "uni.UNI6331937"
@@ -81,4 +81,5 @@ dependencies {
     implementation project(':uniplugin_module')
     implementation project(':uniplugin_richalert')
     implementation project(':uniplugin_electronic')
+    implementation project(':uniplugin_camera')
 }

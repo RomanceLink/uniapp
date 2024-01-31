@@ -37,6 +37,16 @@
           "class": "com.example.uniplugin_electronic.ElectronicModule"
         }
       ]
+    },
+    {
+      "hooksClass": "",
+      "plugins": [
+        {
+          "type": "module",
+          "name": "camera",
+          "class": "com.example.uniplugin_camera.CameraModule"
+        }
+      ]
     }
   ]
 }

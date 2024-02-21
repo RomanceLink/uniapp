@@ -105,6 +105,31 @@ public class Electronic {
         });
     }
 
+    // 断开连接电子秤服务
+    public void disconnectScaleService(final UniJSCallback jsCallback) {
+        if (scaleManager != null) {
+                scaleManager.onDestroy();
+                isServiceConnected = false;
+                if (jsCallback != null) {
+                    JSONObject data = new JSONObject();
+                    data.put("code", true);
+                    data.put("msg", "断开连接成功");
+                    data.put("data", null);
+                    jsCallback.invoke(data);
+                }
+        } else {
+            // If scaleManager is null, the service is not connected.
+            isServiceConnected = false;
+            if (jsCallback != null) {
+                JSONObject data = new JSONObject();
+                data.put("code", false);
+                data.put("msg", "尚未连接到电子秤服务");
+                data.put("data", null);
+                jsCallback.invoke(data);
+            }
+        }
+    }
+
     public Electronic(@NonNull Context context, final UniJSCallback jsCallback) {
         mContext = context;
         connectScaleService(jsCallback);

@@ -19,6 +19,13 @@ public class ElectronicModule extends UniModule {
         electronic = new Electronic(mUniSDKInstance.getContext(), callback);
     }
 
+    //断开服务
+    @UniJSMethod(uiThread = true)
+    public void disConnectService(UniJSCallback callback) {
+        Log.e(TAG, "disConnectService");
+        electronic.disconnectScaleService(callback);
+    }
+
     //获取称重信息
     @UniJSMethod(uiThread = true)
     public void getRData(UniJSCallback callback) {

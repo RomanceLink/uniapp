@@ -47,6 +47,16 @@
           "class": "com.example.uniplugin_camera.CameraModule"
         }
       ]
+    },
+    {
+      "hooksClass": "",
+      "plugins": [
+        {
+          "type": "module",
+          "name": "sunmiFace",
+          "class": "com.example.uniplugin_sunmiface.SunmiFaceModule"
+        }
+      ]
     }
   ]
 }

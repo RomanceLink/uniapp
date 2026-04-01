@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.android.UniPlugin.app-mergeDebugResources-12:/values-large-v4/values-large-v4.xml",
+            "outputFile": "com.android.UniPlugin.app-mergeDebugResources-16:/values-large-v4/values-large-v4.xml",
             "map": [
                 {
-                    "source": "/Users/panlong/.gradle/caches/transforms-3/7208d67472441715d1167eab9181d58e/transformed/appcompat-1.1.0/res/values-large-v4/values-large-v4.xml",
+                    "source": "/Users/panlong/.gradle/caches/transforms-3/e36166d39b8ccbaf01fe46dc847f367e/transformed/appcompat-1.1.0/res/values-large-v4/values-large-v4.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",

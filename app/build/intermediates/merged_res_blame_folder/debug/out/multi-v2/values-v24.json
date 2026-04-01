@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.android.UniPlugin.app-mergeDebugResources-12:/values-v24/values-v24.xml",
+            "outputFile": "com.android.UniPlugin.app-mergeDebugResources-16:/values-v24/values-v24.xml",
             "map": [
                 {
-                    "source": "/Users/panlong/.gradle/caches/transforms-3/7208d67472441715d1167eab9181d58e/transformed/appcompat-1.1.0/res/values-v24/values-v24.xml",
+                    "source": "/Users/panlong/.gradle/caches/transforms-3/e36166d39b8ccbaf01fe46dc847f367e/transformed/appcompat-1.1.0/res/values-v24/values-v24.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",

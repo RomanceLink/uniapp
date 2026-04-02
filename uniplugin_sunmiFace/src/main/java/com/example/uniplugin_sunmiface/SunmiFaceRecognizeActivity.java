@@ -21,6 +21,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,6 +38,9 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private boolean preferFrontCamera = true;
     private int autoCaptureDelayMs = 800;
+    private boolean showCancelButton = true;
+    private boolean showSwitchCameraButton = true;
+    private boolean showStatusText = true;
     // 预览显示方向（只影响预览，不自动修正图片像素方向）
     private int displayOrientationDeg = 90;
     // 保存图片时是否旋转/镜像到“前端期望”的方向
@@ -55,6 +60,9 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
         super.onCreate(savedInstanceState);
         preferFrontCamera = getIntent().getBooleanExtra("preferFrontCamera", true);
         autoCaptureDelayMs = Math.max(300, getIntent().getIntExtra("autoCaptureDelayMs", 800));
+        showCancelButton = getIntent().getBooleanExtra("showCancelButton", true);
+        showSwitchCameraButton = getIntent().getBooleanExtra("showSwitchCameraButton", true);
+        showStatusText = getIntent().getBooleanExtra("showStatusText", true);
         displayOrientationDeg = getIntent().getIntExtra("displayOrientationDeg", 90);
         captureImageRotationDeg = getIntent().getIntExtra("captureImageRotationDeg", 0);
         captureMirrorX = getIntent().getBooleanExtra("captureMirrorX", false);
@@ -72,49 +80,62 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         ));
+        if (showCancelButton || showSwitchCameraButton || showStatusText) {
+            LinearLayout bottomBar = new LinearLayout(this);
+            bottomBar.setOrientation(LinearLayout.VERTICAL);
+            bottomBar.setPadding(32, 32, 32, 48);
+            bottomBar.setBackgroundColor(0x66000000);
 
-        LinearLayout bottomBar = new LinearLayout(this);
-        bottomBar.setOrientation(LinearLayout.VERTICAL);
-        bottomBar.setPadding(32, 32, 32, 48);
-        bottomBar.setBackgroundColor(0x66000000);
+            if (showStatusText) {
+                statusView = new TextView(this);
+                statusView.setTextColor(Color.WHITE);
+                statusView.setTextSize(16);
+                statusView.setText("请将人脸对准镜头，检测到人脸后会自动识别");
+                bottomBar.addView(statusView);
+            } else {
+                statusView = new TextView(this);
+                statusView.setVisibility(View.GONE);
+                bottomBar.addView(statusView);
+            }
 
-        statusView = new TextView(this);
-        statusView.setTextColor(Color.WHITE);
-        statusView.setTextSize(16);
-        statusView.setText("请将人脸对准镜头，检测到人脸后会自动识别");
-        bottomBar.addView(statusView);
+            LinearLayout actions = new LinearLayout(this);
+            actions.setOrientation(LinearLayout.HORIZONTAL);
+            actions.setGravity(Gravity.CENTER_HORIZONTAL);
+            actions.setPadding(0, 24, 0, 0);
 
-        LinearLayout actions = new LinearLayout(this);
-        actions.setOrientation(LinearLayout.HORIZONTAL);
-        actions.setGravity(Gravity.CENTER_HORIZONTAL);
-        actions.setPadding(0, 24, 0, 0);
+            if (showCancelButton) {
+                Button cancelButton = new Button(this);
+                cancelButton.setText("取消");
+                cancelButton.setOnClickListener(v -> {
+                    setResult(Activity.RESULT_CANCELED);
+                    finish();
+                });
+                actions.addView(cancelButton);
+            }
 
-        Button cancelButton = new Button(this);
-        cancelButton.setText("取消");
-        cancelButton.setOnClickListener(v -> {
-            setResult(Activity.RESULT_CANCELED);
-            finish();
-        });
-        actions.addView(cancelButton);
+            if (showSwitchCameraButton) {
+                Button switchButton = new Button(this);
+                switchButton.setText("切换摄像头");
+                switchButton.setOnClickListener(v -> switchCamera());
+                LinearLayout.LayoutParams switchParams = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                switchParams.leftMargin = 32;
+                actions.addView(switchButton, switchParams);
+            }
 
-        Button switchButton = new Button(this);
-        switchButton.setText("切换摄像头");
-        switchButton.setOnClickListener(v -> switchCamera());
-        LinearLayout.LayoutParams switchParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
-        switchParams.leftMargin = 32;
-        actions.addView(switchButton, switchParams);
+            bottomBar.addView(actions);
 
-        bottomBar.addView(actions);
-
-        FrameLayout.LayoutParams bottomParams = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
-        bottomParams.gravity = Gravity.BOTTOM;
-        rootView.addView(bottomBar, bottomParams);
+            FrameLayout.LayoutParams bottomParams = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            bottomParams.gravity = Gravity.BOTTOM;
+            rootView.addView(bottomBar, bottomParams);
+        } else {
+            statusView = null;
+        }
         return rootView;
     }
 
@@ -132,9 +153,11 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
             camera.setFaceDetectionListener(this);
             camera.startPreview();
             startFaceDetectionIfSupported();
+            emitEvent("ready", "等待检测人脸...");
         } catch (Exception e) {
-            statusView.setText("打开相机失败: " + e.getMessage());
+            if (statusView != null) statusView.setText("打开相机失败: " + e.getMessage());
             releaseCamera();
+            emitEvent("final", "camera_open_failed:" + e.getMessage());
         }
     }
 
@@ -153,12 +176,14 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
             return;
         }
         isCapturing = true;
-        statusView.setText("正在拍照识别...");
+        if (statusView != null) statusView.setText("正在拍照识别...");
+        emitEvent("capturing", "正在拍照识别...");
         try {
             camera.takePicture(null, null, this);
         } catch (Exception e) {
             isCapturing = false;
-            statusView.setText("拍照失败: " + e.getMessage());
+            if (statusView != null) statusView.setText("拍照失败: " + e.getMessage());
+            emitEvent("final", "capture_failed:" + e.getMessage());
         }
     }
 
@@ -166,15 +191,17 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     public void onFaceDetection(Camera.Face[] faces, Camera camera) {
         if (faces == null || faces.length == 0) {
             if (!isCapturing) {
-                statusView.setText("请将人脸对准镜头，系统会自动识别");
+                if (statusView != null) statusView.setText("请将人脸对准镜头，系统会自动识别");
             }
+            emitEvent("face_not_detected", "未检测到人脸");
             cancelAutoCapture();
             return;
         }
         if (isCapturing) {
             return;
         }
-        statusView.setText("检测到人脸，正在自动识别...");
+        if (statusView != null) statusView.setText("检测到人脸，正在自动识别...");
+        emitEvent("face_detected", "检测到人脸");
         if (!pendingAutoCapture) {
             pendingAutoCapture = true;
             mainHandler.postDelayed(autoCaptureRunnable, autoCaptureDelayMs);
@@ -224,7 +251,7 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
         } catch (IOException e) {
             isCapturing = false;
             pendingAutoCapture = false;
-            statusView.setText("保存照片失败: " + e.getMessage());
+            if (statusView != null) statusView.setText("保存照片失败: " + e.getMessage());
             try {
                 camera.startPreview();
                 startFaceDetectionIfSupported();
@@ -249,14 +276,14 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
             if (parameters.getMaxNumDetectedFaces() > 0) {
                 camera.startFaceDetection();
             } else {
-                statusView.setText("当前设备不支持实时人脸检测，请保持正对镜头");
+                if (statusView != null) statusView.setText("当前设备不支持实时人脸检测，请保持正对镜头");
                 if (!pendingAutoCapture && !isCapturing) {
                     pendingAutoCapture = true;
                     mainHandler.postDelayed(autoCaptureRunnable, 1500);
                 }
             }
         } catch (Exception e) {
-            statusView.setText("自动检测不可用，将尝试直接拍照识别");
+            if (statusView != null) statusView.setText("自动检测不可用，将尝试直接拍照识别");
             if (!pendingAutoCapture && !isCapturing) {
                 pendingAutoCapture = true;
                 mainHandler.postDelayed(autoCaptureRunnable, 1500);
@@ -339,6 +366,8 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     }
 
     private void switchCamera() {
+        // switchCameraButton 被隐藏时，仍然不允许切换（避免误触）
+        if (!showSwitchCameraButton) return;
         preferFrontCamera = !preferFrontCamera;
         isCapturing = false;
         cancelAutoCapture();
@@ -348,7 +377,7 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
                 surfaceCreated(surfaceHolder);
             }
         } catch (Exception e) {
-            statusView.setText("切换摄像头失败: " + e.getMessage());
+            if (statusView != null) statusView.setText("切换摄像头失败: " + e.getMessage());
         }
     }
 
@@ -368,6 +397,16 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
             }
             camera.release();
             camera = null;
+        }
+    }
+
+    private void emitEvent(String eventType, String message) {
+        try {
+            JSONObject event = new JSONObject();
+            event.put("eventType", eventType);
+            event.put("message", message);
+            SunmiFaceModule.emitFaceEvent(event);
+        } catch (Throwable ignored) {
         }
     }
 }

@@ -61,6 +61,8 @@ import io.dcloud.feature.uniapp.common.UniModule;
 public class SunmiFaceModule extends UniModule {
     private static final int REQUEST_CODE_PERMISSIONS = 40961;
     private static final int REQUEST_CODE_FACE_RECOGNIZE = 40962;
+    // Activity -> JS 实时事件推送
+    private static volatile UniJSCallback faceEventCallback = null;
 
     private static final String[] REQUIRED_PERMISSIONS = new String[]{
             "android.permission.READ_EXTERNAL_STORAGE",
@@ -232,14 +234,37 @@ public class SunmiFaceModule extends UniModule {
         }
         recognizeCallback = callback;
         recognizeOptions = options == null ? new JSONObject() : options;
+        // 把 callback 同步给 Activity，以便 startFaceRecognize 期间实时推送检测状态
+        faceEventCallback = callback;
         Intent intent = new Intent(context, SunmiFaceRecognizeActivity.class);
-        intent.putExtra("preferFrontCamera", !recognizeOptions.containsKey("preferFrontCamera") || recognizeOptions.getBooleanValue("preferFrontCamera"));
+        boolean preferFrontCamera = !recognizeOptions.containsKey("preferFrontCamera") || recognizeOptions.getBooleanValue("preferFrontCamera");
+        if (recognizeOptions.containsKey("cameraFacing")) {
+            String facing = recognizeOptions.getString("cameraFacing");
+            // cameraFacing: "front" / "back"
+            preferFrontCamera = !"back".equalsIgnoreCase(facing);
+        }
+        intent.putExtra("preferFrontCamera", preferFrontCamera);
         intent.putExtra("autoCaptureDelayMs", recognizeOptions.containsKey("autoCaptureDelayMs") ? recognizeOptions.getIntValue("autoCaptureDelayMs") : 800);
+        intent.putExtra("showCancelButton", !recognizeOptions.containsKey("showCancelButton") || recognizeOptions.getBooleanValue("showCancelButton"));
+        intent.putExtra("showSwitchCameraButton", !recognizeOptions.containsKey("showSwitchCameraButton") || recognizeOptions.getBooleanValue("showSwitchCameraButton"));
+        // 让“检测文字”交给前端：可把状态栏隐藏
+        intent.putExtra("showStatusText", !recognizeOptions.containsKey("showStatusText") || recognizeOptions.getBooleanValue("showStatusText"));
         // 允许前端调整预览方向/抓拍图片方向，避免不同机型“倒的”
         intent.putExtra("displayOrientationDeg", recognizeOptions.containsKey("displayOrientationDeg") ? recognizeOptions.getIntValue("displayOrientationDeg") : 90);
         intent.putExtra("captureImageRotationDeg", recognizeOptions.containsKey("captureImageRotationDeg") ? recognizeOptions.getIntValue("captureImageRotationDeg") : 0);
         intent.putExtra("captureMirrorX", recognizeOptions.containsKey("captureMirrorX") && recognizeOptions.getBooleanValue("captureMirrorX"));
         ((Activity) context).startActivityForResult(intent, REQUEST_CODE_FACE_RECOGNIZE);
+    }
+
+    // 给 Activity 调用：多次 invoke 给 JS（JS 侧需要支持流式回调）
+    public static void emitFaceEvent(JSONObject event) {
+        UniJSCallback cb = faceEventCallback;
+        if (cb == null || event == null) return;
+        try {
+            cb.invoke(event);
+        } catch (Throwable ignored) {
+            // JS 侧可能已处理完并不再关心后续事件
+        }
     }
 
     @UniJSMethod(uiThread = false)
@@ -1262,19 +1287,24 @@ public class SunmiFaceModule extends UniModule {
         JSONObject options = recognizeOptions;
         recognizeCallback = null;
         recognizeOptions = null;
+        faceEventCallback = null;
 
         if (callback == null) {
             return;
         }
 
         if (resultCode != Activity.RESULT_OK || data == null) {
-            callback.invoke(error(SunmiFaceStatusCode.FACE_CODE_OTHER_ERROR, "recognize canceled"));
+            JSONObject res = error(SunmiFaceStatusCode.FACE_CODE_OTHER_ERROR, "recognize canceled");
+            res.put("eventType", "final");
+            callback.invoke(res);
             return;
         }
 
         String imagePath = data.getStringExtra("imagePath");
         if (TextUtils.isEmpty(imagePath)) {
-            callback.invoke(error(SunmiFaceStatusCode.FACE_CODE_EMPTY_IMAGE, "captured image is empty"));
+            JSONObject res = error(SunmiFaceStatusCode.FACE_CODE_EMPTY_IMAGE, "captured image is empty");
+            res.put("eventType", "final");
+            callback.invoke(res);
             return;
         }
 
@@ -1323,7 +1353,9 @@ public class SunmiFaceModule extends UniModule {
             payload.put("feature", extractionResult.toJson());
 
             if (extractionResult.code != SunmiFaceStatusCode.FACE_CODE_OK || extractionResult.feature == null) {
-                callback.invoke(status(extractionResult.code, payload, null));
+                JSONObject res = status(extractionResult.code, payload, null);
+                res.put("eventType", "final");
+                callback.invoke(res);
                 return;
             }
 
@@ -1331,9 +1363,13 @@ public class SunmiFaceModule extends UniModule {
             SunmiFaceDBIdInfo info = new SunmiFaceDBIdInfo();
             int searchCode = SunmiFaceSDK.searchDB(record, info);
             payload.put("search", dbIdInfoToJson(info));
-            callback.invoke(status(searchCode, payload, searchCode == SunmiFaceStatusCode.FACE_CODE_OK ? "face recognize success" : null));
+            JSONObject res = status(searchCode, payload, searchCode == SunmiFaceStatusCode.FACE_CODE_OK ? "face recognize success" : null);
+            res.put("eventType", "final");
+            callback.invoke(res);
         } catch (Exception e) {
-            callback.invoke(exception(e));
+            JSONObject res = exception(e);
+            res.put("eventType", "final");
+            callback.invoke(res);
         } finally {
             if (extractionResult != null && extractionResult.imageFeatures != null) {
                 SunmiFaceSDK.releaseImageFeatures(extractionResult.imageFeatures);

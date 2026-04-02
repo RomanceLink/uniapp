@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Camera;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -33,6 +36,11 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private boolean preferFrontCamera = true;
     private int autoCaptureDelayMs = 800;
+    // 预览显示方向（只影响预览，不自动修正图片像素方向）
+    private int displayOrientationDeg = 90;
+    // 保存图片时是否旋转/镜像到“前端期望”的方向
+    private int captureImageRotationDeg = 0;
+    private boolean captureMirrorX = false;
     private boolean pendingAutoCapture = false;
     private final Runnable autoCaptureRunnable = new Runnable() {
         @Override
@@ -47,6 +55,9 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
         super.onCreate(savedInstanceState);
         preferFrontCamera = getIntent().getBooleanExtra("preferFrontCamera", true);
         autoCaptureDelayMs = Math.max(300, getIntent().getIntExtra("autoCaptureDelayMs", 800));
+        displayOrientationDeg = getIntent().getIntExtra("displayOrientationDeg", 90);
+        captureImageRotationDeg = getIntent().getIntExtra("captureImageRotationDeg", 0);
+        captureMirrorX = getIntent().getBooleanExtra("captureMirrorX", false);
         setContentView(buildContentView());
     }
 
@@ -112,7 +123,7 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
         try {
             camera = Camera.open(resolveCameraId());
             camera.setPreviewDisplay(holder);
-            camera.setDisplayOrientation(90);
+            camera.setDisplayOrientation(displayOrientationDeg);
             Camera.Parameters parameters = camera.getParameters();
             parameters.setPictureFormat(android.graphics.PixelFormat.JPEG);
             applyBestCameraSize(parameters);
@@ -174,9 +185,37 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     public void onPictureTaken(byte[] data, Camera camera) {
         try {
             File imageFile = new File(getCacheDir(), "sunmi-face-capture-" + System.currentTimeMillis() + ".jpg");
-            try (FileOutputStream outputStream = new FileOutputStream(imageFile)) {
-                outputStream.write(data);
-                outputStream.flush();
+            // 如果需要对齐前端坐标系/预览方向，就在保存阶段把图片做一次旋转/镜像
+            if (captureImageRotationDeg != 0 || captureMirrorX) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                if (bitmap != null) {
+                    Matrix matrix = new Matrix();
+                    if (captureImageRotationDeg != 0) {
+                        matrix.postRotate(captureImageRotationDeg);
+                    }
+                    if (captureMirrorX) {
+                        // 围绕位图中心做水平翻转，避免平移导致裁剪偏差
+                        matrix.postScale(-1, 1, bitmap.getWidth() / 2f, bitmap.getHeight() / 2f);
+                    }
+                    Bitmap out = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                    bitmap.recycle();
+                    try (FileOutputStream outputStream = new FileOutputStream(imageFile)) {
+                        out.compress(Bitmap.CompressFormat.JPEG, 95, outputStream);
+                        outputStream.flush();
+                    }
+                    out.recycle();
+                } else {
+                    // 解码失败则回退：直接保存原始 jpeg bytes
+                    try (FileOutputStream outputStream = new FileOutputStream(imageFile)) {
+                        outputStream.write(data);
+                        outputStream.flush();
+                    }
+                }
+            } else {
+                try (FileOutputStream outputStream = new FileOutputStream(imageFile)) {
+                    outputStream.write(data);
+                    outputStream.flush();
+                }
             }
             Intent intent = new Intent();
             intent.putExtra("imagePath", imageFile.getAbsolutePath());

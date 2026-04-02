@@ -235,6 +235,10 @@ public class SunmiFaceModule extends UniModule {
         Intent intent = new Intent(context, SunmiFaceRecognizeActivity.class);
         intent.putExtra("preferFrontCamera", !recognizeOptions.containsKey("preferFrontCamera") || recognizeOptions.getBooleanValue("preferFrontCamera"));
         intent.putExtra("autoCaptureDelayMs", recognizeOptions.containsKey("autoCaptureDelayMs") ? recognizeOptions.getIntValue("autoCaptureDelayMs") : 800);
+        // 允许前端调整预览方向/抓拍图片方向，避免不同机型“倒的”
+        intent.putExtra("displayOrientationDeg", recognizeOptions.containsKey("displayOrientationDeg") ? recognizeOptions.getIntValue("displayOrientationDeg") : 90);
+        intent.putExtra("captureImageRotationDeg", recognizeOptions.containsKey("captureImageRotationDeg") ? recognizeOptions.getIntValue("captureImageRotationDeg") : 0);
+        intent.putExtra("captureMirrorX", recognizeOptions.containsKey("captureMirrorX") && recognizeOptions.getBooleanValue("captureMirrorX"));
         ((Activity) context).startActivityForResult(intent, REQUEST_CODE_FACE_RECOGNIZE);
     }
 
@@ -598,14 +602,17 @@ public class SunmiFaceModule extends UniModule {
 
     private ExtractionResult extractFeatures(JSONObject options) throws IOException {
         ensureHandle();
-        SunmiFaceImage image = buildImage(options);
+        ImageBuildResult buildResult = buildImage(options);
+        SunmiFaceImage image = buildResult.image;
+        int imageWidth = buildResult.width;
+        int imageHeight = buildResult.height;
         SunmiFaceImageFeatures imageFeatures = new SunmiFaceImageFeatures();
         int code = SunmiFaceSDK.getImageFeatures(image, imageFeatures);
         ExtractionResult result = new ExtractionResult();
         result.code = code;
         result.imageFeatures = imageFeatures;
         result.feature = getPrimaryFeature(imageFeatures);
-        result.data = featureContainerToJson(imageFeatures);
+        result.data = featureContainerToJson(imageFeatures, options, imageWidth, imageHeight);
         if (code == SunmiFaceStatusCode.FACE_CODE_OK && options != null && options.getBooleanValue("keepAlive")) {
             result.token = UUID.randomUUID().toString();
             featuresCache.put(result.token, imageFeatures);
@@ -652,7 +659,7 @@ public class SunmiFaceModule extends UniModule {
         }
     }
 
-    private SunmiFaceImage buildImage(JSONObject options) throws IOException {
+    private ImageBuildResult buildImage(JSONObject options) throws IOException {
         byte[] imageBytes = resolveImageBytes(options);
         if (imageBytes == null || imageBytes.length == 0) {
             throw new IllegalArgumentException("imagePath or base64 is required");
@@ -681,7 +688,7 @@ public class SunmiFaceModule extends UniModule {
         image.setPredictMode(options == null || !options.containsKey("predictMode") ? SunmiFaceMode.PredictMode_Feature : options.getIntValue("predictMode"));
         image.setLivenessMode(options == null ? SunmiFaceLivenessMode.LivenessMode_None : options.getIntValue("livenessMode"));
         image.setQualityMode(options == null ? SunmiFaceQualityMode.QualityMode_None : options.getIntValue("qualityMode"));
-        return image;
+        return new ImageBuildResult(image, width, height);
     }
 
     private Bitmap decodeBitmapForFace(byte[] imageBytes) {
@@ -767,10 +774,20 @@ public class SunmiFaceModule extends UniModule {
         return data;
     }
 
-    private JSONObject featureContainerToJson(SunmiFaceImageFeatures imageFeatures) {
+    private JSONObject featureContainerToJson(SunmiFaceImageFeatures imageFeatures, JSONObject options, int imageWidth, int imageHeight) {
         JSONObject data = new JSONObject();
+        int rectRotationDeg = options != null && options.containsKey("rectRotation") ? options.getIntValue("rectRotation") : 0;
+        boolean rectMirrorX = options != null && options.containsKey("rectMirrorX") && options.getBooleanValue("rectMirrorX");
+        int normRot = ((rectRotationDeg % 360) + 360) % 360;
+        int outputWidth = (normRot == 90 || normRot == 270) ? imageHeight : imageWidth;
+        int outputHeight = (normRot == 90 || normRot == 270) ? imageWidth : imageHeight;
+
+        data.put("imageWidth", imageWidth);
+        data.put("imageHeight", imageHeight);
+        data.put("outputImageWidth", outputWidth);
+        data.put("outputImageHeight", outputHeight);
         data.put("featuresCount", imageFeatures.getFeaturesCount());
-        data.put("feature", featureToJson(getPrimaryFeature(imageFeatures)));
+        data.put("feature", featureToJson(getPrimaryFeature(imageFeatures), imageWidth, imageHeight, normRot, rectMirrorX));
         return data;
     }
 
@@ -781,12 +798,12 @@ public class SunmiFaceModule extends UniModule {
         return SunmiFaceLib.SunmiFaceFeatureArrayGetItem(imageFeatures.getFeatures(), 0);
     }
 
-    private JSONObject featureToJson(SunmiFaceFeature feature) {
+    private JSONObject featureToJson(SunmiFaceFeature feature, int imageWidth, int imageHeight, int rectRotationDeg, boolean rectMirrorX) {
         if (feature == null) {
             return null;
         }
         JSONObject data = new JSONObject();
-        data.put("faceRect", rectToJson(feature.getFaceRect()));
+        data.put("faceRect", rectToJson(feature.getFaceRect(), imageWidth, imageHeight, rectRotationDeg, rectMirrorX));
         data.put("rgbLivenessScore", feature.getRgbLivenessScore());
         data.put("nirLivenessScore", feature.getNirLivenessScore());
         data.put("depthLivenessScore", feature.getDepthLivenessScore());
@@ -818,17 +835,68 @@ public class SunmiFaceModule extends UniModule {
         return result;
     }
 
-    private JSONObject rectToJson(SunmiFaceRect rect) {
+    private JSONObject rectToJson(SunmiFaceRect rect, int imageWidth, int imageHeight, int rectRotationDeg, boolean rectMirrorX) {
         if (rect == null) {
             return null;
         }
         JSONObject data = new JSONObject();
-        data.put("x1", rect.getX1());
-        data.put("y1", rect.getY1());
-        data.put("x2", rect.getX2());
-        data.put("y2", rect.getY2());
+
+        float x1 = rect.getX1();
+        float y1 = rect.getY1();
+        float x2 = rect.getX2();
+        float y2 = rect.getY2();
+
+        float left = Math.min(x1, x2);
+        float right = Math.max(x1, x2);
+        float top = Math.min(y1, y2);
+        float bottom = Math.max(y1, y2);
+
+        // 先镜像后旋转（与前端对图像的变换顺序保持一致的前提下，通常最接近预期）
+        float[] p1 = transformPoint(left, top, imageWidth, imageHeight, rectRotationDeg, rectMirrorX);     // LT
+        float[] p2 = transformPoint(right, top, imageWidth, imageHeight, rectRotationDeg, rectMirrorX);    // RT
+        float[] p3 = transformPoint(left, bottom, imageWidth, imageHeight, rectRotationDeg, rectMirrorX); // LB
+        float[] p4 = transformPoint(right, bottom, imageWidth, imageHeight, rectRotationDeg, rectMirrorX); // RB
+
+        float nx1 = Math.min(Math.min(p1[0], p2[0]), Math.min(p3[0], p4[0]));
+        float nx2 = Math.max(Math.max(p1[0], p2[0]), Math.max(p3[0], p4[0]));
+        float ny1 = Math.min(Math.min(p1[1], p2[1]), Math.min(p3[1], p4[1]));
+        float ny2 = Math.max(Math.max(p1[1], p2[1]), Math.max(p3[1], p4[1]));
+
+        data.put("x1", nx1);
+        data.put("y1", ny1);
+        data.put("x2", nx2);
+        data.put("y2", ny2);
         data.put("score", rect.getScore());
         return data;
+    }
+
+    /**
+     * 将点 (x,y) 从“原始图片坐标系”映射到“应用了 rectRotationDeg + rectMirrorX 后的坐标系”。
+     * 坐标原点假设为左上角，rectRotationDeg 为顺时针旋转角度。
+     */
+    private float[] transformPoint(float x, float y, int imageWidth, int imageHeight, int rectRotationDeg, boolean rectMirrorX) {
+        float px = x;
+        float py = y;
+        if (rectMirrorX) {
+            // 水平翻转：x 从左侧变到右侧
+            px = imageWidth - px;
+        }
+
+        switch (rectRotationDeg) {
+            case 0:
+                return new float[]{px, py};
+            case 90:
+                // (x,y) -> (H - y, x)
+                return new float[]{imageHeight - py, px};
+            case 180:
+                // (x,y) -> (W - x, H - y)
+                return new float[]{imageWidth - px, imageHeight - py};
+            case 270:
+                // (x,y) -> (y, W - x)
+                return new float[]{py, imageWidth - px};
+            default:
+                return new float[]{px, py};
+        }
     }
 
     private JSONObject poseToJson(SunmiFacePose pose) {
@@ -1210,6 +1278,13 @@ public class SunmiFaceModule extends UniModule {
             featureOptions.put("qualityMode", options != null && options.containsKey("qualityMode")
                     ? options.getIntValue("qualityMode")
                     : SunmiFaceQualityMode.QualityMode_None);
+            // 允许前端指定 faceRect 坐标变换，解决“画框倒了/偏了”
+            if (options != null && options.containsKey("rectRotation")) {
+                featureOptions.put("rectRotation", options.getIntValue("rectRotation"));
+            }
+            if (options != null && options.containsKey("rectMirrorX")) {
+                featureOptions.put("rectMirrorX", options.getBooleanValue("rectMirrorX"));
+            }
 
             extractionResult = extractFeatures(featureOptions);
             JSONObject payload = new JSONObject();
@@ -1269,6 +1344,18 @@ public class SunmiFaceModule extends UniModule {
                 result.put("token", token);
             }
             return result;
+        }
+    }
+
+    private static class ImageBuildResult {
+        final SunmiFaceImage image;
+        final int width;
+        final int height;
+
+        ImageBuildResult(SunmiFaceImage image, int width, int height) {
+            this.image = image;
+            this.width = width;
+            this.height = height;
         }
     }
 }

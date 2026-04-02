@@ -266,7 +266,8 @@ public class SunmiFaceModule extends UniModule {
         try {
             MAIN.post(() -> {
                 try {
-                    cb.invoke(event);
+                    // 关键：实时事件需要 keepAlive，否则回调通道可能在第一次 invoke 后被释放
+                    cb.invokeAndKeepAlive(event);
                 } catch (Throwable ignored) {
                 }
             });

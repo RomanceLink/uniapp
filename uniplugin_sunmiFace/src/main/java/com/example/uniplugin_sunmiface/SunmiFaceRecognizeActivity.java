@@ -47,6 +47,7 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     private int captureImageRotationDeg = 0;
     private boolean captureMirrorX = false;
     private boolean pendingAutoCapture = false;
+    private boolean lastFacePresent = false;
     private final Runnable autoCaptureRunnable = new Runnable() {
         @Override
         public void run() {
@@ -142,6 +143,15 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         try {
+            // 如果运行时没有 CAMERA 权限，避免 Camera.open 直接触发系统级崩溃
+            if (androidx.core.content.ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
+                    != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                if (statusView != null) statusView.setText("未获得相机权限");
+                emitEvent("final", "camera_permission_missing");
+                releaseCamera();
+                finish();
+                return;
+            }
             camera = Camera.open(resolveCameraId());
             camera.setPreviewDisplay(holder);
             camera.setDisplayOrientation(displayOrientationDeg);
@@ -189,19 +199,26 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
 
     @Override
     public void onFaceDetection(Camera.Face[] faces, Camera camera) {
-        if (faces == null || faces.length == 0) {
+        boolean facePresent = !(faces == null || faces.length == 0);
+        if (!facePresent) {
             if (!isCapturing) {
                 if (statusView != null) statusView.setText("请将人脸对准镜头，系统会自动识别");
             }
-            emitEvent("face_not_detected", "未检测到人脸");
+            if (lastFacePresent) {
+                emitEvent("face_not_detected", "未检测到人脸");
+                lastFacePresent = false;
+            }
             cancelAutoCapture();
             return;
+        }
+        if (!lastFacePresent) {
+            lastFacePresent = true;
+            emitEvent("face_detected", "检测到人脸");
         }
         if (isCapturing) {
             return;
         }
         if (statusView != null) statusView.setText("检测到人脸，正在自动识别...");
-        emitEvent("face_detected", "检测到人脸");
         if (!pendingAutoCapture) {
             pendingAutoCapture = true;
             mainHandler.postDelayed(autoCaptureRunnable, autoCaptureDelayMs);

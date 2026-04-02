@@ -10,6 +10,8 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -63,6 +65,7 @@ public class SunmiFaceModule extends UniModule {
     private static final int REQUEST_CODE_FACE_RECOGNIZE = 40962;
     // Activity -> JS 实时事件推送
     private static volatile UniJSCallback faceEventCallback = null;
+    private static final Handler MAIN = new Handler(Looper.getMainLooper());
 
     private static final String[] REQUIRED_PERMISSIONS = new String[]{
             "android.permission.READ_EXTERNAL_STORAGE",
@@ -261,7 +264,12 @@ public class SunmiFaceModule extends UniModule {
         UniJSCallback cb = faceEventCallback;
         if (cb == null || event == null) return;
         try {
-            cb.invoke(event);
+            MAIN.post(() -> {
+                try {
+                    cb.invoke(event);
+                } catch (Throwable ignored) {
+                }
+            });
         } catch (Throwable ignored) {
             // JS 侧可能已处理完并不再关心后续事件
         }

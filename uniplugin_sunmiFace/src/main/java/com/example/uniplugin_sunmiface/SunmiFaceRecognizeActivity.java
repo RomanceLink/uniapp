@@ -41,6 +41,7 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     private boolean showCancelButton = true;
     private boolean showSwitchCameraButton = true;
     private boolean showStatusText = true;
+    private boolean enableSystemFaceDetection = false;
     // 预览显示方向（只影响预览，不自动修正图片像素方向）
     private int displayOrientationDeg = 90;
     // 保存图片时是否旋转/镜像到“前端期望”的方向
@@ -66,6 +67,7 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
         showCancelButton = getIntent().getBooleanExtra("showCancelButton", true);
         showSwitchCameraButton = getIntent().getBooleanExtra("showSwitchCameraButton", true);
         showStatusText = getIntent().getBooleanExtra("showStatusText", true);
+        enableSystemFaceDetection = getIntent().getBooleanExtra("enableSystemFaceDetection", false);
         displayOrientationDeg = getIntent().getIntExtra("displayOrientationDeg", 90);
         captureImageRotationDeg = getIntent().getIntExtra("captureImageRotationDeg", 0);
         captureMirrorX = getIntent().getBooleanExtra("captureMirrorX", false);
@@ -164,8 +166,17 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
             updatePreviewLayout(parameters);
             camera.setFaceDetectionListener(this);
             camera.startPreview();
-            startFaceDetectionIfSupported();
-            emitEvent("ready", "等待检测人脸...");
+            // 某些机型系统人脸检测会导致 native 崩溃；关闭后改为定时自动拍照识别
+            if (enableSystemFaceDetection) {
+                startFaceDetectionIfSupported();
+                emitEvent("ready", "等待检测人脸...");
+            } else {
+                if (!pendingAutoCapture && !isCapturing) {
+                    pendingAutoCapture = true;
+                    mainHandler.postDelayed(autoCaptureRunnable, Math.max(600, autoCaptureDelayMs));
+                }
+                emitEvent("ready", "系统人脸检测已关闭，定时自动识别中...");
+            }
         } catch (Exception e) {
             if (statusView != null) statusView.setText("打开相机失败: " + e.getMessage());
             releaseCamera();
@@ -211,6 +222,9 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
 
     @Override
     public void onFaceDetection(Camera.Face[] faces, Camera camera) {
+        if (!enableSystemFaceDetection) {
+            return;
+        }
         if (finishing || destroyed) {
             return;
         }
@@ -305,6 +319,9 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
 
     private void startFaceDetectionIfSupported() {
         if (camera == null || finishing || destroyed) {
+            return;
+        }
+        if (!enableSystemFaceDetection) {
             return;
         }
         try {
@@ -424,7 +441,9 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
             } catch (Exception ignored) {
             }
             try {
-                camera.stopFaceDetection();
+                if (enableSystemFaceDetection) {
+                    camera.stopFaceDetection();
+                }
             } catch (Exception ignored) {
             }
             try {

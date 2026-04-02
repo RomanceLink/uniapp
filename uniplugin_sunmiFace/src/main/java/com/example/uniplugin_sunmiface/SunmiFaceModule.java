@@ -256,6 +256,8 @@ public class SunmiFaceModule extends UniModule {
         intent.putExtra("showSwitchCameraButton", !recognizeOptions.containsKey("showSwitchCameraButton") || recognizeOptions.getBooleanValue("showSwitchCameraButton"));
         // 让“检测文字”交给前端：可把状态栏隐藏
         intent.putExtra("showStatusText", !recognizeOptions.containsKey("showStatusText") || recognizeOptions.getBooleanValue("showStatusText"));
+        // 某些机型启用系统人脸检测会导致 native 崩溃（scudo/double free），默认关闭更稳
+        intent.putExtra("enableSystemFaceDetection", recognizeOptions.containsKey("enableSystemFaceDetection") && recognizeOptions.getBooleanValue("enableSystemFaceDetection"));
         // 允许前端调整预览方向/抓拍图片方向，避免不同机型“倒的”
         intent.putExtra("displayOrientationDeg", recognizeOptions.containsKey("displayOrientationDeg") ? recognizeOptions.getIntValue("displayOrientationDeg") : 90);
         intent.putExtra("captureImageRotationDeg", recognizeOptions.containsKey("captureImageRotationDeg") ? recognizeOptions.getIntValue("captureImageRotationDeg") : 0);
@@ -1361,6 +1363,12 @@ public class SunmiFaceModule extends UniModule {
             payload.put("feature", extractionResult.toJson());
 
             if (extractionResult.code != SunmiFaceStatusCode.FACE_CODE_OK || extractionResult.feature == null) {
+                // 关闭系统人脸检测时，也需要给前端一个明确的“未检测到人脸/识别失败”状态
+                JSONObject evt = new JSONObject();
+                evt.put("eventType", "face_not_detected");
+                evt.put("message", "未检测到人脸");
+                emitFaceEvent(evt);
+
                 JSONObject res = status(extractionResult.code, payload, null);
                 res.put("eventType", "final");
                 callback.invoke(res);
@@ -1371,10 +1379,27 @@ public class SunmiFaceModule extends UniModule {
             SunmiFaceDBIdInfo info = new SunmiFaceDBIdInfo();
             int searchCode = SunmiFaceSDK.searchDB(record, info);
             payload.put("search", dbIdInfoToJson(info));
+            if (searchCode == SunmiFaceStatusCode.FACE_CODE_OK) {
+                JSONObject evt = new JSONObject();
+                evt.put("eventType", "recognize_success");
+                evt.put("message", "识别成功");
+                emitFaceEvent(evt);
+            } else {
+                JSONObject evt = new JSONObject();
+                evt.put("eventType", "recognize_failed");
+                evt.put("message", "识别失败: " + SunmiFaceSDK.getErrorString(searchCode));
+                emitFaceEvent(evt);
+            }
+
             JSONObject res = status(searchCode, payload, searchCode == SunmiFaceStatusCode.FACE_CODE_OK ? "face recognize success" : null);
             res.put("eventType", "final");
             callback.invoke(res);
         } catch (Exception e) {
+            JSONObject evt = new JSONObject();
+            evt.put("eventType", "recognize_failed");
+            evt.put("message", "识别异常: " + (e.getMessage() == null ? e.toString() : e.getMessage()));
+            emitFaceEvent(evt);
+
             JSONObject res = exception(e);
             res.put("eventType", "final");
             callback.invoke(res);

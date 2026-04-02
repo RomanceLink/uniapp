@@ -602,6 +602,21 @@ public class SunmiFaceModule extends UniModule {
 
     private ExtractionResult extractFeatures(JSONObject options) throws IOException {
         ensureHandle();
+        // 如前端传了识别参数（distanceThreshold/minFaceSize 等），先下发给 SDK
+        if (options != null
+                && (options.containsKey("threadNum")
+                || options.containsKey("distanceThreshold")
+                || options.containsKey("faceScoreThreshold")
+                || options.containsKey("minFaceSize")
+                || options.containsKey("depthXOffset")
+                || options.containsKey("depthYOffset")
+                || options.containsKey("boxSortMode"))) {
+            int code = SunmiFaceSDK.setConfig(buildConfigParam(options));
+            if (code != SunmiFaceStatusCode.FACE_CODE_OK) {
+                throw new IllegalStateException("setConfig failed: " + SunmiFaceSDK.getErrorString(code));
+            }
+        }
+
         ImageBuildResult buildResult = buildImage(options);
         SunmiFaceImage image = buildResult.image;
         int imageWidth = buildResult.width;
@@ -665,7 +680,10 @@ public class SunmiFaceModule extends UniModule {
             throw new IllegalArgumentException("imagePath or base64 is required");
         }
 
-        Bitmap bitmap = decodeBitmapForFace(imageBytes);
+        int decodeMaxSize = options == null || !options.containsKey("decodeMaxSize") ? 1280 : options.getIntValue("decodeMaxSize");
+        decodeMaxSize = Math.max(64, decodeMaxSize);
+
+        Bitmap bitmap = decodeBitmapForFace(imageBytes, decodeMaxSize);
         if (bitmap == null) {
             throw new IllegalArgumentException("failed to decode image");
         }
@@ -691,14 +709,14 @@ public class SunmiFaceModule extends UniModule {
         return new ImageBuildResult(image, width, height);
     }
 
-    private Bitmap decodeBitmapForFace(byte[] imageBytes) {
+    private Bitmap decodeBitmapForFace(byte[] imageBytes, int decodeMaxSize) {
         BitmapFactory.Options bounds = new BitmapFactory.Options();
         bounds.inJustDecodeBounds = true;
         BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length, bounds);
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        options.inSampleSize = calculateInSampleSize(bounds, 1280, 1280);
+        options.inSampleSize = calculateInSampleSize(bounds, decodeMaxSize, decodeMaxSize);
         return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length, options);
     }
 
@@ -1278,6 +1296,19 @@ public class SunmiFaceModule extends UniModule {
             featureOptions.put("qualityMode", options != null && options.containsKey("qualityMode")
                     ? options.getIntValue("qualityMode")
                     : SunmiFaceQualityMode.QualityMode_None);
+
+            // 配置参数与解码尺寸（用于解决“距离太远/太近不好调”与“闪退/内存问题”）
+            if (options != null) {
+                if (options.containsKey("threadNum")) featureOptions.put("threadNum", options.getIntValue("threadNum"));
+                if (options.containsKey("distanceThreshold")) featureOptions.put("distanceThreshold", options.getFloatValue("distanceThreshold"));
+                if (options.containsKey("faceScoreThreshold")) featureOptions.put("faceScoreThreshold", options.getFloatValue("faceScoreThreshold"));
+                if (options.containsKey("minFaceSize")) featureOptions.put("minFaceSize", options.getIntValue("minFaceSize"));
+                if (options.containsKey("depthXOffset")) featureOptions.put("depthXOffset", options.getIntValue("depthXOffset"));
+                if (options.containsKey("depthYOffset")) featureOptions.put("depthYOffset", options.getIntValue("depthYOffset"));
+                if (options.containsKey("boxSortMode")) featureOptions.put("boxSortMode", options.getIntValue("boxSortMode"));
+                if (options.containsKey("decodeMaxSize")) featureOptions.put("decodeMaxSize", options.getIntValue("decodeMaxSize"));
+            }
+
             // 允许前端指定 faceRect 坐标变换，解决“画框倒了/偏了”
             if (options != null && options.containsKey("rectRotation")) {
                 featureOptions.put("rectRotation", options.getIntValue("rectRotation"));

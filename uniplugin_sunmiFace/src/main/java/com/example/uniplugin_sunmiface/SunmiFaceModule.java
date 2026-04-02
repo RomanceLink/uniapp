@@ -59,12 +59,14 @@ import java.util.UUID;
 import io.dcloud.feature.uniapp.annotation.UniJSMethod;
 import io.dcloud.feature.uniapp.bridge.UniJSCallback;
 import io.dcloud.feature.uniapp.common.UniModule;
+import io.dcloud.feature.uniapp.AbsSDKInstance;
 
 public class SunmiFaceModule extends UniModule {
     private static final int REQUEST_CODE_PERMISSIONS = 40961;
     private static final int REQUEST_CODE_FACE_RECOGNIZE = 40962;
-    // Activity -> JS 实时事件推送
-    private static volatile UniJSCallback faceEventCallback = null;
+    // 用全局事件推送实时状态（比多次回调 UniJSCallback 更稳定）
+    private static final String FACE_EVENT_NAME = "SunmiFaceEvent";
+    private static volatile AbsSDKInstance faceEventSDKInstance = null;
     private static final Handler MAIN = new Handler(Looper.getMainLooper());
 
     private static final String[] REQUIRED_PERMISSIONS = new String[]{
@@ -237,8 +239,10 @@ public class SunmiFaceModule extends UniModule {
         }
         recognizeCallback = callback;
         recognizeOptions = options == null ? new JSONObject() : options;
-        // 把 callback 同步给 Activity，以便 startFaceRecognize 期间实时推送检测状态
-        faceEventCallback = callback;
+        // 记录 SDKInstance 给 Activity 推事件用
+        if (mUniSDKInstance instanceof AbsSDKInstance) {
+            faceEventSDKInstance = (AbsSDKInstance) mUniSDKInstance;
+        }
         Intent intent = new Intent(context, SunmiFaceRecognizeActivity.class);
         boolean preferFrontCamera = !recognizeOptions.containsKey("preferFrontCamera") || recognizeOptions.getBooleanValue("preferFrontCamera");
         if (recognizeOptions.containsKey("cameraFacing")) {
@@ -259,21 +263,16 @@ public class SunmiFaceModule extends UniModule {
         ((Activity) context).startActivityForResult(intent, REQUEST_CODE_FACE_RECOGNIZE);
     }
 
-    // 给 Activity 调用：多次 invoke 给 JS（JS 侧需要支持流式回调）
+    // 给 Activity 调用：通过全局事件推送实时状态
     public static void emitFaceEvent(JSONObject event) {
-        UniJSCallback cb = faceEventCallback;
-        if (cb == null || event == null) return;
-        try {
-            MAIN.post(() -> {
-                try {
-                    // 关键：实时事件需要 keepAlive，否则回调通道可能在第一次 invoke 后被释放
-                    cb.invokeAndKeepAlive(event);
-                } catch (Throwable ignored) {
-                }
-            });
-        } catch (Throwable ignored) {
-            // JS 侧可能已处理完并不再关心后续事件
-        }
+        AbsSDKInstance inst = faceEventSDKInstance;
+        if (inst == null || event == null) return;
+        MAIN.post(() -> {
+            try {
+                inst.fireGlobalEventCallback(FACE_EVENT_NAME, event);
+            } catch (Throwable ignored) {
+            }
+        });
     }
 
     @UniJSMethod(uiThread = false)
@@ -1296,7 +1295,7 @@ public class SunmiFaceModule extends UniModule {
         JSONObject options = recognizeOptions;
         recognizeCallback = null;
         recognizeOptions = null;
-        faceEventCallback = null;
+        faceEventSDKInstance = null;
 
         if (callback == null) {
             return;

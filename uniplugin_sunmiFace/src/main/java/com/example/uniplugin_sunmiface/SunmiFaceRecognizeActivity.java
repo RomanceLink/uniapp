@@ -48,6 +48,8 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     private boolean captureMirrorX = false;
     private boolean pendingAutoCapture = false;
     private boolean lastFacePresent = false;
+    private volatile boolean destroyed = false;
+    private volatile boolean finishing = false;
     private final Runnable autoCaptureRunnable = new Runnable() {
         @Override
         public void run() {
@@ -178,17 +180,27 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         cancelAutoCapture();
+        finishing = true;
         releaseCamera();
     }
 
     private void capture() {
-        if (camera == null || isCapturing) {
+        if (camera == null || isCapturing || finishing || destroyed) {
             return;
         }
         isCapturing = true;
         if (statusView != null) statusView.setText("正在拍照识别...");
         emitEvent("capturing", "正在拍照识别...");
         try {
+            // 拍照前先停掉人脸检测，避免 takePicture/stopFaceDetection 并发导致底层状态异常
+            try {
+                camera.setFaceDetectionListener(null);
+            } catch (Exception ignored) {
+            }
+            try {
+                camera.stopFaceDetection();
+            } catch (Exception ignored) {
+            }
             camera.takePicture(null, null, this);
         } catch (Exception e) {
             isCapturing = false;
@@ -199,6 +211,9 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
 
     @Override
     public void onFaceDetection(Camera.Face[] faces, Camera camera) {
+        if (finishing || destroyed) {
+            return;
+        }
         boolean facePresent = !(faces == null || faces.length == 0);
         if (!facePresent) {
             if (!isCapturing) {
@@ -228,6 +243,8 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
         try {
+            finishing = true;
+            cancelAutoCapture();
             File imageFile = new File(getCacheDir(), "sunmi-face-capture-" + System.currentTimeMillis() + ".jpg");
             // 如果需要对齐前端坐标系/预览方向，就在保存阶段把图片做一次旋转/镜像
             if (captureImageRotationDeg != 0 || captureMirrorX) {
@@ -280,12 +297,14 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        destroyed = true;
+        finishing = true;
         cancelAutoCapture();
         releaseCamera();
     }
 
     private void startFaceDetectionIfSupported() {
-        if (camera == null) {
+        if (camera == null || finishing || destroyed) {
             return;
         }
         try {
@@ -384,7 +403,7 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
 
     private void switchCamera() {
         // switchCameraButton 被隐藏时，仍然不允许切换（避免误触）
-        if (!showSwitchCameraButton) return;
+        if (!showSwitchCameraButton || finishing || destroyed) return;
         preferFrontCamera = !preferFrontCamera;
         isCapturing = false;
         cancelAutoCapture();
@@ -418,6 +437,7 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     }
 
     private void emitEvent(String eventType, String message) {
+        if (destroyed) return;
         try {
             JSONObject event = new JSONObject();
             event.put("eventType", eventType);

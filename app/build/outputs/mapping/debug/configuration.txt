@@ -272,6 +272,7 @@
 -keep class androidx.core.app.CoreComponentFactory { <init>(); }
 -keep class com.dmcbig.mediapicker.PickerActivity { <init>(); }
 -keep class com.dmcbig.mediapicker.PreviewActivity { <init>(); }
+-keep class com.example.uniplugin_sunmiface.SunmiFaceRecognizeActivity { <init>(); }
 -keep class com.taobao.weex.WXGlobalEventReceiver { <init>(); }
 -keep class io.dcloud.PandoraEntry { <init>(); }
 -keep class io.dcloud.PandoraEntryActivity { <init>(); }

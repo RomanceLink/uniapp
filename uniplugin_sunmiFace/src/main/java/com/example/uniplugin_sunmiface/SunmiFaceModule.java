@@ -62,6 +62,7 @@ import io.dcloud.feature.uniapp.common.UniModule;
 import io.dcloud.feature.uniapp.AbsSDKInstance;
 
 public class SunmiFaceModule extends UniModule {
+    private static final String METADATA_FILE_NAME = "face_records_meta.json";
     private static final int REQUEST_CODE_PERMISSIONS = 40961;
     private static final int REQUEST_CODE_FACE_RECOGNIZE = 40962;
     // 用全局事件推送实时状态（比多次回调 UniJSCallback 更稳定）
@@ -534,6 +535,9 @@ public class SunmiFaceModule extends UniModule {
             record.setImgId(getString(options, "imgId"));
             int code = SunmiFaceSDK.addDBRecord(record);
             JSONObject data = dbRecordToJson(record);
+            if (code == SunmiFaceStatusCode.FACE_CODE_OK) {
+                saveMetadataRecord(options, record, carrier.feature);
+            }
             callback.invoke(status(code, data, code == SunmiFaceStatusCode.FACE_CODE_OK ? "add db record success" : null));
         } catch (Exception e) {
             callback.invoke(exception(e));
@@ -556,6 +560,12 @@ public class SunmiFaceModule extends UniModule {
             SunmiFaceDBIdInfo info = new SunmiFaceDBIdInfo();
             int code = SunmiFaceSDK.searchDB(record, info);
             JSONObject data = dbIdInfoToJson(info);
+            if (code == SunmiFaceStatusCode.FACE_CODE_OK) {
+                JSONObject metadata = findFirstMetadataRecord(options, info.getId());
+                if (metadata != null) {
+                    data.put("metadata", metadata);
+                }
+            }
             callback.invoke(status(code, data, code == SunmiFaceStatusCode.FACE_CODE_OK ? "search db success" : null));
         } catch (Exception e) {
             callback.invoke(exception(e));
@@ -597,14 +607,100 @@ public class SunmiFaceModule extends UniModule {
     public void deleteDBRecord(JSONObject options, UniJSCallback callback) {
         ensureHandle();
         String id = getString(options, "id");
-        if (TextUtils.isEmpty(id)) {
-            callback.invoke(error(SunmiFaceStatusCode.FACE_CODE_IMAGE_ID_ERROR, "id is required"));
+        String imgId = getString(options, "imgId");
+        if (TextUtils.isEmpty(id) && TextUtils.isEmpty(imgId)) {
+            callback.invoke(error(SunmiFaceStatusCode.FACE_CODE_IMAGE_ID_ERROR, "imgId or id is required"));
             return;
         }
-        int code = SunmiFaceSDK.deleteDBRecord(id);
-        JSONObject data = new JSONObject();
-        data.put("id", id);
-        callback.invoke(status(code, data, code == SunmiFaceStatusCode.FACE_CODE_OK ? "delete db record success" : null));
+        try {
+            File metadataFile = resolveMetadataFile(options);
+            JSONArray deletedImgIds = new JSONArray();
+            int code;
+            if (!TextUtils.isEmpty(imgId)) {
+                code = SunmiFaceSDK.deleteDBRecord(imgId);
+                if (code == SunmiFaceStatusCode.FACE_CODE_OK) {
+                    deletedImgIds.add(imgId);
+                    removeMetadataRecords(metadataFile, deletedImgIds);
+                }
+            } else {
+                JSONArray imgIds = findImgIdsById(metadataFile, id);
+                if (imgIds.isEmpty()) {
+                    code = SunmiFaceSDK.deleteDBRecord(id);
+                    if (code == SunmiFaceStatusCode.FACE_CODE_OK) {
+                        deletedImgIds.add(id);
+                    }
+                } else {
+                    code = SunmiFaceStatusCode.FACE_CODE_OK;
+                    for (int i = 0; i < imgIds.size(); i++) {
+                        String currentImgId = imgIds.getString(i);
+                        int deleteCode = SunmiFaceSDK.deleteDBRecord(currentImgId);
+                        if (deleteCode == SunmiFaceStatusCode.FACE_CODE_OK) {
+                            deletedImgIds.add(currentImgId);
+                        } else {
+                            code = deleteCode;
+                            break;
+                        }
+                    }
+                    if (!deletedImgIds.isEmpty()) {
+                        removeMetadataRecords(metadataFile, deletedImgIds);
+                    }
+                }
+            }
+            JSONObject data = new JSONObject();
+            data.put("id", id);
+            data.put("imgId", imgId);
+            data.put("deletedImgIds", deletedImgIds);
+            data.put("deletedCount", deletedImgIds.size());
+            callback.invoke(status(code, data, code == SunmiFaceStatusCode.FACE_CODE_OK ? "delete db record success" : null));
+        } catch (Exception e) {
+            callback.invoke(exception(e));
+        }
+    }
+
+    @UniJSMethod(uiThread = false)
+    public void getAllDBRecords(JSONObject options, UniJSCallback callback) {
+        ensureHandle();
+        try {
+            File metadataFile = resolveMetadataFile(options);
+            JSONArray records = readMetadataArray(metadataFile);
+            JSONObject data = new JSONObject();
+            data.put("records", records);
+            data.put("count", records.size());
+            data.put("metadataPath", metadataFile.getAbsolutePath());
+            callback.invoke(success(data, "get all db records success"));
+        } catch (Exception e) {
+            callback.invoke(exception(e));
+        }
+    }
+
+    @UniJSMethod(uiThread = false)
+    public void clearFaceDatabase(JSONObject options, UniJSCallback callback) {
+        ensureHandle();
+        try {
+            String dbPath = resolveDbFilePath(options);
+            File dbFile = new File(dbPath);
+            File metadataFile = resolveMetadataFile(options);
+            boolean deletedDb = !dbFile.exists() || dbFile.delete();
+            boolean deletedMetadata = !metadataFile.exists() || metadataFile.delete();
+            if (!deletedDb) {
+                callback.invoke(error(SunmiFaceStatusCode.FACE_CODE_FACE_DB_ERROR, "failed to delete db file"));
+                return;
+            }
+            if (!deletedMetadata) {
+                callback.invoke(error(SunmiFaceStatusCode.FACE_CODE_FACE_DB_ERROR, "failed to delete metadata file"));
+                return;
+            }
+            ensureParentDirectory(dbFile);
+            int code = SunmiFaceSDK.initDB(dbPath);
+            JSONObject data = new JSONObject();
+            data.put("dbPath", dbPath);
+            data.put("metadataPath", metadataFile.getAbsolutePath());
+            data.put("deletedDb", deletedDb);
+            data.put("deletedMetadata", deletedMetadata);
+            callback.invoke(status(code, data, code == SunmiFaceStatusCode.FACE_CODE_OK ? "clear face database success" : null));
+        } catch (Exception e) {
+            callback.invoke(exception(e));
+        }
     }
 
     @UniJSMethod(uiThread = false)
@@ -1293,6 +1389,125 @@ public class SunmiFaceModule extends UniModule {
             return TextUtils.isEmpty(assetValue) ? "sunmi_face.db" : new File(normalizePath(assetValue)).getName();
         }
         return new File(normalizePath(value)).getName();
+    }
+
+    private File resolveMetadataFile(JSONObject options) throws IOException {
+        String dbPath = resolveDbFilePath(options);
+        File dbFile = new File(dbPath);
+        File parent = dbFile.getParentFile();
+        if (parent == null) {
+            throw new IOException("invalid db path: " + dbPath);
+        }
+        return new File(parent, METADATA_FILE_NAME);
+    }
+
+    private JSONArray readMetadataArray(File metadataFile) throws IOException {
+        if (metadataFile == null || !metadataFile.exists() || metadataFile.length() <= 0) {
+            return new JSONArray();
+        }
+        JSONArray records = JSONArray.parseArray(readTextFile(metadataFile));
+        return records == null ? new JSONArray() : records;
+    }
+
+    private void writeMetadataArray(File metadataFile, JSONArray records) throws IOException {
+        ensureParentDirectory(metadataFile);
+        writeTextFile(metadataFile, records == null ? "[]" : records.toJSONString());
+    }
+
+    private void saveMetadataRecord(JSONObject options, SunmiFaceDBRecord record, SunmiFaceFeature feature) throws IOException {
+        File metadataFile = resolveMetadataFile(options);
+        JSONArray records = readMetadataArray(metadataFile);
+        String imgId = record.getImgId();
+        if (TextUtils.isEmpty(imgId)) {
+            imgId = getString(options, "imgId");
+        }
+        JSONObject item = new JSONObject();
+        item.put("imgId", imgId);
+        item.put("id", record.getId());
+        item.put("name", record.getName());
+        item.put("phone", getString(options, "phone"));
+        item.put("photoPath", firstNonEmpty(getString(options, "photoPath"), getString(options, "imagePath")));
+        item.put("feature", feature == null ? null : feature.getFeature());
+        item.put("createdAt", System.currentTimeMillis());
+
+        int existingIndex = -1;
+        for (int i = 0; i < records.size(); i++) {
+            JSONObject current = records.getJSONObject(i);
+            if (current != null && TextUtils.equals(imgId, current.getString("imgId"))) {
+                existingIndex = i;
+                break;
+            }
+        }
+        if (existingIndex >= 0) {
+            records.set(existingIndex, item);
+        } else {
+            records.add(item);
+        }
+        writeMetadataArray(metadataFile, records);
+    }
+
+    private JSONArray findImgIdsById(File metadataFile, String id) throws IOException {
+        JSONArray imgIds = new JSONArray();
+        if (TextUtils.isEmpty(id)) {
+            return imgIds;
+        }
+        JSONArray records = readMetadataArray(metadataFile);
+        for (int i = 0; i < records.size(); i++) {
+            JSONObject item = records.getJSONObject(i);
+            if (item != null && TextUtils.equals(id, item.getString("id"))) {
+                String imgId = item.getString("imgId");
+                if (!TextUtils.isEmpty(imgId)) {
+                    imgIds.add(imgId);
+                }
+            }
+        }
+        return imgIds;
+    }
+
+    private void removeMetadataRecords(File metadataFile, JSONArray deletedImgIds) throws IOException {
+        if (deletedImgIds == null || deletedImgIds.isEmpty()) {
+            return;
+        }
+        JSONArray records = readMetadataArray(metadataFile);
+        JSONArray next = new JSONArray();
+        for (int i = 0; i < records.size(); i++) {
+            JSONObject item = records.getJSONObject(i);
+            String imgId = item == null ? null : item.getString("imgId");
+            if (!containsString(deletedImgIds, imgId)) {
+                next.add(item);
+            }
+        }
+        writeMetadataArray(metadataFile, next);
+    }
+
+    private JSONObject findFirstMetadataRecord(JSONObject options, String id) throws IOException {
+        if (TextUtils.isEmpty(id)) {
+            return null;
+        }
+        JSONArray records = readMetadataArray(resolveMetadataFile(options));
+        for (int i = 0; i < records.size(); i++) {
+            JSONObject item = records.getJSONObject(i);
+            if (item != null && TextUtils.equals(id, item.getString("id"))) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    private boolean containsString(JSONArray array, String value) {
+        if (array == null || TextUtils.isEmpty(value)) {
+            return false;
+        }
+        for (int i = 0; i < array.size(); i++) {
+            if (TextUtils.equals(value, array.getString(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String firstNonEmpty(String first, String second) {
+        return TextUtils.isEmpty(first) ? second : first;
     }
 
     private String readAssetConfigValue(String key) throws IOException {

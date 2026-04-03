@@ -110,7 +110,13 @@
     <string name="dcloud_feature_barcode2_no_camera_permission">未获取相机权限</string>
     <string name="dcloud_feature_error_tips">请检查assets/data/properties.xml文件是否添加 %s 相关节点。</string>
     <string name="dcloud_feature_error_tips2">打包时未添加%s模块, 请参考</string>
+    <string name="dcloud_feature_media_livepusher_error_screen_capture">无法获取截图</string>
+    <string name="dcloud_feature_media_livepusher_error_screen_data_convert_fail">截图数据转换失败</string>
     <string name="dcloud_feature_weex_jsfk_not_found_tips">当前环境无法运行“%s”版本的uni-app应用！</string>
+    <string name="dcloud_feature_weex_livepusher_error_tips">当前环境无法正常运行推流功能!</string>
+    <string name="dcloud_feature_weex_livepusher_msg_user_permission_loss_camera">用户禁止使用摄像头</string>
+    <string name="dcloud_feature_weex_livepusher_msg_user_permission_loss_read_phone_state">用户禁止读取设备状态</string>
+    <string name="dcloud_feature_weex_livepusher_msg_user_permission_loss_record">用户禁止使用录音</string>
     <string name="dcloud_feature_weex_msg_cannot_find_file_by_path">无法通过此路径找到相关文件</string>
     <string name="dcloud_feature_weex_msg_page_destroyed">当前页面已销毁</string>
     <string name="dcloud_feature_weex_msg_param_empty">参数为空</string>

@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.android.UniPlugin.app-mergeDebugResources-16:/values-ldrtl-v17/values-ldrtl-v17.xml",
+            "outputFile": "com.android.UniPlugin.app-mergeDebugResources-18:/values-ldrtl-v17/values-ldrtl-v17.xml",
             "map": [
                 {
                     "source": "/Users/panlong/.gradle/caches/transforms-3/5044443b8a92dff7fa937bab0ca870ef/transformed/jetified-uniapp-v8-release/res/values-ldrtl-v17/values-ldrtl-v17.xml",

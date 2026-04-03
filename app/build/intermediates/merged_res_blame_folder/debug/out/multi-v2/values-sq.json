@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.android.UniPlugin.app-mergeDebugResources-16:/values-sq/values-sq.xml",
+            "outputFile": "com.android.UniPlugin.app-mergeDebugResources-18:/values-sq/values-sq.xml",
             "map": [
                 {
                     "source": "/Users/panlong/.gradle/caches/transforms-3/f5e4bff6dddc95c1e4569b2a41c648ee/transformed/core-1.9.0/res/values-sq/values-sq.xml",

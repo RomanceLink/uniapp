@@ -433,7 +433,13 @@
     <string name="dcloud_feature_barcode2_no_camera_permission">no camera permission</string>
     <string name="dcloud_feature_error_tips">please check whether %s related nodes are added in assets/data/properties.xml file.</string>
     <string name="dcloud_feature_error_tips2">%s module was not added when packaging, please refer to</string>
+    <string name="dcloud_feature_media_livepusher_error_screen_capture">screen capture error</string>
+    <string name="dcloud_feature_media_livepusher_error_screen_data_convert_fail">screen data convert error</string>
     <string name="dcloud_feature_weex_jsfk_not_found_tips">The current environment cannot run the uni app application of "%s" version!</string>
+    <string name="dcloud_feature_weex_livepusher_error_tips">current environment can not run the livepusher normally</string>
+    <string name="dcloud_feature_weex_livepusher_msg_user_permission_loss_camera">Users are not allowed to use cameras</string>
+    <string name="dcloud_feature_weex_livepusher_msg_user_permission_loss_read_phone_state">Users are not allowed to read phone state</string>
+    <string name="dcloud_feature_weex_livepusher_msg_user_permission_loss_record">Users are not allowed to use recording</string>
     <string name="dcloud_feature_weex_msg_cannot_find_file_by_path">can not find file by path</string>
     <string name="dcloud_feature_weex_msg_page_destroyed">page had destroyed</string>
     <string name="dcloud_feature_weex_msg_param_empty">param is empty</string>

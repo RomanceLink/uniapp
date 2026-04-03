@@ -2151,6 +2151,157 @@ net.lingala.zip4j.util.Zip4jUtil:
     public static long epochToExtendedDosTime(long)
     public static boolean isStringNullOrEmpty(java.lang.String)
 net.lingala.zip4j.util.ZipVersionUtils
+net.ossrs.yasea.SrsAllocator$Allocation:
+    public void put(int)
+    public void put(short)
+    public void put(byte[])
+net.ossrs.yasea.SrsCameraView$3
+net.ossrs.yasea.SrsCameraView$CameraCallbacks
+net.ossrs.yasea.SrsCameraView:
+    public void <init>(android.content.Context)
+    static synthetic int access$500(net.ossrs.yasea.SrsCameraView)
+    static synthetic int access$502(net.ossrs.yasea.SrsCameraView,int)
+    private android.hardware.Camera$Size adaptPreviewResolutionLand(android.hardware.Camera$Size)
+    private void deleteTextures()
+    public int[] setPreviewResolutionLand(int,int)
+    public boolean startTorch()
+net.ossrs.yasea.SrsEncodeHandler:
+    private static final int MSG_ENCODE_ILLEGAL_ARGUMENT_EXCEPTION
+    private static final int MSG_ENCODE_NETWORK_RESUME
+    private static final int MSG_ENCODE_NETWORK_WEAK
+net.ossrs.yasea.SrsEncoder:
+    public static final int ABITRATE
+    public static final java.lang.String ACODEC
+    public static final int ASAMPLERATE
+    private static final java.lang.String TAG
+    public static final java.lang.String VCODEC
+    public static final int VFPS
+    public static final int VGOP
+    private byte[] hwArgbFrame(int[],int,int)
+    private byte[] hwArgbFrameScaled(int[],int,int,android.graphics.Rect)
+    private byte[] hwYUVNV21FrameScaled(byte[],int,int,android.graphics.Rect)
+    public boolean isSoftEncoder()
+    public void onGetArgbFrame(int[],int,int)
+    public void onGetArgbFrame(int[],int,int,android.graphics.Rect)
+    public void onGetYuvNV21Frame(byte[],int,int,android.graphics.Rect)
+    private void onSoftEncodedData(byte[],long,boolean)
+    public void setScreenOrientation(int)
+    public void setVideoSmoothMode()
+    public void switchToHardEncoder()
+    public void switchToSoftEncoder()
+net.ossrs.yasea.SrsFlvMuxer$SrsAacObjectType
+net.ossrs.yasea.SrsFlvMuxer$SrsAacProfile
+net.ossrs.yasea.SrsFlvMuxer$SrsAvcNaluType
+net.ossrs.yasea.SrsFlvMuxer$SrsCodecAudioSampleRate
+net.ossrs.yasea.SrsFlvMuxer$SrsCodecFlvTag
+net.ossrs.yasea.SrsFlvMuxer$SrsCodecVideo
+net.ossrs.yasea.SrsFlvMuxer$SrsCodecVideoAVCFrame
+net.ossrs.yasea.SrsFlvMuxer$SrsCodecVideoAVCType
+net.ossrs.yasea.SrsFlvMuxer$SrsRawAacStreamCodec
+net.ossrs.yasea.SrsFlvMuxer$SrsRawH264Stream:
+    private static final java.lang.String TAG
+    public boolean isPps(net.ossrs.yasea.SrsFlvMuxer$SrsFlvFrameBytes)
+    public boolean isSps(net.ossrs.yasea.SrsFlvMuxer$SrsFlvFrameBytes)
+net.ossrs.yasea.SrsFlvMuxer:
+    private static final int AUDIO_ALLOC_SIZE
+    private static final int AUDIO_TRACK
+    private static final java.lang.String TAG
+    private static final int VIDEO_ALLOC_SIZE
+    private static final int VIDEO_TRACK
+net.ossrs.yasea.SrsMp4Muxer$1:
+    final synthetic net.ossrs.yasea.SrsMp4Muxer this$0
+    void <init>(net.ossrs.yasea.SrsMp4Muxer)
+    public void run()
+net.ossrs.yasea.SrsMp4Muxer$InterleaveChunkMdat:
+    private long contentSize
+    private boolean first
+    private java.nio.ByteBuffer header
+    private com.coremedia.iso.boxes.ContainerBox parent
+    final synthetic net.ossrs.yasea.SrsMp4Muxer this$0
+    private void <init>(net.ossrs.yasea.SrsMp4Muxer)
+    synthetic void <init>(net.ossrs.yasea.SrsMp4Muxer,net.ossrs.yasea.SrsMp4Muxer$1)
+    static synthetic boolean access$1600(net.ossrs.yasea.SrsMp4Muxer$InterleaveChunkMdat)
+    static synthetic boolean access$1602(net.ossrs.yasea.SrsMp4Muxer$InterleaveChunkMdat,boolean)
+    public void getBox(java.nio.channels.WritableByteChannel)
+    public long getContentSize()
+    public int getHeaderSize()
+    public com.coremedia.iso.boxes.ContainerBox getParent()
+    public long getSize()
+    public java.lang.String getType()
+    private boolean isSmallBox(long)
+    public void parse(java.nio.channels.ReadableByteChannel,java.nio.ByteBuffer,long,com.coremedia.iso.BoxParser)
+    public void setContentSize(long)
+    public void setParent(com.coremedia.iso.boxes.ContainerBox)
+net.ossrs.yasea.SrsMp4Muxer$Mp4Movie:
+    public void addSample(int,long,android.media.MediaCodec$BufferInfo)
+    public void addTrack(android.media.MediaFormat,boolean)
+    public com.googlecode.mp4parser.util.Matrix getMatrix()
+    public java.util.HashMap getTracks()
+    public void removeTrack(int)
+net.ossrs.yasea.SrsMp4Muxer$Sample
+net.ossrs.yasea.SrsMp4Muxer$SrsAvcNaluType
+net.ossrs.yasea.SrsMp4Muxer$SrsEsFrame:
+    public boolean is_audio()
+    public boolean is_video()
+net.ossrs.yasea.SrsMp4Muxer$Track
+net.ossrs.yasea.SrsMp4Muxer:
+    private static final int AUDIO_TRACK
+    private static final java.lang.String TAG
+    private static final int VIDEO_TRACK
+    private java.io.File mRecFile
+    private java.lang.Thread worker
+    static synthetic java.nio.ByteBuffer access$1100(net.ossrs.yasea.SrsMp4Muxer)
+    static synthetic java.util.ArrayList access$1200(net.ossrs.yasea.SrsMp4Muxer)
+    static synthetic java.util.ArrayList access$1300(net.ossrs.yasea.SrsMp4Muxer)
+    static synthetic java.util.Map access$1400()
+    static synthetic boolean access$200(net.ossrs.yasea.SrsMp4Muxer)
+    static synthetic boolean access$202(net.ossrs.yasea.SrsMp4Muxer,boolean)
+    static synthetic java.util.concurrent.ConcurrentLinkedQueue access$300(net.ossrs.yasea.SrsMp4Muxer)
+    static synthetic void access$400(net.ossrs.yasea.SrsMp4Muxer,java.nio.ByteBuffer,android.media.MediaCodec$BufferInfo,boolean)
+    static synthetic java.lang.Object access$500(net.ossrs.yasea.SrsMp4Muxer)
+    static synthetic java.lang.Thread access$600(net.ossrs.yasea.SrsMp4Muxer)
+    private com.coremedia.iso.boxes.FileTypeBox createFileTypeBox()
+    private void createMovie(java.io.File)
+    private com.coremedia.iso.boxes.MovieBox createMovieBox(net.ossrs.yasea.SrsMp4Muxer$Mp4Movie)
+    private com.coremedia.iso.boxes.Box createStbl(net.ossrs.yasea.SrsMp4Muxer$Track)
+    private void createStco(net.ossrs.yasea.SrsMp4Muxer$Track,com.coremedia.iso.boxes.SampleTableBox)
+    private void createStsc(net.ossrs.yasea.SrsMp4Muxer$Track,com.coremedia.iso.boxes.SampleTableBox)
+    private void createStsd(net.ossrs.yasea.SrsMp4Muxer$Track,com.coremedia.iso.boxes.SampleTableBox)
+    private void createStss(net.ossrs.yasea.SrsMp4Muxer$Track,com.coremedia.iso.boxes.SampleTableBox)
+    private void createStsz(net.ossrs.yasea.SrsMp4Muxer$Track,com.coremedia.iso.boxes.SampleTableBox)
+    private void createStts(net.ossrs.yasea.SrsMp4Muxer$Track,com.coremedia.iso.boxes.SampleTableBox)
+    private com.coremedia.iso.boxes.TrackBox createTrackBox(net.ossrs.yasea.SrsMp4Muxer$Track,net.ossrs.yasea.SrsMp4Muxer$Mp4Movie)
+    private void finishMovie()
+    private long getTimescale(net.ossrs.yasea.SrsMp4Muxer$Mp4Movie)
+    public void pause()
+    public boolean record(java.io.File)
+    public void stop()
+    private void writeSampleData(java.nio.ByteBuffer,android.media.MediaCodec$BufferInfo,boolean)
+net.ossrs.yasea.SrsPublisher:
+    public android.hardware.Camera getCamera()
+    public int getVideoFrameCacheCount()
+    public double getmSamplingFps()
+    public boolean isAllFramesUploaded()
+    public boolean isSoftEncoder()
+    public void pauseRecord()
+    public void setPreviewResolutionLand(int,int)
+    public void setScreenOrientation(int)
+    public void setVideoSmoothMode()
+    public boolean startRecord(java.lang.String)
+    public void stopRecord()
+    public void switchToHardEncoder()
+    public void switchToSoftEncoder()
+net.ossrs.yasea.SrsRecordHandler:
+    private static final int MSG_RECORD_FINISHED
+    private static final int MSG_RECORD_ILLEGEL_ARGUMENT_EXCEPTION
+    private static final int MSG_RECORD_IO_EXCEPTION
+    private static final int MSG_RECORD_PAUSE
+    private static final int MSG_RECORD_RESUME
+    private static final int MSG_RECORD_STARTED
+    public void notifyRecordFinished(java.lang.String)
+    public void notifyRecordIOException(java.io.IOException)
+    public void notifyRecordPause()
+    public void notifyRecordStarted(java.lang.String)
 org.chromium.support_lib_boundary.util.BoundaryInterfaceReflectionUtil:
     public static boolean containsFeature(java.lang.String[],java.lang.String)
     public static java.lang.reflect.InvocationHandler[] createInvocationHandlersForArray(java.lang.Object[])
@@ -3768,6 +3919,9 @@ net.lingala.zip4j.io.inputstream.ZipInputStream:
     public void setPassword(char[])
 net.lingala.zip4j.util.PasswordCallback:
     public abstract char[] getPassword()
+net.ossrs.yasea.SrsMp4Muxer$InterleaveChunkMdat
+net.ossrs.yasea.SrsMp4Muxer:
+    private net.ossrs.yasea.SrsMp4Muxer$InterleaveChunkMdat mdat
 org.chromium.support_lib_boundary.util.BoundaryInterfaceReflectionUtil:
     static final synthetic boolean $assertionsDisabled
 org.opencv.android.CameraBridgeViewBase$CvCameraViewListenerAdapter:

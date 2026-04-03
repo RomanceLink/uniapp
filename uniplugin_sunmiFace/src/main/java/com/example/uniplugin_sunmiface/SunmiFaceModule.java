@@ -133,7 +133,7 @@ public class SunmiFaceModule extends UniModule {
                 containsIgnoreCase(Build.BRAND, "sunmi")
                         || containsIgnoreCase(Build.MANUFACTURER, "sunmi"));
 
-        File defaultLicenseFile = new File("/sdcard/SunmiRemoteFiles/license_face.txt");
+        File defaultLicenseFile = new File("/storage/emulated/0/SunmiRemoteFiles/license_face.txt");
         data.put("defaultLicensePath", defaultLicenseFile.getAbsolutePath());
         data.put("defaultLicenseExists", defaultLicenseFile.exists());
         data.put("defaultLicenseReadable", defaultLicenseFile.canRead());
@@ -303,7 +303,7 @@ public class SunmiFaceModule extends UniModule {
         try {
             String licensePath = getString(options, "licensePath");
             if (TextUtils.isEmpty(licensePath)) {
-                licensePath = "/sdcard/SunmiRemoteFiles/license_face.txt";
+                licensePath = "/storage/emulated/0/SunmiRemoteFiles/license_face.txt";
             }
             String licenseContent = readTextFile(new File(normalizePath(licensePath)));
             int code = SunmiFaceSDK.verifyLicense(getSafeContext(), licenseContent);
@@ -383,7 +383,9 @@ public class SunmiFaceModule extends UniModule {
             String configPath = getString(options, "configPath");
             boolean useAssetConfig = options == null || !options.containsKey("useAssetConfig") || options.getBooleanValue("useAssetConfig");
             if (TextUtils.isEmpty(configPath) && useAssetConfig) {
-                configPath = new File(ensureConfigDirectory(context), "config.json").getAbsolutePath();
+                configPath = new File(ensureConfigDirectory(context, options), "config.json").getAbsolutePath();
+            } else if (!TextUtils.isEmpty(configPath)) {
+                configPath = resolveConfigPath(configPath);
             }
             int code = SunmiFaceSDK.init(configPath);
             JSONObject data = new JSONObject();
@@ -472,16 +474,8 @@ public class SunmiFaceModule extends UniModule {
     public void initDB(JSONObject options, UniJSCallback callback) {
         ensureHandle();
         try {
-            Context context = getSafeContext();
-            String dbPath = getString(options, "dbPath");
-            if (TextUtils.isEmpty(dbPath) && context != null) {
-                File dbDir = new File(context.getFilesDir(), "sunmi-face-db");
-                if (!dbDir.exists() && !dbDir.mkdirs()) {
-                    callback.invoke(error(SunmiFaceStatusCode.FACE_CODE_FACE_DB_ERROR, "failed to create db directory"));
-                    return;
-                }
-                dbPath = dbDir.getAbsolutePath();
-            }
+            String dbPath = resolveDbFilePath(options);
+            ensureParentDirectory(new File(dbPath));
             int code = SunmiFaceSDK.initDB(dbPath);
             JSONObject data = new JSONObject();
             data.put("dbPath", dbPath);
@@ -1206,11 +1200,11 @@ public class SunmiFaceModule extends UniModule {
         return result;
     }
 
-    private File ensureConfigDirectory(Context context) throws IOException {
+    private File ensureConfigDirectory(Context context, JSONObject options) throws IOException {
         if (context == null) {
             throw new IllegalStateException("context is null");
         }
-        File configDir = new File(context.getFilesDir(), "sunmi-face-config");
+        File configDir = resolveStorageDirectory(options);
         if (!configDir.exists() && !configDir.mkdirs()) {
             throw new IOException("failed to create config directory");
         }
@@ -1224,23 +1218,113 @@ public class SunmiFaceModule extends UniModule {
     private void rewriteConfigJson(File configDir) throws IOException {
         File configFile = new File(configDir, "config.json");
         JSONObject jsonObject = JSONObject.parseObject(readTextFile(configFile));
-        jsonObject.put("face_model_path", new File(configDir, "face.model").getAbsolutePath());
-        jsonObject.put("detect_model_path", new File(configDir, "detect.model").getAbsolutePath());
-        jsonObject.put("rgb_liveness_model_path", new File(configDir, "rgb_liveness.model").getAbsolutePath());
-        jsonObject.put("nir_liveness_model_path", new File(configDir, "nir_liveness.model").getAbsolutePath());
-        jsonObject.put("attr_model_path", new File(configDir, "attribute.model").getAbsolutePath());
-        jsonObject.put("occlusion_model_path", new File(configDir, "face_occlusion.model").getAbsolutePath());
-        jsonObject.put("headpose_model_path", new File(configDir, "head_pose.model").getAbsolutePath());
-        jsonObject.put("depth_detector", new File(configDir, "depth_detector.yml").getAbsolutePath());
-        jsonObject.put("face_db_file", new File(configDir, "sunmi_face.db").getAbsolutePath());
+        absolutizeConfigValue(jsonObject, configDir, "face_model_path");
+        absolutizeConfigValue(jsonObject, configDir, "detect_model_path");
+        absolutizeConfigValue(jsonObject, configDir, "rgb_liveness_model_path");
+        absolutizeConfigValue(jsonObject, configDir, "nir_liveness_model_path");
+        absolutizeConfigValue(jsonObject, configDir, "attr_model_path");
+        absolutizeConfigValue(jsonObject, configDir, "occlusion_model_path");
+        absolutizeConfigValue(jsonObject, configDir, "headpose_model_path");
+        absolutizeConfigValue(jsonObject, configDir, "depth_detector");
+        absolutizeConfigValue(jsonObject, configDir, "face_db_file");
         writeTextFile(configFile, jsonObject.toJSONString());
+    }
+
+    private void absolutizeConfigValue(JSONObject jsonObject, File baseDir, String key) {
+        if (jsonObject == null || baseDir == null || TextUtils.isEmpty(key)) {
+            return;
+        }
+        String value = jsonObject.getString(key);
+        if (TextUtils.isEmpty(value)) {
+            return;
+        }
+        File file = new File(normalizePath(value));
+        if (!file.isAbsolute()) {
+            jsonObject.put(key, new File(baseDir, value).getAbsolutePath());
+        }
+    }
+
+    private File resolveStorageDirectory(JSONObject options) {
+        String configPath = getString(options, "configPath");
+        if (!TextUtils.isEmpty(configPath)) {
+            File target = new File(normalizePath(configPath));
+            return target.isDirectory() ? target : target.getParentFile();
+        }
+        String dbPath = getString(options, "dbPath");
+        if (!TextUtils.isEmpty(dbPath)) {
+            File target = new File(normalizePath(dbPath));
+            return target.isDirectory() ? target : target.getParentFile();
+        }
+        return new File("/storage/emulated/0", "config");
+    }
+
+    private String resolveConfigPath(String configPath) {
+        File configFile = new File(normalizePath(configPath));
+        if (configFile.isDirectory()) {
+            configFile = new File(configFile, "config.json");
+        }
+        return configFile.getAbsolutePath();
+    }
+
+    private String resolveDbFilePath(JSONObject options) throws IOException {
+        String dbPath = getString(options, "dbPath");
+        File storageDir = resolveStorageDirectory(options);
+        String dbFileName = resolveConfiguredDbFileName(storageDir);
+        if (TextUtils.isEmpty(dbPath)) {
+            return new File(storageDir, dbFileName).getAbsolutePath();
+        }
+        File target = new File(normalizePath(dbPath));
+        if (target.isDirectory() || !target.getName().contains(".")) {
+            target = new File(target, dbFileName);
+        }
+        return target.getAbsolutePath();
+    }
+
+    private String resolveConfiguredDbFileName(File storageDir) throws IOException {
+        File configFile = new File(storageDir, "config.json");
+        if (!configFile.exists()) {
+            String assetValue = readAssetConfigValue("face_db_file");
+            return TextUtils.isEmpty(assetValue) ? "sunmi_face.db" : new File(normalizePath(assetValue)).getName();
+        }
+        JSONObject jsonObject = JSONObject.parseObject(readTextFile(configFile));
+        String value = jsonObject.getString("face_db_file");
+        if (TextUtils.isEmpty(value)) {
+            String assetValue = readAssetConfigValue("face_db_file");
+            return TextUtils.isEmpty(assetValue) ? "sunmi_face.db" : new File(normalizePath(assetValue)).getName();
+        }
+        return new File(normalizePath(value)).getName();
+    }
+
+    private String readAssetConfigValue(String key) throws IOException {
+        Context context = getSafeContext();
+        if (context == null) {
+            return null;
+        }
+        try (InputStream inputStream = context.getAssets().open("config/config.json")) {
+            byte[] bytes = new byte[inputStream.available()];
+            int offset = 0;
+            int len;
+            while (offset < bytes.length
+                    && (len = inputStream.read(bytes, offset, bytes.length - offset)) != -1) {
+                offset += len;
+            }
+            JSONObject jsonObject = JSONObject.parseObject(new String(bytes, 0, offset, StandardCharsets.UTF_8));
+            return jsonObject.getString(key);
+        }
+    }
+
+    private void ensureParentDirectory(File file) throws IOException {
+        File parent = file.getParentFile();
+        if (parent != null && !parent.exists() && !parent.mkdirs()) {
+            throw new IOException("failed to create parent directory: " + parent.getAbsolutePath());
+        }
     }
 
     private void copyAssetIfNeeded(Context context, String assetName, File targetFile) throws IOException {
         if (targetFile.exists() && targetFile.length() > 0) {
             return;
         }
-        try (InputStream inputStream = context.getAssets().open(assetName);
+        try (InputStream inputStream = context.getAssets().open("config/" + assetName);
              FileOutputStream outputStream = new FileOutputStream(targetFile)) {
             byte[] buffer = new byte[8192];
             int len;
@@ -1321,7 +1405,7 @@ public class SunmiFaceModule extends UniModule {
         ExtractionResult extractionResult = null;
         try {
             if (options != null && !TextUtils.isEmpty(getString(options, "dbPath"))) {
-                SunmiFaceSDK.initDB(getString(options, "dbPath"));
+                SunmiFaceSDK.initDB(resolveDbFilePath(options));
             }
 
             JSONObject featureOptions = new JSONObject();

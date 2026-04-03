@@ -142,306 +142,305 @@
 76-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:35:9-33
 77        android:supportsRtl="true"
 77-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:36:9-35
-78        android:testOnly="true"
-79        android:usesCleartextTraffic="true" >
-79-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:175:9-44
-80
-81        <!-- 应用入口 -->
-82        <activity
-82-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:39:9-61:20
-83            android:name="io.dcloud.PandoraEntry"
-83-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:40:13-50
-84            android:configChanges="orientation|keyboardHidden|screenSize|mcc|mnc|fontScale"
-84-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:42:13-92
-85            android:hardwareAccelerated="true"
-85-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:43:13-47
-86            android:theme="@style/TranslucentTheme"
-86-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:41:13-52
-87            android:windowSoftInputMode="adjustResize" >
-87-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:44:13-55
-88            <intent-filter>
-88-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:45:13-51:29
-89                <data android:scheme="hbuilder" />
-89-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:46:17-50
-89-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:46:23-48
-90
-91                <action android:name="android.intent.action.VIEW" />
-91-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:47:17-68
-91-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:47:25-66
-92
-93                <category android:name="android.intent.category.DEFAULT" />
-93-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:49:17-75
-93-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:49:27-73
-94                <category android:name="android.intent.category.BROWSABLE" />
-94-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:50:17-77
-94-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:50:27-75
-95            </intent-filter>
-96            <intent-filter>
-96-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:52:13-56:29
-97                <data android:mimeType="image/*" />
-97-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:46:17-50
-97-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:53:23-49
-98
-99                <action android:name="android.intent.action.SEND" />
-99-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:54:17-68
-99-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:54:25-66
-100
-101                <category android:name="android.intent.category.DEFAULT" />
-101-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:49:17-75
-101-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:49:27-73
-102            </intent-filter>
-103            <intent-filter>
-103-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:57:13-60:29
-104                <action android:name="android.intent.action.MAIN" />
-104-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:58:17-68
-104-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:58:25-66
-105
-106                <category android:name="android.intent.category.LAUNCHER" />
-106-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:59:17-76
-106-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:59:27-74
-107            </intent-filter>
-108        </activity>
-109
-110        <meta-data
-110-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:62:9-63:35
-111            android:name="dcloud_uninview_background"
-111-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:62:20-61
-112            android:value="true" />
-112-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:63:13-33
-113
-114        <activity
-114-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:65:9-89:20
-115            android:name="io.dcloud.PandoraEntryActivity"
-115-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:66:13-58
-116            android:configChanges="orientation|keyboardHidden|screenSize|mcc|mnc|fontScale|keyboard|smallestScreenSize|screenLayout|screenSize|uiMode"
-116-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:68:13-151
-117            android:hardwareAccelerated="true"
-117-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:69:13-47
-118            android:launchMode="singleTask"
-118-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:67:13-44
-119            android:permission="com.miui.securitycenter.permission.AppPermissionsEditor"
-119-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:70:13-89
-120            android:screenOrientation="user"
-120-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:71:13-45
-121            android:theme="@style/DCloudTheme"
-121-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:72:13-47
-122            android:windowSoftInputMode="adjustResize" >
-122-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:73:13-55
-123            <intent-filter>
-123-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:75:13-88:29
-124                <category android:name="android.intent.category.DEFAULT" />
-124-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:49:17-75
-124-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:49:27-73
-125                <category android:name="android.intent.category.BROWSABLE" />
-125-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:50:17-77
-125-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:50:27-75
-126
-127                <action android:name="android.intent.action.VIEW" />
-127-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:47:17-68
-127-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:47:25-66
-128
-129                <data android:scheme=" " />
-129-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:46:17-50
-129-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:46:23-48
-130            </intent-filter>
-131        </activity>
-132
-133        <meta-data
-133-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:90:9-92:64
-134            android:name="dcloud_appkey"
-134-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:91:13-41
-135            android:value="4a48f0d82daf910cbe64b58a16c0277c" />
-135-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:92:13-61
-136        <!--
-137        <activity
-138            android:name="io.dcloud.imagepick.CustomGalleryActivity"
-139            android:noHistory="true"
-140            android:exported="false"/>
-141        -->
-142        <activity
-142-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:184:9-190:58
-143            android:name="io.dcloud.feature.nativeObj.photoview.PhotoActivity"
-143-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:185:13-79
-144            android:configChanges="orientation|keyboardHidden"
-144-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:186:13-63
-145            android:exported="false"
-145-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:187:13-37
-146            android:noHistory="false"
-146-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:188:13-38
-147            android:screenOrientation="behind"
-147-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:189:13-47
-148            android:theme="@style/DeviceDefault.Light" />
-148-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:190:13-55
-149        <activity
-149-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:191:9-200:58
-150            android:name="io.dcloud.WebAppActivity"
-150-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:192:13-52
-151            android:configChanges="orientation|keyboard|keyboardHidden|smallestScreenSize|screenLayout|screenSize|mcc|mnc|fontScale|navigation"
-151-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:193:13-144
-152            android:hardwareAccelerated="true"
-152-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:194:13-47
-153            android:icon="@drawable/dcloud_recent"
-153-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:195:13-51
-154            android:label="@string/stream_my"
-154-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:196:13-46
-155            android:launchMode="singleTask"
-155-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:197:13-44
-156            android:screenOrientation="portrait"
-156-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:198:13-49
-157            android:theme="@style/DCloudTheme"
-157-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:199:13-47
-158            android:windowSoftInputMode="adjustResize" />
-158-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:200:13-55
-159        <activity
-159-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:201:9-205:75
-160            android:name="io.dcloud.ProcessMediator"
-160-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:202:13-53
-161            android:excludeFromRecents="true"
-161-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:203:13-46
-162            android:exported="false"
-162-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:204:13-37
-163            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-163-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:205:13-72
-164        <activity
-164-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:206:9-212:20
-165            android:name="io.dcloud.WebviewActivity"
-165-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:207:13-53
-166            android:exported="false"
-166-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:208:13-37
-167            android:screenOrientation="portrait"
-167-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:209:13-49
-168            android:theme="@style/ThemeNoTitleBar"
-168-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:210:13-51
-169            android:windowSoftInputMode="adjustPan" >
-169-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:211:13-52
-170        </activity> <!-- gallery******start -->
-171        <activity
-171-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:215:9-220:63
-172            android:name="com.dmcbig.mediapicker.PickerActivity"
-172-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:216:13-65
-173            android:configChanges="orientation|screenSize"
-173-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:217:13-59
-174            android:exported="false"
-174-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:218:13-37
-175            android:theme="@style/DeviceDefault.Light"
-175-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:219:13-55
-176            android:windowSoftInputMode="stateAlwaysHidden" />
-176-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:220:13-60
-177        <activity
-177-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:221:9-226:63
-178            android:name="com.dmcbig.mediapicker.PreviewActivity"
-178-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:222:13-66
-179            android:configChanges="orientation|screenSize"
-179-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:223:13-59
-180            android:exported="false"
-180-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:224:13-37
-181            android:theme="@style/DeviceDefault.Light"
-181-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:225:13-55
-182            android:windowSoftInputMode="stateAlwaysHidden" /> <!-- gallery******end -->
-182-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:226:13-60
-183        <provider
-183-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:229:9-237:20
-184            android:name="io.dcloud.common.util.DCloud_FileProvider"
-184-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:230:13-69
-185            android:authorities="uni.UNI6331937.dc.fileprovider"
-185-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:231:13-67
-186            android:exported="false"
-186-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:232:13-37
-187            android:grantUriPermissions="true" >
-187-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:233:13-47
-188            <meta-data
-188-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:234:13-236:64
-189                android:name="android.support.FILE_PROVIDER_PATHS"
-189-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:235:17-67
-190                android:resource="@xml/dcloud_file_provider" />
-190-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:236:17-61
-191        </provider>
-192        <!--
-193            <meta-data
-194            android:name="DCLOUD_STREAMAPP_CHANNEL"
-195            android:value="io.dcloud.%APPID%|%APPID%|" />
-196        -->
-197        <meta-data
-197-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:244:9-246:35
-198            android:name="android.max_aspect"
-198-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:245:13-46
-199            android:value="2.4" />
-199-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:246:13-32
-200
-201        <activity
-201-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:248:9-253:63
-202            android:name="io.dcloud.feature.gallery.imageedit.IMGEditActivity"
-202-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:249:13-79
-203            android:configChanges="orientation|keyboardHidden|screenSize"
-203-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:250:13-74
-204            android:exported="false"
-204-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:251:13-37
-205            android:theme="@style/ImageEditTheme"
-205-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:252:13-50
-206            android:windowSoftInputMode="stateAlwaysHidden" /> <!-- 广告相关配置开始 -->
-206-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:253:13-60
-207        <activity
-207-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:256:9-261:55
-208            android:name="io.dcloud.sdk.activity.WebViewActivity"
-208-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:257:13-66
-209            android:exported="false"
-209-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:258:13-37
-210            android:screenOrientation="portrait"
-210-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:259:13-49
-211            android:theme="@style/ThemeNoTitleBar"
-211-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:260:13-51
-212            android:windowSoftInputMode="adjustPan" />
-212-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:261:13-52
-213
-214        <service
-214-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:263:9-266:72
-215            android:name="io.dcloud.sdk.base.service.DownloadService"
-215-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:264:13-70
-216            android:exported="false"
-216-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:265:13-37
-217            android:permission="android.permission.BIND_JOB_SERVICE" />
-217-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:266:13-69
-218
-219        <provider
-219-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:268:9-276:20
-220            android:name="io.dcloud.sdk.base.service.provider.DCloudAdFileProvider"
-220-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:269:13-84
-221            android:authorities="uni.UNI6331937.dc.fileprovider"
-221-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:270:13-67
-222            android:exported="false"
-222-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:271:13-37
-223            android:grantUriPermissions="true" >
-223-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:272:13-47
-224            <meta-data
-224-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:234:13-236:64
-225                android:name="android.support.FILE_PROVIDER_PATHS"
-225-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:235:17-67
-226                android:resource="@xml/dcloud_gg_file_provider" />
-226-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:236:17-61
-227        </provider>
-228
-229        <receiver
-229-->[uniapp-v8-release.aar] /Users/panlong/.gradle/caches/transforms-3/5044443b8a92dff7fa937bab0ca870ef/transformed/jetified-uniapp-v8-release/AndroidManifest.xml:30:9-34:20
-230            android:name="com.taobao.weex.WXGlobalEventReceiver"
-230-->[uniapp-v8-release.aar] /Users/panlong/.gradle/caches/transforms-3/5044443b8a92dff7fa937bab0ca870ef/transformed/jetified-uniapp-v8-release/AndroidManifest.xml:31:13-65
-231            android:enabled="true"
-231-->[uniapp-v8-release.aar] /Users/panlong/.gradle/caches/transforms-3/5044443b8a92dff7fa937bab0ca870ef/transformed/jetified-uniapp-v8-release/AndroidManifest.xml:32:13-35
-232            android:exported="false" >
-232-->[uniapp-v8-release.aar] /Users/panlong/.gradle/caches/transforms-3/5044443b8a92dff7fa937bab0ca870ef/transformed/jetified-uniapp-v8-release/AndroidManifest.xml:33:13-37
-233        </receiver>
-234
-235        <activity
-235-->[:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:9-10:84
-236            android:name="io.dcloud.uniplugin.NativePageActivity"
-236-->[:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:13-66
-237            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" />
-237-->[:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:13-81
-238        <activity
-238-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:18:9-20:84
-239            android:name="com.example.uniplugin_sunmiface.SunmiFaceRecognizeActivity"
-239-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:19:13-86
-240            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" />
-240-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:20:13-81
-241    </application>
-242
-243</manifest>
+78        android:usesCleartextTraffic="true" >
+78-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:175:9-44
+79
+80        <!-- 应用入口 -->
+81        <activity
+81-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:39:9-61:20
+82            android:name="io.dcloud.PandoraEntry"
+82-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:40:13-50
+83            android:configChanges="orientation|keyboardHidden|screenSize|mcc|mnc|fontScale"
+83-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:42:13-92
+84            android:hardwareAccelerated="true"
+84-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:43:13-47
+85            android:theme="@style/TranslucentTheme"
+85-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:41:13-52
+86            android:windowSoftInputMode="adjustResize" >
+86-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:44:13-55
+87            <intent-filter>
+87-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:45:13-51:29
+88                <data android:scheme="hbuilder" />
+88-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:46:17-50
+88-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:46:23-48
+89
+90                <action android:name="android.intent.action.VIEW" />
+90-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:47:17-68
+90-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:47:25-66
+91
+92                <category android:name="android.intent.category.DEFAULT" />
+92-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:49:17-75
+92-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:49:27-73
+93                <category android:name="android.intent.category.BROWSABLE" />
+93-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:50:17-77
+93-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:50:27-75
+94            </intent-filter>
+95            <intent-filter>
+95-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:52:13-56:29
+96                <data android:mimeType="image/*" />
+96-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:46:17-50
+96-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:53:23-49
+97
+98                <action android:name="android.intent.action.SEND" />
+98-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:54:17-68
+98-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:54:25-66
+99
+100                <category android:name="android.intent.category.DEFAULT" />
+100-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:49:17-75
+100-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:49:27-73
+101            </intent-filter>
+102            <intent-filter>
+102-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:57:13-60:29
+103                <action android:name="android.intent.action.MAIN" />
+103-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:58:17-68
+103-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:58:25-66
+104
+105                <category android:name="android.intent.category.LAUNCHER" />
+105-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:59:17-76
+105-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:59:27-74
+106            </intent-filter>
+107        </activity>
+108
+109        <meta-data
+109-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:62:9-63:35
+110            android:name="dcloud_uninview_background"
+110-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:62:20-61
+111            android:value="true" />
+111-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:63:13-33
+112
+113        <activity
+113-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:65:9-89:20
+114            android:name="io.dcloud.PandoraEntryActivity"
+114-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:66:13-58
+115            android:configChanges="orientation|keyboardHidden|screenSize|mcc|mnc|fontScale|keyboard|smallestScreenSize|screenLayout|screenSize|uiMode"
+115-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:68:13-151
+116            android:hardwareAccelerated="true"
+116-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:69:13-47
+117            android:launchMode="singleTask"
+117-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:67:13-44
+118            android:permission="com.miui.securitycenter.permission.AppPermissionsEditor"
+118-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:70:13-89
+119            android:screenOrientation="user"
+119-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:71:13-45
+120            android:theme="@style/DCloudTheme"
+120-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:72:13-47
+121            android:windowSoftInputMode="adjustResize" >
+121-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:73:13-55
+122            <intent-filter>
+122-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:75:13-88:29
+123                <category android:name="android.intent.category.DEFAULT" />
+123-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:49:17-75
+123-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:49:27-73
+124                <category android:name="android.intent.category.BROWSABLE" />
+124-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:50:17-77
+124-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:50:27-75
+125
+126                <action android:name="android.intent.action.VIEW" />
+126-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:47:17-68
+126-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:47:25-66
+127
+128                <data android:scheme=" " />
+128-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:46:17-50
+128-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:46:23-48
+129            </intent-filter>
+130        </activity>
+131
+132        <meta-data
+132-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:90:9-92:64
+133            android:name="dcloud_appkey"
+133-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:91:13-41
+134            android:value="4a48f0d82daf910cbe64b58a16c0277c" />
+134-->/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:92:13-61
+135        <!--
+136        <activity
+137            android:name="io.dcloud.imagepick.CustomGalleryActivity"
+138            android:noHistory="true"
+139            android:exported="false"/>
+140        -->
+141        <activity
+141-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:184:9-190:58
+142            android:name="io.dcloud.feature.nativeObj.photoview.PhotoActivity"
+142-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:185:13-79
+143            android:configChanges="orientation|keyboardHidden"
+143-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:186:13-63
+144            android:exported="false"
+144-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:187:13-37
+145            android:noHistory="false"
+145-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:188:13-38
+146            android:screenOrientation="behind"
+146-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:189:13-47
+147            android:theme="@style/DeviceDefault.Light" />
+147-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:190:13-55
+148        <activity
+148-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:191:9-200:58
+149            android:name="io.dcloud.WebAppActivity"
+149-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:192:13-52
+150            android:configChanges="orientation|keyboard|keyboardHidden|smallestScreenSize|screenLayout|screenSize|mcc|mnc|fontScale|navigation"
+150-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:193:13-144
+151            android:hardwareAccelerated="true"
+151-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:194:13-47
+152            android:icon="@drawable/dcloud_recent"
+152-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:195:13-51
+153            android:label="@string/stream_my"
+153-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:196:13-46
+154            android:launchMode="singleTask"
+154-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:197:13-44
+155            android:screenOrientation="portrait"
+155-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:198:13-49
+156            android:theme="@style/DCloudTheme"
+156-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:199:13-47
+157            android:windowSoftInputMode="adjustResize" />
+157-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:200:13-55
+158        <activity
+158-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:201:9-205:75
+159            android:name="io.dcloud.ProcessMediator"
+159-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:202:13-53
+160            android:excludeFromRecents="true"
+160-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:203:13-46
+161            android:exported="false"
+161-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:204:13-37
+162            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+162-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:205:13-72
+163        <activity
+163-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:206:9-212:20
+164            android:name="io.dcloud.WebviewActivity"
+164-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:207:13-53
+165            android:exported="false"
+165-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:208:13-37
+166            android:screenOrientation="portrait"
+166-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:209:13-49
+167            android:theme="@style/ThemeNoTitleBar"
+167-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:210:13-51
+168            android:windowSoftInputMode="adjustPan" >
+168-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:211:13-52
+169        </activity> <!-- gallery******start -->
+170        <activity
+170-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:215:9-220:63
+171            android:name="com.dmcbig.mediapicker.PickerActivity"
+171-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:216:13-65
+172            android:configChanges="orientation|screenSize"
+172-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:217:13-59
+173            android:exported="false"
+173-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:218:13-37
+174            android:theme="@style/DeviceDefault.Light"
+174-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:219:13-55
+175            android:windowSoftInputMode="stateAlwaysHidden" />
+175-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:220:13-60
+176        <activity
+176-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:221:9-226:63
+177            android:name="com.dmcbig.mediapicker.PreviewActivity"
+177-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:222:13-66
+178            android:configChanges="orientation|screenSize"
+178-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:223:13-59
+179            android:exported="false"
+179-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:224:13-37
+180            android:theme="@style/DeviceDefault.Light"
+180-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:225:13-55
+181            android:windowSoftInputMode="stateAlwaysHidden" /> <!-- gallery******end -->
+181-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:226:13-60
+182        <provider
+182-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:229:9-237:20
+183            android:name="io.dcloud.common.util.DCloud_FileProvider"
+183-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:230:13-69
+184            android:authorities="uni.UNI6331937.dc.fileprovider"
+184-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:231:13-67
+185            android:exported="false"
+185-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:232:13-37
+186            android:grantUriPermissions="true" >
+186-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:233:13-47
+187            <meta-data
+187-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:234:13-236:64
+188                android:name="android.support.FILE_PROVIDER_PATHS"
+188-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:235:17-67
+189                android:resource="@xml/dcloud_file_provider" />
+189-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:236:17-61
+190        </provider>
+191        <!--
+192            <meta-data
+193            android:name="DCLOUD_STREAMAPP_CHANNEL"
+194            android:value="io.dcloud.%APPID%|%APPID%|" />
+195        -->
+196        <meta-data
+196-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:244:9-246:35
+197            android:name="android.max_aspect"
+197-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:245:13-46
+198            android:value="2.4" />
+198-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:246:13-32
+199
+200        <activity
+200-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:248:9-253:63
+201            android:name="io.dcloud.feature.gallery.imageedit.IMGEditActivity"
+201-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:249:13-79
+202            android:configChanges="orientation|keyboardHidden|screenSize"
+202-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:250:13-74
+203            android:exported="false"
+203-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:251:13-37
+204            android:theme="@style/ImageEditTheme"
+204-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:252:13-50
+205            android:windowSoftInputMode="stateAlwaysHidden" /> <!-- 广告相关配置开始 -->
+205-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:253:13-60
+206        <activity
+206-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:256:9-261:55
+207            android:name="io.dcloud.sdk.activity.WebViewActivity"
+207-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:257:13-66
+208            android:exported="false"
+208-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:258:13-37
+209            android:screenOrientation="portrait"
+209-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:259:13-49
+210            android:theme="@style/ThemeNoTitleBar"
+210-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:260:13-51
+211            android:windowSoftInputMode="adjustPan" />
+211-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:261:13-52
+212
+213        <service
+213-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:263:9-266:72
+214            android:name="io.dcloud.sdk.base.service.DownloadService"
+214-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:264:13-70
+215            android:exported="false"
+215-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:265:13-37
+216            android:permission="android.permission.BIND_JOB_SERVICE" />
+216-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:266:13-69
+217
+218        <provider
+218-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:268:9-276:20
+219            android:name="io.dcloud.sdk.base.service.provider.DCloudAdFileProvider"
+219-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:269:13-84
+220            android:authorities="uni.UNI6331937.dc.fileprovider"
+220-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:270:13-67
+221            android:exported="false"
+221-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:271:13-37
+222            android:grantUriPermissions="true" >
+222-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:272:13-47
+223            <meta-data
+223-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:234:13-236:64
+224                android:name="android.support.FILE_PROVIDER_PATHS"
+224-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:235:17-67
+225                android:resource="@xml/dcloud_gg_file_provider" />
+225-->[lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/520db42e4320b8b812e33cd60f0271b2/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:236:17-61
+226        </provider>
+227
+228        <receiver
+228-->[uniapp-v8-release.aar] /Users/panlong/.gradle/caches/transforms-3/5044443b8a92dff7fa937bab0ca870ef/transformed/jetified-uniapp-v8-release/AndroidManifest.xml:30:9-34:20
+229            android:name="com.taobao.weex.WXGlobalEventReceiver"
+229-->[uniapp-v8-release.aar] /Users/panlong/.gradle/caches/transforms-3/5044443b8a92dff7fa937bab0ca870ef/transformed/jetified-uniapp-v8-release/AndroidManifest.xml:31:13-65
+230            android:enabled="true"
+230-->[uniapp-v8-release.aar] /Users/panlong/.gradle/caches/transforms-3/5044443b8a92dff7fa937bab0ca870ef/transformed/jetified-uniapp-v8-release/AndroidManifest.xml:32:13-35
+231            android:exported="false" >
+231-->[uniapp-v8-release.aar] /Users/panlong/.gradle/caches/transforms-3/5044443b8a92dff7fa937bab0ca870ef/transformed/jetified-uniapp-v8-release/AndroidManifest.xml:33:13-37
+232        </receiver>
+233
+234        <activity
+234-->[:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:9-10:84
+235            android:name="io.dcloud.uniplugin.NativePageActivity"
+235-->[:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:13-66
+236            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" />
+236-->[:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:13-81
+237        <activity
+237-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:18:9-20:84
+238            android:name="com.example.uniplugin_sunmiface.SunmiFaceRecognizeActivity"
+238-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:19:13-86
+239            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" />
+239-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:20:13-81
+240    </application>
+241
+242</manifest>

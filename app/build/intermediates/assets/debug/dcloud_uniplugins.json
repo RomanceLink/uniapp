@@ -55,6 +55,11 @@
           "type": "module",
           "name": "sunmiFace",
           "class": "com.example.uniplugin_sunmiface.SunmiFaceModule"
+        },
+        {
+          "type": "component",
+          "name": "sunmiFaceCamera",
+          "class": "com.example.uniplugin_sunmiface.SunmiFaceCameraComponent"
         }
       ]
     }

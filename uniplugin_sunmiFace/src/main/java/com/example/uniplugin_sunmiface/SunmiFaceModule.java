@@ -69,6 +69,7 @@ public class SunmiFaceModule extends UniModule {
     private static final String FACE_EVENT_NAME = "SunmiFaceEvent";
     private static volatile AbsSDKInstance faceEventSDKInstance = null;
     private static final Handler MAIN = new Handler(Looper.getMainLooper());
+    private static SunmiFaceDetectOverlay activeDetectOverlay = null;
 
     private static final String[] REQUIRED_PERMISSIONS = new String[]{
             "android.permission.READ_EXTERNAL_STORAGE",
@@ -257,13 +258,75 @@ public class SunmiFaceModule extends UniModule {
         intent.putExtra("showSwitchCameraButton", !recognizeOptions.containsKey("showSwitchCameraButton") || recognizeOptions.getBooleanValue("showSwitchCameraButton"));
         // 让“检测文字”交给前端：可把状态栏隐藏
         intent.putExtra("showStatusText", !recognizeOptions.containsKey("showStatusText") || recognizeOptions.getBooleanValue("showStatusText"));
+        intent.putExtra("autoStartAnalyze", !recognizeOptions.containsKey("autoStartAnalyze") || recognizeOptions.getBooleanValue("autoStartAnalyze"));
         // 某些机型启用系统人脸检测会导致 native 崩溃（scudo/double free），默认关闭更稳
         intent.putExtra("enableSystemFaceDetection", recognizeOptions.containsKey("enableSystemFaceDetection") && recognizeOptions.getBooleanValue("enableSystemFaceDetection"));
         // 允许前端调整预览方向/抓拍图片方向，避免不同机型“倒的”
         intent.putExtra("displayOrientationDeg", recognizeOptions.containsKey("displayOrientationDeg") ? recognizeOptions.getIntValue("displayOrientationDeg") : 90);
         intent.putExtra("captureImageRotationDeg", recognizeOptions.containsKey("captureImageRotationDeg") ? recognizeOptions.getIntValue("captureImageRotationDeg") : 0);
         intent.putExtra("captureMirrorX", recognizeOptions.containsKey("captureMirrorX") && recognizeOptions.getBooleanValue("captureMirrorX"));
+        intent.putExtra("predictMode", recognizeOptions.containsKey("predictMode")
+                ? recognizeOptions.getIntValue("predictMode")
+                : SunmiFaceMode.PredictMode_Feature);
+        intent.putExtra("livenessMode", recognizeOptions.containsKey("livenessMode")
+                ? recognizeOptions.getIntValue("livenessMode")
+                : SunmiFaceLivenessMode.LivenessMode_None);
+        intent.putExtra("qualityMode", recognizeOptions.containsKey("qualityMode")
+                ? recognizeOptions.getIntValue("qualityMode")
+                : SunmiFaceQualityMode.QualityMode_None);
+        intent.putExtra("maxFaceCount", recognizeOptions.containsKey("maxFaceCount")
+                ? Math.max(1, recognizeOptions.getIntValue("maxFaceCount"))
+                : 1);
+        intent.putExtra("analyzeIntervalMs", recognizeOptions.containsKey("analyzeIntervalMs")
+                ? Math.max(300, recognizeOptions.getIntValue("analyzeIntervalMs"))
+                : 700);
+        intent.putExtra("previewDecodeMaxSize", recognizeOptions.containsKey("previewDecodeMaxSize")
+                ? Math.max(240, recognizeOptions.getIntValue("previewDecodeMaxSize"))
+                : (recognizeOptions.containsKey("decodeMaxSize")
+                ? Math.max(240, recognizeOptions.getIntValue("decodeMaxSize"))
+                : 640));
+        intent.putExtra("minFaceSize", recognizeOptions.containsKey("minFaceSize")
+                ? Math.max(0, recognizeOptions.getIntValue("minFaceSize"))
+                : 0);
+        intent.putExtra("distanceThreshold", recognizeOptions.containsKey("distanceThreshold")
+                ? recognizeOptions.getFloatValue("distanceThreshold")
+                : 0f);
         ((Activity) context).startActivityForResult(intent, REQUEST_CODE_FACE_RECOGNIZE);
+    }
+
+    @UniJSMethod(uiThread = true)
+    public void startFaceDetect(JSONObject options, UniJSCallback callback) {
+        Context context = getSafeContext();
+        if (!(context instanceof Activity)) {
+            callback.invoke(error(SunmiFaceStatusCode.FACE_CODE_OTHER_ERROR, "context is not activity"));
+            return;
+        }
+        stopActiveDetectOverlay("replaced", "已替换上一层人脸识别");
+        JSONObject detectOptions = options == null ? new JSONObject() : options;
+        activeDetectOverlay = new SunmiFaceDetectOverlay((Activity) context, detectOptions, callback, false);
+        activeDetectOverlay.start();
+    }
+
+    @UniJSMethod(uiThread = true)
+    public JSONObject stopFaceDetect() {
+        stopActiveDetectOverlay("stopped", "已关闭人脸识别");
+        return success(null, "stop face detect success");
+    }
+
+    @UniJSMethod(uiThread = true)
+    public void openFaceDetect(JSONObject options, UniJSCallback callback) {
+        Context context = getSafeContext();
+        if (!(context instanceof Activity)) {
+            callback.invoke(error(SunmiFaceStatusCode.FACE_CODE_OTHER_ERROR, "context is not activity"));
+            return;
+        }
+        stopActiveDetectOverlay("replaced", "已替换上一层人脸识别");
+        JSONObject detectOptions = options == null ? new JSONObject() : options;
+        if (!detectOptions.containsKey("autoStopOnRecognize")) {
+            detectOptions.put("autoStopOnRecognize", true);
+        }
+        activeDetectOverlay = new SunmiFaceDetectOverlay((Activity) context, detectOptions, callback, true);
+        activeDetectOverlay.start();
     }
 
     // 给 Activity 调用：通过全局事件推送实时状态
@@ -276,6 +339,14 @@ public class SunmiFaceModule extends UniModule {
             } catch (Throwable ignored) {
             }
         });
+    }
+
+    private void stopActiveDetectOverlay(String eventType, String message) {
+        SunmiFaceDetectOverlay overlay = activeDetectOverlay;
+        activeDetectOverlay = null;
+        if (overlay != null) {
+            overlay.stop(eventType, message);
+        }
     }
 
     @UniJSMethod(uiThread = false)

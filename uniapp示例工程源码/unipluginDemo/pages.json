@@ -23,6 +23,12 @@
 			"style": {
 				"navigationBarTitleText": "RichAlert"
 			}
+		},
+		{
+			"path": "pages/sample/sunmiFaceCamera",
+			"style": {
+				"navigationBarTitleText": "SunmiFace相机"
+			}
 		}
 	],
 	"globalStyle": {

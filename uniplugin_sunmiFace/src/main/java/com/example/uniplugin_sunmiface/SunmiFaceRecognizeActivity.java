@@ -22,11 +22,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sunmi.facelib.SunmiFaceLivenessMode;
+import com.sunmi.facelib.SunmiFaceMode;
+import com.sunmi.facelib.SunmiFaceQualityMode;
+import com.sunmi.facelib.SunmiFaceSDK;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolder.Callback, Camera.PictureCallback, Camera.FaceDetectionListener {
 
     private FrameLayout rootView;
@@ -42,6 +45,8 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     private boolean showSwitchCameraButton = true;
     private boolean showStatusText = true;
     private boolean enableSystemFaceDetection = false;
+    private boolean autoStartAnalyze = true;
+    private boolean detectionEnabled = true;
     // 预览显示方向（只影响预览，不自动修正图片像素方向）
     private int displayOrientationDeg = 90;
     // 保存图片时是否旋转/镜像到“前端期望”的方向
@@ -51,6 +56,15 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     private boolean lastFacePresent = false;
     private volatile boolean destroyed = false;
     private volatile boolean finishing = false;
+    private String lastStatusMessage = "";
+    private int recognizePredictMode = SunmiFaceMode.PredictMode_Feature;
+    private int recognizeLivenessMode = SunmiFaceLivenessMode.LivenessMode_None;
+    private int recognizeQualityMode = SunmiFaceQualityMode.QualityMode_None;
+    private int recognizeMaxFaceCount = 1;
+    private int analyzeIntervalMs = 700;
+    private int previewDecodeMaxSize = 640;
+    private int minFaceSize = 0;
+    private float distanceThreshold = 0f;
     private final Runnable autoCaptureRunnable = new Runnable() {
         @Override
         public void run() {
@@ -62,15 +76,26 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SunmiFaceKeepAliveService.start(this);
         preferFrontCamera = getIntent().getBooleanExtra("preferFrontCamera", true);
         autoCaptureDelayMs = Math.max(300, getIntent().getIntExtra("autoCaptureDelayMs", 800));
         showCancelButton = getIntent().getBooleanExtra("showCancelButton", true);
         showSwitchCameraButton = getIntent().getBooleanExtra("showSwitchCameraButton", true);
         showStatusText = getIntent().getBooleanExtra("showStatusText", true);
         enableSystemFaceDetection = getIntent().getBooleanExtra("enableSystemFaceDetection", false);
+        autoStartAnalyze = !getIntent().hasExtra("autoStartAnalyze") || getIntent().getBooleanExtra("autoStartAnalyze", true);
+        detectionEnabled = autoStartAnalyze;
         displayOrientationDeg = getIntent().getIntExtra("displayOrientationDeg", 90);
         captureImageRotationDeg = getIntent().getIntExtra("captureImageRotationDeg", 0);
         captureMirrorX = getIntent().getBooleanExtra("captureMirrorX", false);
+        recognizePredictMode = getIntent().getIntExtra("predictMode", SunmiFaceMode.PredictMode_Feature);
+        recognizeLivenessMode = getIntent().getIntExtra("livenessMode", SunmiFaceLivenessMode.LivenessMode_None);
+        recognizeQualityMode = getIntent().getIntExtra("qualityMode", SunmiFaceQualityMode.QualityMode_None);
+        recognizeMaxFaceCount = Math.max(1, getIntent().getIntExtra("maxFaceCount", 1));
+        analyzeIntervalMs = Math.max(300, getIntent().getIntExtra("analyzeIntervalMs", 700));
+        previewDecodeMaxSize = Math.max(240, getIntent().getIntExtra("previewDecodeMaxSize", 640));
+        minFaceSize = Math.max(0, getIntent().getIntExtra("minFaceSize", 0));
+        distanceThreshold = getIntent().getFloatExtra("distanceThreshold", 0f);
         setContentView(buildContentView());
     }
 
@@ -130,6 +155,28 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
                 actions.addView(switchButton, switchParams);
             }
 
+            if (!autoStartAnalyze || !enableSystemFaceDetection) {
+                Button detectButton = new Button(this);
+                detectButton.setText(enableSystemFaceDetection ? "开始检测" : "拍照识别");
+                detectButton.setOnClickListener(v -> {
+                    detectionEnabled = true;
+                    if (statusView != null) {
+                        statusView.setText(enableSystemFaceDetection ? "正在检测，请将人脸对准镜头" : "正在拍照识别...");
+                    }
+                    if (enableSystemFaceDetection) {
+                        startFaceDetectionIfSupported();
+                    } else {
+                        capture();
+                    }
+                });
+                LinearLayout.LayoutParams detectParams = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                detectParams.leftMargin = 32;
+                actions.addView(detectButton, detectParams);
+            }
+
             bottomBar.addView(actions);
 
             FrameLayout.LayoutParams bottomParams = new FrameLayout.LayoutParams(
@@ -164,6 +211,7 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
             applyBestCameraSize(parameters);
             camera.setParameters(parameters);
             updatePreviewLayout(parameters);
+            applyFaceConfig();
             // 只有启用系统人脸检测时才注册 listener，避免某些机型底层崩溃
             if (enableSystemFaceDetection) {
                 camera.setFaceDetectionListener(this);
@@ -174,17 +222,8 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
                 }
             }
             camera.startPreview();
-            // 某些机型系统人脸检测会导致 native 崩溃；关闭后改为定时自动拍照识别
-            if (enableSystemFaceDetection) {
-                startFaceDetectionIfSupported();
-                emitEvent("ready", "等待检测人脸...");
-            } else {
-                if (!pendingAutoCapture && !isCapturing) {
-                    pendingAutoCapture = true;
-                    mainHandler.postDelayed(autoCaptureRunnable, Math.max(600, autoCaptureDelayMs));
-                }
-                emitEvent("ready", "系统人脸检测已关闭，定时自动识别中...");
-            }
+            startFaceDetectionIfSupported();
+            emitStatus("ready", autoStartAnalyze && enableSystemFaceDetection ? "预览已开启，请将人脸对准镜头" : "预览已开启");
         } catch (Exception e) {
             if (statusView != null) statusView.setText("打开相机失败: " + e.getMessage());
             releaseCamera();
@@ -230,32 +269,21 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
 
     @Override
     public void onFaceDetection(Camera.Face[] faces, Camera camera) {
-        if (!enableSystemFaceDetection) {
+        if (!enableSystemFaceDetection || !detectionEnabled || finishing || destroyed || isCapturing) {
             return;
         }
-        if (finishing || destroyed) {
-            return;
-        }
-        boolean facePresent = !(faces == null || faces.length == 0);
-        if (!facePresent) {
-            if (!isCapturing) {
-                if (statusView != null) statusView.setText("请将人脸对准镜头，系统会自动识别");
-            }
-            if (lastFacePresent) {
-                emitEvent("face_not_detected", "未检测到人脸");
-                lastFacePresent = false;
-            }
+        boolean hasFace = faces != null && faces.length > 0;
+        lastFacePresent = hasFace;
+        if (!hasFace) {
             cancelAutoCapture();
+            if (statusView != null) {
+                statusView.setText("未检测到人脸");
+            }
             return;
         }
-        if (!lastFacePresent) {
-            lastFacePresent = true;
-            emitEvent("face_detected", "检测到人脸");
+        if (statusView != null) {
+            statusView.setText("检测到人脸，准备识别...");
         }
-        if (isCapturing) {
-            return;
-        }
-        if (statusView != null) statusView.setText("检测到人脸，正在自动识别...");
         if (!pendingAutoCapture) {
             pendingAutoCapture = true;
             mainHandler.postDelayed(autoCaptureRunnable, autoCaptureDelayMs);
@@ -325,32 +353,16 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
         finishing = true;
         cancelAutoCapture();
         releaseCamera();
+        SunmiFaceKeepAliveService.stop(this);
     }
 
     private void startFaceDetectionIfSupported() {
-        if (camera == null || finishing || destroyed) {
-            return;
-        }
-        if (!enableSystemFaceDetection) {
+        if (!enableSystemFaceDetection || !detectionEnabled || camera == null || finishing || destroyed) {
             return;
         }
         try {
-            Camera.Parameters parameters = camera.getParameters();
-            if (parameters.getMaxNumDetectedFaces() > 0) {
-                camera.startFaceDetection();
-            } else {
-                if (statusView != null) statusView.setText("当前设备不支持实时人脸检测，请保持正对镜头");
-                if (!pendingAutoCapture && !isCapturing) {
-                    pendingAutoCapture = true;
-                    mainHandler.postDelayed(autoCaptureRunnable, 1500);
-                }
-            }
-        } catch (Exception e) {
-            if (statusView != null) statusView.setText("自动检测不可用，将尝试直接拍照识别");
-            if (!pendingAutoCapture && !isCapturing) {
-                pendingAutoCapture = true;
-                mainHandler.postDelayed(autoCaptureRunnable, 1500);
-            }
+            camera.startFaceDetection();
+        } catch (Exception ignored) {
         }
     }
 
@@ -447,6 +459,10 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     private void releaseCamera() {
         if (camera != null) {
             try {
+                camera.setPreviewCallback(null);
+            } catch (Exception ignored) {
+            }
+            try {
                 camera.setFaceDetectionListener(null);
             } catch (Exception ignored) {
             }
@@ -465,13 +481,55 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
         }
     }
 
-    private void emitEvent(String eventType, String message) {
-        if (destroyed) return;
+    private void applyFaceConfig() {
         try {
-            JSONObject event = new JSONObject();
-            event.put("eventType", eventType);
-            event.put("message", message);
-            SunmiFaceModule.emitFaceEvent(event);
+            com.sunmi.facelib.SunmiFaceConfigParam param = new com.sunmi.facelib.SunmiFaceConfigParam();
+            SunmiFaceSDK.getConfig(param);
+            if (minFaceSize > 0) {
+                param.setMinFaceSize(minFaceSize);
+            }
+            if (distanceThreshold > 0) {
+                param.setDistanceThreshold(distanceThreshold);
+            }
+            SunmiFaceSDK.setConfig(param);
+        } catch (Exception ignored) {
+        }
+    }
+
+    private void emitStatus(String eventType, String message) {
+        emitStatus(eventType, message, null);
+    }
+
+    private void emitStatus(String eventType, String message, JSONObject featureStatus) {
+        mainHandler.post(() -> {
+            if (destroyed) return;
+            if (statusView != null && message != null) {
+                statusView.setText(message);
+            }
+            if (message != null && message.equals(lastStatusMessage)) {
+                return;
+            }
+            lastStatusMessage = message == null ? "" : message;
+            emitEvent(eventType, message, featureStatus);
+        });
+    }
+
+    private void emitEvent(String eventType, String message) {
+        emitEvent(eventType, message, null);
+    }
+
+    private void emitEvent(String eventType, String message, JSONObject featureStatus) {
+        // 原生相机页在前台时，持续向 uni 的 JS 引擎推送全局事件会导致部分设备/基座报
+        // “original owner has die” 并直接闪退。实时提示改为只显示在原生页面内，
+        // 最终结果仍通过 onActivityResult 返回给前端。
+    }
+
+    private void mergeFeatureStatus(JSONObject event, JSONObject featureStatus) {
+        if (event == null || featureStatus == null) {
+            return;
+        }
+        try {
+            event.putAll(featureStatus);
         } catch (Throwable ignored) {
         }
     }

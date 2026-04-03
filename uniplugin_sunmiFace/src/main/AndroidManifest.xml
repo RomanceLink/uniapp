@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
     <!-- 授权码/令牌拉取通常需要联网 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -15,5 +17,9 @@
         <activity
             android:name="com.example.uniplugin_sunmiface.SunmiFaceRecognizeActivity"
             android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" />
+        <service
+            android:name="com.example.uniplugin_sunmiface.SunmiFaceKeepAliveService"
+            android:exported="false"
+            android:foregroundServiceType="camera" />
     </application>
 </manifest>

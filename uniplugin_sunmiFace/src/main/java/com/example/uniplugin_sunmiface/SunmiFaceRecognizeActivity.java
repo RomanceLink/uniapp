@@ -164,7 +164,15 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
             applyBestCameraSize(parameters);
             camera.setParameters(parameters);
             updatePreviewLayout(parameters);
-            camera.setFaceDetectionListener(this);
+            // 只有启用系统人脸检测时才注册 listener，避免某些机型底层崩溃
+            if (enableSystemFaceDetection) {
+                camera.setFaceDetectionListener(this);
+            } else {
+                try {
+                    camera.setFaceDetectionListener(null);
+                } catch (Exception ignored) {
+                }
+            }
             camera.startPreview();
             // 某些机型系统人脸检测会导致 native 崩溃；关闭后改为定时自动拍照识别
             if (enableSystemFaceDetection) {
@@ -295,6 +303,8 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
             Intent intent = new Intent();
             intent.putExtra("imagePath", imageFile.getAbsolutePath());
             setResult(Activity.RESULT_OK, intent);
+            // 有些机型在 finish 之后异步释放相机会触发 native 崩溃，成功路径先主动释放
+            releaseCamera();
             finish();
         } catch (IOException e) {
             isCapturing = false;

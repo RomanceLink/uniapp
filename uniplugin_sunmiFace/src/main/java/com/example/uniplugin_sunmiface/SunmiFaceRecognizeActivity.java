@@ -2,11 +2,15 @@ package com.example.uniplugin_sunmiface;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -35,6 +39,7 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     private FrameLayout rootView;
     private SurfaceView surfaceView;
     private SurfaceHolder surfaceHolder;
+    private GuideOverlayView guideOverlayView;
     private Camera camera;
     private TextView statusView;
     private boolean isCapturing = false;
@@ -44,6 +49,7 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     private boolean showCancelButton = true;
     private boolean showSwitchCameraButton = true;
     private boolean showStatusText = true;
+    private boolean showStartButton = false;
     private boolean enableSystemFaceDetection = false;
     private boolean autoStartAnalyze = true;
     private boolean detectionEnabled = true;
@@ -68,6 +74,9 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     private int openedCameraId = 0;
     private int appliedDisplayOrientationDeg = 90;
     private int appliedJpegRotationDeg = 0;
+    private boolean showCircleGuide = false;
+    private boolean showSquareGuide = true;
+    private boolean showRedLineGuide = false;
     private final Runnable autoCaptureRunnable = new Runnable() {
         @Override
         public void run() {
@@ -85,6 +94,7 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
         showCancelButton = getIntent().getBooleanExtra("showCancelButton", true);
         showSwitchCameraButton = getIntent().getBooleanExtra("showSwitchCameraButton", true);
         showStatusText = getIntent().getBooleanExtra("showStatusText", true);
+        showStartButton = getIntent().getBooleanExtra("showStartButton", false);
         enableSystemFaceDetection = getIntent().getBooleanExtra("enableSystemFaceDetection", false);
         autoStartAnalyze = !getIntent().hasExtra("autoStartAnalyze") || getIntent().getBooleanExtra("autoStartAnalyze", true);
         detectionEnabled = autoStartAnalyze;
@@ -99,6 +109,9 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
         previewDecodeMaxSize = Math.max(240, getIntent().getIntExtra("previewDecodeMaxSize", 640));
         minFaceSize = Math.max(0, getIntent().getIntExtra("minFaceSize", 0));
         distanceThreshold = getIntent().getFloatExtra("distanceThreshold", 0f);
+        showCircleGuide = getIntent().getBooleanExtra("showCircleGuide", false);
+        showSquareGuide = !getIntent().hasExtra("showSquareGuide") || getIntent().getBooleanExtra("showSquareGuide", true);
+        showRedLineGuide = getIntent().getBooleanExtra("showRedLineGuide", false);
         setContentView(buildContentView());
     }
 
@@ -110,6 +123,12 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(this);
         rootView.addView(surfaceView, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
+        guideOverlayView = new GuideOverlayView(this);
+        guideOverlayView.setGuideStyle(showCircleGuide, showSquareGuide, showRedLineGuide);
+        rootView.addView(guideOverlayView, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         ));
@@ -139,10 +158,7 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
             if (showCancelButton) {
                 Button cancelButton = new Button(this);
                 cancelButton.setText("取消");
-                cancelButton.setOnClickListener(v -> {
-                    setResult(Activity.RESULT_CANCELED);
-                    finish();
-                });
+                cancelButton.setOnClickListener(v -> cancelAndFinish());
                 actions.addView(cancelButton);
             }
 
@@ -158,7 +174,7 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
                 actions.addView(switchButton, switchParams);
             }
 
-            if (!autoStartAnalyze || !enableSystemFaceDetection) {
+            if (showStartButton || !autoStartAnalyze || !enableSystemFaceDetection) {
                 Button detectButton = new Button(this);
                 detectButton.setText(enableSystemFaceDetection ? "开始检测" : "拍照识别");
                 detectButton.setOnClickListener(v -> {
@@ -365,6 +381,11 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
         SunmiFaceKeepAliveService.stop(this);
     }
 
+    @Override
+    public void onBackPressed() {
+        cancelAndFinish();
+    }
+
     private void startFaceDetectionIfSupported() {
         if (!enableSystemFaceDetection || !detectionEnabled || camera == null || finishing || destroyed) {
             return;
@@ -534,9 +555,20 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
                 camera.stopPreview();
             } catch (Exception ignored) {
             }
-            camera.release();
+            try {
+                camera.release();
+            } catch (Exception ignored) {
+            }
             camera = null;
         }
+    }
+
+    private void cancelAndFinish() {
+        finishing = true;
+        cancelAutoCapture();
+        setResult(Activity.RESULT_CANCELED);
+        releaseCamera();
+        finish();
     }
 
     private void applyFaceConfig() {
@@ -589,6 +621,97 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
         try {
             event.putAll(featureStatus);
         } catch (Throwable ignored) {
+        }
+    }
+
+    private static class GuideOverlayView extends View {
+        private final Paint maskPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint guidePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint cornerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint redLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint redGlowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Path maskPath = new Path();
+        private boolean showCircleGuide;
+        private boolean showSquareGuide;
+        private boolean showRedLineGuide;
+
+        GuideOverlayView(Activity context) {
+            super(context);
+            setClickable(false);
+            setFocusable(false);
+            maskPaint.setColor(0x8A05070D);
+            maskPaint.setStyle(Paint.Style.FILL);
+            guidePaint.setColor(0xFFF7FAFC);
+            guidePaint.setStyle(Paint.Style.STROKE);
+            guidePaint.setStrokeWidth(7f);
+            cornerPaint.setColor(0xFF2DD4BF);
+            cornerPaint.setStyle(Paint.Style.STROKE);
+            cornerPaint.setStrokeWidth(10f);
+            cornerPaint.setStrokeCap(Paint.Cap.ROUND);
+            redLinePaint.setColor(0xFFFF5A5F);
+            redLinePaint.setStyle(Paint.Style.FILL);
+            redGlowPaint.setColor(0x55FF5A5F);
+            redGlowPaint.setStyle(Paint.Style.FILL);
+        }
+
+        void setGuideStyle(boolean showCircleGuide, boolean showSquareGuide, boolean showRedLineGuide) {
+            this.showCircleGuide = showCircleGuide;
+            this.showSquareGuide = showSquareGuide;
+            this.showRedLineGuide = showRedLineGuide;
+            invalidate();
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+            float width = getWidth();
+            float height = getHeight();
+            float side = Math.min(width, height) * 0.62f;
+            float left = (width - side) / 2f;
+            float top = (height - side) / 2f;
+            float right = left + side;
+            float bottom = top + side;
+            RectF rect = new RectF(left, top, right, bottom);
+            drawMask(canvas, rect);
+            if (showCircleGuide) {
+                canvas.drawOval(rect, guidePaint);
+            }
+            if (showSquareGuide) {
+                canvas.drawRoundRect(rect, 28f, 28f, guidePaint);
+                drawSquareCorners(canvas, rect);
+            }
+            if (showRedLineGuide) {
+                float centerY = (top + bottom) / 2f;
+                RectF glowRect = new RectF(left + side * 0.08f, centerY - 16f, right - side * 0.08f, centerY + 16f);
+                RectF lineRect = new RectF(left + side * 0.12f, centerY - 4f, right - side * 0.12f, centerY + 4f);
+                canvas.drawRoundRect(glowRect, 18f, 18f, redGlowPaint);
+                canvas.drawRoundRect(lineRect, 12f, 12f, redLinePaint);
+            }
+        }
+
+        private void drawMask(Canvas canvas, RectF guideRect) {
+            maskPath.reset();
+            maskPath.setFillType(Path.FillType.EVEN_ODD);
+            maskPath.addRect(0f, 0f, getWidth(), getHeight(), Path.Direction.CW);
+            if (showCircleGuide && !showSquareGuide) {
+                maskPath.addOval(guideRect, Path.Direction.CW);
+            } else {
+                maskPath.addRoundRect(guideRect, 28f, 28f, Path.Direction.CW);
+            }
+            canvas.drawPath(maskPath, maskPaint);
+        }
+
+        private void drawSquareCorners(Canvas canvas, RectF rect) {
+            float len = rect.width() * 0.14f;
+            float radius = 28f;
+            canvas.drawLine(rect.left, rect.top + radius, rect.left, rect.top + len, cornerPaint);
+            canvas.drawLine(rect.left + radius, rect.top, rect.left + len, rect.top, cornerPaint);
+            canvas.drawLine(rect.right, rect.top + radius, rect.right, rect.top + len, cornerPaint);
+            canvas.drawLine(rect.right - radius, rect.top, rect.right - len, rect.top, cornerPaint);
+            canvas.drawLine(rect.left, rect.bottom - radius, rect.left, rect.bottom - len, cornerPaint);
+            canvas.drawLine(rect.left + radius, rect.bottom, rect.left + len, rect.bottom, cornerPaint);
+            canvas.drawLine(rect.right, rect.bottom - radius, rect.right, rect.bottom - len, cornerPaint);
+            canvas.drawLine(rect.right - radius, rect.bottom, rect.right - len, rect.bottom, cornerPaint);
         }
     }
 }

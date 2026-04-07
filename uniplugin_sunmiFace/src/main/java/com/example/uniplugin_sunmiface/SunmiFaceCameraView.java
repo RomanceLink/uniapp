@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.ImageFormat;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
@@ -25,6 +26,9 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.sunmi.authorizelibrary.SunmiAuthorizeSDK;
+import com.sunmi.authorizelibrary.bean.AuthorizeResult;
+import com.sunmi.authorizelibrary.constants.ErrorCode;
 import com.sunmi.facelib.SunmiFaceDBIdInfo;
 import com.sunmi.facelib.SunmiFaceDBRecord;
 import com.sunmi.facelib.SunmiFaceFeature;
@@ -42,6 +46,9 @@ import com.sunmi.facelib.SunmiFaceStatusCode;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -68,9 +75,14 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
     private boolean destroyed = false;
     private boolean analyzingFrame = false;
     private boolean sdkHandleReady = false;
+    private boolean sdkLicenseVerified = false;
+    private boolean authorizeSdkReady = false;
+    private boolean showStatusText = true;
     private long lastAnalyzeAt = 0L;
     private String lastMessage = "";
     private String initializedDbPath = "";
+    private int maxRecognizeFailures = 0;
+    private int recognizeFailureCount = 0;
 
     private String cameraFacing = "front";
     private int displayOrientationDeg = 90;
@@ -82,7 +94,12 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
     private int maxFaceCount = 1;
     private int minFaceSize = 0;
     private float distanceThreshold = 0f;
+    private float faceScoreThreshold = 0f;
+    private int threadNum = 0;
     private String dbPath = "";
+    private String licensePath = "";
+    private String appId = "";
+    private boolean forceRefresh = false;
     private boolean autoStopOnRecognize = true;
 
     public SunmiFaceCameraView(Context context) {
@@ -112,6 +129,7 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
     public void setRunning(boolean running) {
         this.running = running;
         if (running) {
+            recognizeFailureCount = 0;
             openCameraIfPossible();
         } else {
             clearFaceOverlay();
@@ -175,12 +193,47 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
         this.distanceThreshold = distanceThreshold;
     }
 
+    public void setFaceScoreThreshold(float faceScoreThreshold) {
+        this.faceScoreThreshold = faceScoreThreshold;
+    }
+
+    public void setThreadNum(int threadNum) {
+        this.threadNum = Math.max(0, threadNum);
+    }
+
     public void setDbPath(String dbPath) {
         this.dbPath = dbPath == null ? "" : dbPath;
     }
 
+    public void setLicensePath(String licensePath) {
+        this.licensePath = licensePath == null ? "" : licensePath;
+        this.sdkLicenseVerified = false;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId == null ? "" : appId;
+        this.sdkLicenseVerified = false;
+    }
+
+    public void setForceRefresh(boolean forceRefresh) {
+        this.forceRefresh = forceRefresh;
+    }
+
     public void setAutoStopOnRecognize(boolean autoStopOnRecognize) {
         this.autoStopOnRecognize = autoStopOnRecognize;
+    }
+
+    public void setShowStatusText(boolean showStatusText) {
+        this.showStatusText = showStatusText;
+        mainHandler.post(() -> overlayView.setVisibility(showStatusText ? View.VISIBLE : View.GONE));
+    }
+
+    public void setMaxRecognizeFailures(int maxRecognizeFailures) {
+        this.maxRecognizeFailures = Math.max(0, maxRecognizeFailures);
+    }
+
+    public void setGuideStyle(boolean showCircleGuide, boolean showSquareGuide, boolean showRedLineGuide) {
+        faceBoxOverlayView.setGuideStyle(showCircleGuide, showSquareGuide, showRedLineGuide);
     }
 
     public void destroyView() {
@@ -285,16 +338,27 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
                     return;
                 }
 
-                JSONObject recognizeData = new JSONObject();
-                recognizeData.put("featuresCount", featuresCount);
-                emitStatus("face_detected", "检测到人脸，正在识别...", recognizeData);
-                record = SunmiFaceSDK.faceFeature2FaceDBRecord(feature);
-                SunmiFaceDBIdInfo info = new SunmiFaceDBIdInfo();
+            JSONObject recognizeData = new JSONObject();
+            recognizeData.put("featuresCount", featuresCount);
+            JSONObject qualityStatus = buildRealtimeQualityStatus(feature);
+            if (qualityStatus != null) {
+                qualityStatus.put("featuresCount", featuresCount);
+                emitStatus(
+                        qualityStatus.getString("eventType"),
+                        qualityStatus.getString("message"),
+                        qualityStatus
+                );
+                return;
+            }
+            emitStatus("face_detected", "检测到人脸，正在识别...", recognizeData);
+            record = SunmiFaceSDK.faceFeature2FaceDBRecord(feature);
+            SunmiFaceDBIdInfo info = new SunmiFaceDBIdInfo();
                 int searchCode = SunmiFaceSDK.searchDB(record, info);
                 recognizeData.put("searchCode", searchCode);
                 recognizeData.put("searchMessage", SunmiFaceSDK.getErrorString(searchCode));
 
                 if (searchCode == SunmiFaceStatusCode.FACE_CODE_OK && info.getIsMatched()) {
+                    recognizeFailureCount = 0;
                     detecting = false;
                     recognizeData.put("matched", true);
                     recognizeData.put("id", info.getId());
@@ -306,6 +370,7 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
                     }
                 } else {
                     recognizeData.put("matched", false);
+                    handleRecognizeFailure();
                     emitStatus("recognize_failed", searchCode == SunmiFaceStatusCode.FACE_CODE_OK ? "未匹配到人脸" : "识别失败", recognizeData);
                 }
             } finally {
@@ -350,17 +415,32 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
                 sdkHandleReady = true;
             }
 
+            ensureLicenseVerified();
+
             try {
                 com.sunmi.facelib.SunmiFaceConfigParam param = new com.sunmi.facelib.SunmiFaceConfigParam();
-                SunmiFaceSDK.getConfig(param);
+                int getConfigCode = SunmiFaceSDK.getConfig(param);
+                if (getConfigCode != SunmiFaceStatusCode.FACE_CODE_OK) {
+                    throw new IllegalStateException("getConfig failed: " + SunmiFaceSDK.getErrorString(getConfigCode));
+                }
+                if (threadNum > 0) {
+                    param.setThreadNum(threadNum);
+                }
                 if (minFaceSize > 0) {
                     param.setMinFaceSize(minFaceSize);
                 }
                 if (distanceThreshold > 0) {
                     param.setDistanceThreshold(distanceThreshold);
                 }
-                SunmiFaceSDK.setConfig(param);
-            } catch (Exception ignored) {
+                if (faceScoreThreshold > 0f) {
+                    param.setFaceScoreThreshold(faceScoreThreshold);
+                }
+                int setConfigCode = SunmiFaceSDK.setConfig(param);
+                if (setConfigCode != SunmiFaceStatusCode.FACE_CODE_OK) {
+                    throw new IllegalStateException("setConfig failed: " + SunmiFaceSDK.getErrorString(setConfigCode));
+                }
+            } catch (Exception e) {
+                throw new IllegalStateException("apply config failed: " + safeMessage(e), e);
             }
 
             if (!TextUtils.isEmpty(dbPath)) {
@@ -374,6 +454,66 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
                     initializedDbPath = finalDbPath;
                 }
             }
+        }
+    }
+
+    private void ensureLicenseVerified() {
+        if (sdkLicenseVerified) {
+            return;
+        }
+        Context context = getContext();
+        if (context == null) {
+            throw new IllegalStateException("context is null");
+        }
+
+        String finalLicensePath = TextUtils.isEmpty(licensePath)
+                ? "/storage/emulated/0/SunmiRemoteFiles/license_face.txt"
+                : licensePath;
+        File licenseFile = new File(finalLicensePath);
+        int verifyCode;
+        if (licenseFile.exists() && licenseFile.canRead()) {
+            String licenseContent = readTextFile(licenseFile);
+            if (TextUtils.isEmpty(licenseContent)) {
+                throw new IllegalStateException("license file is empty: " + finalLicensePath);
+            }
+            verifyCode = SunmiFaceSDK.verifyLicense(context, licenseContent);
+        } else if (!TextUtils.isEmpty(appId)) {
+            if (!authorizeSdkReady) {
+                SunmiAuthorizeSDK.init(context);
+                authorizeSdkReady = true;
+            }
+            java.util.Map<String, Object> params = new java.util.HashMap<>();
+            params.put(SunmiAuthorizeSDK.APP_ID, appId);
+            params.put(SunmiAuthorizeSDK.CATEGORY_TYPE_KEY, SunmiAuthorizeSDK.CATEGORY_TYPE_FACE);
+            params.put(SunmiAuthorizeSDK.IS_FORCE_REFRESH, forceRefresh);
+            AuthorizeResult result = SunmiAuthorizeSDK.syncGetAuthorizeCode(params);
+            if (result == null || result.code != ErrorCode.IS_SUCCESS || TextUtils.isEmpty(result.token)) {
+                String message = result == null ? "authorize result is null" : result.msg;
+                throw new IllegalStateException("authorize failed: " + message);
+            }
+            verifyCode = SunmiFaceSDK.verifyLicense(context, result.token);
+        } else {
+            throw new IllegalStateException("licensePath/appId is required for realtime recognize");
+        }
+
+        if (verifyCode != SunmiFaceStatusCode.FACE_CODE_OK) {
+            throw new IllegalStateException("verifyLicense failed: " + SunmiFaceSDK.getErrorString(verifyCode));
+        }
+        sdkLicenseVerified = true;
+    }
+
+    private String readTextFile(File file) {
+        try (FileInputStream inputStream = new FileInputStream(file)) {
+            byte[] bytes = new byte[(int) file.length()];
+            int offset = 0;
+            int len;
+            while (offset < bytes.length
+                    && (len = inputStream.read(bytes, offset, bytes.length - offset)) != -1) {
+                offset += len;
+            }
+            return new String(bytes, 0, offset, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new IllegalStateException("read license file failed: " + safeMessage(e), e);
         }
     }
 
@@ -422,37 +562,44 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
         return bgr;
     }
 
-    private String evaluateFaceQuality(SunmiFaceFeature feature) {
+    private JSONObject buildRealtimeQualityStatus(SunmiFaceFeature feature) {
         if (feature == null) {
-            return "未检测到人脸";
+            return qualityStatus("face_not_detected", "未检测到人脸");
         }
         if ((qualityMode & SunmiFaceQualityMode.QualityMode_Occlusion) != 0 && feature.getOcclusionScore() > 0.6f) {
-            return "人脸遮挡严重，请露出五官";
+            return qualityStatus("face_occluded", "人脸遮挡严重，请露出五官");
         }
         if ((qualityMode & SunmiFaceQualityMode.QualityMode_Pose) != 0) {
             SunmiFacePose pose = feature.getPose();
             if (pose != null) {
                 if (Math.abs(pose.getYaw()) > 20f) {
-                    return "请正对镜头";
+                    return qualityStatus("face_pose_invalid", "请正对镜头");
                 }
                 if (Math.abs(pose.getPitch()) > 20f) {
-                    return "请保持平视";
+                    return qualityStatus("face_pose_invalid", "请保持平视");
                 }
                 if (Math.abs(pose.getRoll()) > 20f) {
-                    return "请端正头部";
+                    return qualityStatus("face_pose_invalid", "请端正头部");
                 }
             }
             if (feature.getLuminance() < 40f) {
-                return "光线过暗，请靠近亮处";
+                return qualityStatus("face_too_dark", "光线过暗，请靠近亮处");
             }
             if (feature.getVarLaplacian() < 20f) {
-                return "画面较模糊，请保持稳定";
+                return qualityStatus("face_blurry", "画面较模糊，请保持稳定");
             }
         }
         if (livenessMode == SunmiFaceLivenessMode.LivenessMode_RGB && feature.getRgbLivenessScore() < 0.6f) {
-            return "请使用真人面对镜头";
+            return qualityStatus("face_not_live", "请使用真人面对镜头");
         }
         return null;
+    }
+
+    private JSONObject qualityStatus(String eventType, String message) {
+        JSONObject status = new JSONObject();
+        status.put("eventType", eventType);
+        status.put("message", message);
+        return status;
     }
 
     private JSONObject buildFeatureData(SunmiFaceFeature feature, int imageWidth, int imageHeight) {
@@ -641,6 +788,25 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
         mainHandler.post(() -> faceBoxOverlayView.updateFace(null, null));
     }
 
+    private void handleRecognizeFailure() {
+        if (maxRecognizeFailures <= 0) {
+            return;
+        }
+        recognizeFailureCount++;
+        if (recognizeFailureCount < maxRecognizeFailures) {
+            return;
+        }
+        detecting = false;
+        running = false;
+        mainHandler.postDelayed(() -> {
+            stopPreviewAndRelease();
+            JSONObject detail = new JSONObject();
+            detail.put("maxRecognizeFailures", maxRecognizeFailures);
+            detail.put("recognizeFailureCount", recognizeFailureCount);
+            emitError("recognize_max_failures", "连续识别失败次数过多，已自动关闭");
+        }, 120);
+    }
+
     private JSONObject buildSimpleData(int code) {
         JSONObject data = new JSONObject();
         data.put("code", code);
@@ -767,7 +933,7 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
             if (destroyed) {
                 return;
             }
-            if (!TextUtils.isEmpty(message) && !message.equals(lastMessage)) {
+            if (showStatusText && !TextUtils.isEmpty(message) && !message.equals(lastMessage)) {
                 overlayView.setText(message);
                 lastMessage = message;
             }
@@ -800,8 +966,17 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
     private static class FaceBoxOverlayView extends View {
         private final Paint rectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Paint pointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint maskPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint guidePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint cornerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint redLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Paint redGlowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Path maskPath = new Path();
         private RectF faceRect;
         private java.util.List<PointF> landmarks;
+        private boolean showCircleGuide;
+        private boolean showSquareGuide;
+        private boolean showRedLineGuide;
 
         FaceBoxOverlayView(Context context) {
             super(context);
@@ -810,6 +985,26 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
             rectPaint.setStrokeWidth(6f);
             pointPaint.setColor(0xFFFFD54F);
             pointPaint.setStyle(Paint.Style.FILL);
+            maskPaint.setColor(0x8A05070D);
+            maskPaint.setStyle(Paint.Style.FILL);
+            guidePaint.setColor(0xFFF7FAFC);
+            guidePaint.setStyle(Paint.Style.STROKE);
+            guidePaint.setStrokeWidth(7f);
+            cornerPaint.setColor(0xFF2DD4BF);
+            cornerPaint.setStyle(Paint.Style.STROKE);
+            cornerPaint.setStrokeWidth(10f);
+            cornerPaint.setStrokeCap(Paint.Cap.ROUND);
+            redLinePaint.setColor(0xFFFF5A5F);
+            redLinePaint.setStyle(Paint.Style.FILL);
+            redGlowPaint.setColor(0x55FF5A5F);
+            redGlowPaint.setStyle(Paint.Style.FILL);
+        }
+
+        void setGuideStyle(boolean showCircleGuide, boolean showSquareGuide, boolean showRedLineGuide) {
+            this.showCircleGuide = showCircleGuide;
+            this.showSquareGuide = showSquareGuide;
+            this.showRedLineGuide = showRedLineGuide;
+            invalidate();
         }
 
         void updateFace(JSONObject rect, JSONArray points) {
@@ -839,20 +1034,68 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
+            float width = getWidth();
+            float height = getHeight();
+            float side = Math.min(width, height) * 0.62f;
+            float left = (width - side) / 2f;
+            float top = (height - side) / 2f;
+            float right = left + side;
+            float bottom = top + side;
+            RectF guideRect = new RectF(left, top, right, bottom);
+            drawMask(canvas, guideRect);
+            if (showCircleGuide) {
+                canvas.drawOval(guideRect, guidePaint);
+            }
+            if (showSquareGuide) {
+                canvas.drawRoundRect(guideRect, 28f, 28f, guidePaint);
+                drawSquareCorners(canvas, guideRect);
+            }
+            if (showRedLineGuide) {
+                float centerY = (top + bottom) / 2f;
+                RectF glowRect = new RectF(left + side * 0.08f, centerY - 16f, right - side * 0.08f, centerY + 16f);
+                RectF lineRect = new RectF(left + side * 0.12f, centerY - 4f, right - side * 0.12f, centerY + 4f);
+                canvas.drawRoundRect(glowRect, 18f, 18f, redGlowPaint);
+                canvas.drawRoundRect(lineRect, 12f, 12f, redLinePaint);
+            }
             if (faceRect != null) {
                 RectF drawRect = new RectF(
-                        faceRect.left * getWidth(),
-                        faceRect.top * getHeight(),
-                        faceRect.right * getWidth(),
-                        faceRect.bottom * getHeight()
+                        faceRect.left * width,
+                        faceRect.top * height,
+                        faceRect.right * width,
+                        faceRect.bottom * height
                 );
                 canvas.drawRect(drawRect, rectPaint);
             }
             if (landmarks != null) {
                 for (PointF point : landmarks) {
-                    canvas.drawCircle(point.x * getWidth(), point.y * getHeight(), 8f, pointPaint);
+                    canvas.drawCircle(point.x * width, point.y * height, 8f, pointPaint);
                 }
             }
+        }
+
+        private void drawMask(Canvas canvas, RectF guideRect) {
+            maskPath.reset();
+            maskPath.setFillType(Path.FillType.EVEN_ODD);
+            maskPath.addRect(0f, 0f, getWidth(), getHeight(), Path.Direction.CW);
+            if (showCircleGuide && !showSquareGuide) {
+                maskPath.addOval(guideRect, Path.Direction.CW);
+            } else {
+                maskPath.addRoundRect(guideRect, 28f, 28f, Path.Direction.CW);
+            }
+            canvas.drawPath(maskPath, maskPaint);
+        }
+
+        private void drawSquareCorners(Canvas canvas, RectF rect) {
+            float len = rect.width() * 0.14f;
+            float radius = 28f;
+            canvas.drawLine(rect.left, rect.top + radius, rect.left, rect.top + len, cornerPaint);
+            canvas.drawLine(rect.left + radius, rect.top, rect.left + len, rect.top, cornerPaint);
+            canvas.drawLine(rect.right, rect.top + radius, rect.right, rect.top + len, cornerPaint);
+            canvas.drawLine(rect.right - radius, rect.top, rect.right - len, rect.top, cornerPaint);
+            canvas.drawLine(rect.left, rect.bottom - radius, rect.left, rect.bottom - len, cornerPaint);
+            canvas.drawLine(rect.left + radius, rect.bottom, rect.left + len, rect.bottom, cornerPaint);
+            canvas.drawLine(rect.right, rect.bottom - radius, rect.right, rect.bottom - len, cornerPaint);
+            canvas.drawLine(rect.right - radius, rect.bottom, rect.right - len, rect.bottom, cornerPaint);
         }
     }
 }

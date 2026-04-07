@@ -258,6 +258,7 @@ public class SunmiFaceModule extends UniModule {
         intent.putExtra("showSwitchCameraButton", !recognizeOptions.containsKey("showSwitchCameraButton") || recognizeOptions.getBooleanValue("showSwitchCameraButton"));
         // 让“检测文字”交给前端：可把状态栏隐藏
         intent.putExtra("showStatusText", !recognizeOptions.containsKey("showStatusText") || recognizeOptions.getBooleanValue("showStatusText"));
+        intent.putExtra("showStartButton", recognizeOptions.containsKey("showStartButton") && recognizeOptions.getBooleanValue("showStartButton"));
         intent.putExtra("autoStartAnalyze", !recognizeOptions.containsKey("autoStartAnalyze") || recognizeOptions.getBooleanValue("autoStartAnalyze"));
         // 某些机型启用系统人脸检测会导致 native 崩溃（scudo/double free），默认关闭更稳
         intent.putExtra("enableSystemFaceDetection", recognizeOptions.containsKey("enableSystemFaceDetection") && recognizeOptions.getBooleanValue("enableSystemFaceDetection"));
@@ -265,6 +266,9 @@ public class SunmiFaceModule extends UniModule {
         intent.putExtra("displayOrientationDeg", recognizeOptions.containsKey("displayOrientationDeg") ? recognizeOptions.getIntValue("displayOrientationDeg") : 360);
         intent.putExtra("captureImageRotationDeg", recognizeOptions.containsKey("captureImageRotationDeg") ? recognizeOptions.getIntValue("captureImageRotationDeg") : 360);
         intent.putExtra("captureMirrorX", recognizeOptions.containsKey("captureMirrorX") && recognizeOptions.getBooleanValue("captureMirrorX"));
+        intent.putExtra("showCircleGuide", recognizeOptions.containsKey("showCircleGuide") && recognizeOptions.getBooleanValue("showCircleGuide"));
+        intent.putExtra("showSquareGuide", !recognizeOptions.containsKey("showSquareGuide") || recognizeOptions.getBooleanValue("showSquareGuide"));
+        intent.putExtra("showRedLineGuide", recognizeOptions.containsKey("showRedLineGuide") && recognizeOptions.getBooleanValue("showRedLineGuide"));
         intent.putExtra("predictMode", recognizeOptions.containsKey("predictMode")
                 ? recognizeOptions.getIntValue("predictMode")
                 : SunmiFaceMode.PredictMode_Feature);
@@ -323,7 +327,7 @@ public class SunmiFaceModule extends UniModule {
         stopActiveDetectOverlay("replaced", "已替换上一层人脸识别");
         JSONObject detectOptions = options == null ? new JSONObject() : options;
         if (!detectOptions.containsKey("autoStopOnRecognize")) {
-            detectOptions.put("autoStopOnRecognize", true);
+        detectOptions.put("autoStopOnRecognize", true);
         }
         activeDetectOverlay = new SunmiFaceDetectOverlay((Activity) context, detectOptions, callback, true);
         activeDetectOverlay.start();

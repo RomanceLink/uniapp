@@ -20,6 +20,7 @@ public class SunmiFaceDetectOverlay implements SunmiFaceCameraView.Listener {
     private FrameLayout container;
     private SunmiFaceCameraView cameraView;
     private Button detectButton;
+    private Button closeButton;
 
     public SunmiFaceDetectOverlay(Activity activity, JSONObject options, UniJSCallback callback, boolean fullScreen) {
         this.activity = activity;
@@ -45,19 +46,26 @@ public class SunmiFaceDetectOverlay implements SunmiFaceCameraView.Listener {
             ));
             container.addView(cameraView, cameraParams);
 
-            Button closeButton = new Button(activity);
-            closeButton.setText("关闭");
-            closeButton.setOnClickListener(v -> stop("closed", "已关闭人脸识别"));
-            FrameLayout.LayoutParams closeParams = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            );
-            closeParams.gravity = Gravity.TOP | Gravity.END;
-            closeParams.topMargin = 80;
-            closeParams.rightMargin = 24;
-            container.addView(closeButton, closeParams);
+            if (!options.containsKey("showCloseButton") || options.getBooleanValue("showCloseButton")) {
+                closeButton = new Button(activity);
+                closeButton.setText("关闭");
+                closeButton.setOnClickListener(v -> stop("closed", "已关闭人脸识别"));
+                FrameLayout.LayoutParams closeParams = new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                closeParams.gravity = Gravity.TOP | Gravity.END;
+                closeParams.topMargin = 80;
+                closeParams.rightMargin = 24;
+                container.addView(closeButton, closeParams);
+            } else {
+                closeButton = null;
+            }
 
-            if (options.containsKey("autoStartDetect") && !options.getBooleanValue("autoStartDetect")) {
+            boolean showStartButton = options.containsKey("showStartButton")
+                    ? options.getBooleanValue("showStartButton")
+                    : (options.containsKey("autoStartDetect") && !options.getBooleanValue("autoStartDetect"));
+            if (showStartButton) {
                 detectButton = new Button(activity);
                 detectButton.setText("开始检测");
                 detectButton.setOnClickListener(v -> startDetect());
@@ -96,7 +104,11 @@ public class SunmiFaceDetectOverlay implements SunmiFaceCameraView.Listener {
                 result.put("success", false);
                 result.put("eventType", eventType);
                 result.put("message", message);
-                callback.invokeAndKeepAlive(result);
+                if (fullScreen) {
+                    callback.invoke(result);
+                } else {
+                    callback.invokeAndKeepAlive(result);
+                }
             }
         });
     }
@@ -114,7 +126,7 @@ public class SunmiFaceDetectOverlay implements SunmiFaceCameraView.Listener {
 
     private void applyOptions(SunmiFaceCameraView view, JSONObject opts) {
         view.setCameraFacing(resolveCameraFacing(opts));
-        view.setDisplayOrientationDeg(opts.containsKey("displayOrientationDeg") ? opts.getIntValue("displayOrientationDeg") : 90);
+        view.setDisplayOrientationDeg(opts.containsKey("displayOrientationDeg") ? opts.getIntValue("displayOrientationDeg") : 360);
         view.setAnalyzeIntervalMs(resolveAnalyzeIntervalMs(opts));
         view.setPreviewDecodeMaxSize(opts.containsKey("previewDecodeMaxSize") ? opts.getIntValue("previewDecodeMaxSize") : 640);
         view.setPredictMode(opts.containsKey("predictMode") ? opts.getIntValue("predictMode") : 3);
@@ -123,8 +135,20 @@ public class SunmiFaceDetectOverlay implements SunmiFaceCameraView.Listener {
         view.setMaxFaceCount(opts.containsKey("maxFaceCount") ? opts.getIntValue("maxFaceCount") : 1);
         view.setMinFaceSize(opts.containsKey("minFaceSize") ? opts.getIntValue("minFaceSize") : 0);
         view.setDistanceThreshold(opts.containsKey("distanceThreshold") ? opts.getFloatValue("distanceThreshold") : 0f);
+        view.setFaceScoreThreshold(opts.containsKey("faceScoreThreshold") ? opts.getFloatValue("faceScoreThreshold") : 0f);
+        view.setThreadNum(opts.containsKey("threadNum") ? opts.getIntValue("threadNum") : 0);
         view.setDbPath(opts.getString("dbPath"));
+        view.setLicensePath(opts.getString("licensePath"));
+        view.setAppId(opts.getString("appId"));
+        view.setForceRefresh(opts.containsKey("forceRefresh") && opts.getBooleanValue("forceRefresh"));
         view.setAutoStopOnRecognize(opts.containsKey("autoStopOnRecognize") ? opts.getBooleanValue("autoStopOnRecognize") : fullScreen);
+        view.setShowStatusText(!opts.containsKey("showStatusText") || opts.getBooleanValue("showStatusText"));
+        view.setMaxRecognizeFailures(opts.containsKey("maxRecognizeFailures") ? opts.getIntValue("maxRecognizeFailures") : 0);
+        view.setGuideStyle(
+                opts.containsKey("showCircleGuide") && opts.getBooleanValue("showCircleGuide"),
+                !opts.containsKey("showSquareGuide") || opts.getBooleanValue("showSquareGuide"),
+                opts.containsKey("showRedLineGuide") && opts.getBooleanValue("showRedLineGuide")
+        );
     }
 
     private String resolveCameraFacing(JSONObject opts) {
@@ -205,6 +229,10 @@ public class SunmiFaceDetectOverlay implements SunmiFaceCameraView.Listener {
         } else {
             result.put("data", null);
         }
-        callback.invokeAndKeepAlive(result);
+        if (fullScreen && (success || (event != null && "recognize_max_failures".equals(event.getString("eventType"))))) {
+            callback.invoke(result);
+        } else {
+            callback.invokeAndKeepAlive(result);
+        }
     }
 }

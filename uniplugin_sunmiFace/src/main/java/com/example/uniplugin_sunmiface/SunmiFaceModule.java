@@ -262,8 +262,8 @@ public class SunmiFaceModule extends UniModule {
         // 某些机型启用系统人脸检测会导致 native 崩溃（scudo/double free），默认关闭更稳
         intent.putExtra("enableSystemFaceDetection", recognizeOptions.containsKey("enableSystemFaceDetection") && recognizeOptions.getBooleanValue("enableSystemFaceDetection"));
         // 允许前端调整预览方向/抓拍图片方向，避免不同机型“倒的”
-        intent.putExtra("displayOrientationDeg", recognizeOptions.containsKey("displayOrientationDeg") ? recognizeOptions.getIntValue("displayOrientationDeg") : 90);
-        intent.putExtra("captureImageRotationDeg", recognizeOptions.containsKey("captureImageRotationDeg") ? recognizeOptions.getIntValue("captureImageRotationDeg") : 0);
+        intent.putExtra("displayOrientationDeg", recognizeOptions.containsKey("displayOrientationDeg") ? recognizeOptions.getIntValue("displayOrientationDeg") : 360);
+        intent.putExtra("captureImageRotationDeg", recognizeOptions.containsKey("captureImageRotationDeg") ? recognizeOptions.getIntValue("captureImageRotationDeg") : 360);
         intent.putExtra("captureMirrorX", recognizeOptions.containsKey("captureMirrorX") && recognizeOptions.getBooleanValue("captureMirrorX"));
         intent.putExtra("predictMode", recognizeOptions.containsKey("predictMode")
                 ? recognizeOptions.getIntValue("predictMode")
@@ -568,7 +568,10 @@ public class SunmiFaceModule extends UniModule {
             callback.invoke(exception(e));
         } finally {
             if (result != null && result.owned && result.imageFeatures != null) {
-                SunmiFaceSDK.releaseImageFeatures(result.imageFeatures);
+                try {
+                    SunmiFaceSDK.releaseImageFeatures(result.imageFeatures);
+                } catch (Exception ignored) {
+                }
             }
         }
     }
@@ -589,6 +592,7 @@ public class SunmiFaceModule extends UniModule {
     public void addDBRecord(JSONObject options, UniJSCallback callback) {
         ensureHandle();
         FeatureCarrier carrier = null;
+        SunmiFaceDBRecord record = null;
         try {
             String id = getString(options, "id");
             if (TextUtils.isEmpty(id)) {
@@ -600,7 +604,7 @@ public class SunmiFaceModule extends UniModule {
                 callback.invoke(error(SunmiFaceStatusCode.FACE_CODE_EMPTY_IMAGE, "feature is required"));
                 return;
             }
-            SunmiFaceDBRecord record = SunmiFaceSDK.faceFeature2FaceDBRecord(carrier.feature);
+            record = SunmiFaceSDK.faceFeature2FaceDBRecord(carrier.feature);
             record.setId(id);
             record.setName(getString(options, "name"));
             record.setImgId(getString(options, "imgId"));
@@ -613,6 +617,12 @@ public class SunmiFaceModule extends UniModule {
         } catch (Exception e) {
             callback.invoke(exception(e));
         } finally {
+            if (record != null) {
+                try {
+                    record.delete();
+                } catch (Exception ignored) {
+                }
+            }
             releaseCarrier(carrier);
         }
     }
@@ -621,13 +631,14 @@ public class SunmiFaceModule extends UniModule {
     public void searchDB(JSONObject options, UniJSCallback callback) {
         ensureHandle();
         FeatureCarrier carrier = null;
+        SunmiFaceDBRecord record = null;
         try {
             carrier = resolveFeatureCarrier(options);
             if (carrier.feature == null || carrier.feature.getFeature() == null) {
                 callback.invoke(error(SunmiFaceStatusCode.FACE_CODE_EMPTY_IMAGE, "feature is required"));
                 return;
             }
-            SunmiFaceDBRecord record = SunmiFaceSDK.faceFeature2FaceDBRecord(carrier.feature);
+            record = SunmiFaceSDK.faceFeature2FaceDBRecord(carrier.feature);
             SunmiFaceDBIdInfo info = new SunmiFaceDBIdInfo();
             int code = SunmiFaceSDK.searchDB(record, info);
             JSONObject data = dbIdInfoToJson(info);
@@ -641,6 +652,12 @@ public class SunmiFaceModule extends UniModule {
         } catch (Exception e) {
             callback.invoke(exception(e));
         } finally {
+            if (record != null) {
+                try {
+                    record.delete();
+                } catch (Exception ignored) {
+                }
+            }
             releaseCarrier(carrier);
         }
     }
@@ -818,25 +835,34 @@ public class SunmiFaceModule extends UniModule {
         int imageWidth = buildResult.width;
         int imageHeight = buildResult.height;
         SunmiFaceImageFeatures imageFeatures = new SunmiFaceImageFeatures();
-        int code = SunmiFaceSDK.getImageFeatures(image, imageFeatures);
-        ExtractionResult result = new ExtractionResult();
-        result.code = code;
-        result.imageFeatures = imageFeatures;
-        result.feature = getPrimaryFeature(imageFeatures);
-        result.data = featureContainerToJson(imageFeatures, options, imageWidth, imageHeight);
-        if (code == SunmiFaceStatusCode.FACE_CODE_OK && options != null && options.getBooleanValue("keepAlive")) {
-            result.token = UUID.randomUUID().toString();
-            featuresCache.put(result.token, imageFeatures);
-            result.data.put("token", result.token);
-            result.owned = false;
-        } else {
-            result.owned = true;
+        try {
+            int code = SunmiFaceSDK.getImageFeatures(image, imageFeatures);
+            ExtractionResult result = new ExtractionResult();
+            result.code = code;
+            result.imageFeatures = imageFeatures;
+            result.feature = getPrimaryFeature(imageFeatures);
+            result.data = minimalFeatureContainerToJson(imageFeatures, imageWidth, imageHeight);
+            if (code == SunmiFaceStatusCode.FACE_CODE_OK && options != null && options.getBooleanValue("keepAlive")) {
+                result.token = UUID.randomUUID().toString();
+                featuresCache.put(result.token, imageFeatures);
+                result.data.put("token", result.token);
+                result.owned = false;
+            } else {
+                result.owned = true;
+            }
+            if (result.owned && code != SunmiFaceStatusCode.FACE_CODE_OK) {
+                try {
+                    SunmiFaceSDK.releaseImageFeatures(imageFeatures);
+                } catch (Exception ignored) {
+                }
+            }
+            return result;
+        } finally {
+            try {
+                image.delete();
+            } catch (Exception ignored) {
+            }
         }
-        image.deleteImageBuf();
-        if (result.owned && code != SunmiFaceStatusCode.FACE_CODE_OK) {
-            SunmiFaceSDK.releaseImageFeatures(imageFeatures);
-        }
-        return result;
     }
 
     private FeatureCarrier resolveFeatureCarrier(JSONObject options) throws IOException {
@@ -846,8 +872,9 @@ public class SunmiFaceModule extends UniModule {
 
         String token = getString(options, "token");
         if (!TextUtils.isEmpty(token) && featuresCache.containsKey(token)) {
-            SunmiFaceImageFeatures imageFeatures = featuresCache.get(token);
-            return new FeatureCarrier(imageFeatures.getFeatures(), imageFeatures, false);
+            boolean retainToken = options.getBooleanValue("retainToken");
+            SunmiFaceImageFeatures imageFeatures = retainToken ? featuresCache.get(token) : featuresCache.remove(token);
+            return new FeatureCarrier(getPrimaryFeature(imageFeatures), imageFeatures, !retainToken);
         }
 
         float[] featureArray = toFloatArray(options.getJSONArray("feature"));
@@ -865,8 +892,17 @@ public class SunmiFaceModule extends UniModule {
     }
 
     private void releaseCarrier(FeatureCarrier carrier) {
+        if (carrier != null && carrier.feature != null) {
+            try {
+                carrier.feature.delete();
+            } catch (Exception ignored) {
+            }
+        }
         if (carrier != null && carrier.owned && carrier.imageFeatures != null) {
-            SunmiFaceSDK.releaseImageFeatures(carrier.imageFeatures);
+            try {
+                SunmiFaceSDK.releaseImageFeatures(carrier.imageFeatures);
+            } catch (Exception ignored) {
+            }
         }
     }
 
@@ -1002,6 +1038,18 @@ public class SunmiFaceModule extends UniModule {
         data.put("outputImageHeight", outputHeight);
         data.put("featuresCount", imageFeatures.getFeaturesCount());
         data.put("feature", featureToJson(getPrimaryFeature(imageFeatures), imageWidth, imageHeight, normRot, rectMirrorX));
+        return data;
+    }
+
+    private JSONObject minimalFeatureContainerToJson(SunmiFaceImageFeatures imageFeatures, int imageWidth, int imageHeight) {
+        JSONObject data = new JSONObject();
+        data.put("imageWidth", imageWidth);
+        data.put("imageHeight", imageHeight);
+        data.put("outputImageWidth", imageWidth);
+        data.put("outputImageHeight", imageHeight);
+        data.put("featuresCount", imageFeatures == null ? 0 : imageFeatures.getFeaturesCount());
+        data.put("safeMode", true);
+        data.put("ultraSafeMode", true);
         return data;
     }
 
@@ -1657,7 +1705,10 @@ public class SunmiFaceModule extends UniModule {
 
     private void releaseAllCachedFeatures() {
         for (SunmiFaceImageFeatures imageFeatures : featuresCache.values()) {
-            SunmiFaceSDK.releaseImageFeatures(imageFeatures);
+            try {
+                SunmiFaceSDK.releaseImageFeatures(imageFeatures);
+            } catch (Exception ignored) {
+            }
         }
         featuresCache.clear();
     }
@@ -1689,6 +1740,7 @@ public class SunmiFaceModule extends UniModule {
         }
 
         ExtractionResult extractionResult = null;
+        SunmiFaceDBRecord record = null;
         try {
             if (options != null && !TextUtils.isEmpty(getString(options, "dbPath"))) {
                 SunmiFaceSDK.initDB(resolveDbFilePath(options));
@@ -1732,7 +1784,7 @@ public class SunmiFaceModule extends UniModule {
             payload.put("imagePath", imagePath);
             payload.put("feature", extractionResult.toJson());
 
-            if (extractionResult.code != SunmiFaceStatusCode.FACE_CODE_OK || extractionResult.feature == null) {
+            if (extractionResult.code != SunmiFaceStatusCode.FACE_CODE_OK) {
                 // 关闭系统人脸检测时，也需要给前端一个明确的“未检测到人脸/识别失败”状态
                 JSONObject evt = new JSONObject();
                 evt.put("eventType", "face_not_detected");
@@ -1745,11 +1797,27 @@ public class SunmiFaceModule extends UniModule {
                 return;
             }
 
-            SunmiFaceDBRecord record = SunmiFaceSDK.faceFeature2FaceDBRecord(extractionResult.feature);
+            if (extractionResult.feature == null) {
+                JSONObject evt = new JSONObject();
+                evt.put("eventType", "face_not_detected");
+                evt.put("message", "未检测到人脸特征");
+                emitFaceEvent(evt);
+
+                JSONObject res = status(extractionResult.code, payload, null);
+                res.put("eventType", "final");
+                callback.invoke(res);
+                return;
+            }
+
+            record = SunmiFaceSDK.faceFeature2FaceDBRecord(extractionResult.feature);
             SunmiFaceDBIdInfo info = new SunmiFaceDBIdInfo();
             int searchCode = SunmiFaceSDK.searchDB(record, info);
             payload.put("search", dbIdInfoToJson(info));
-            if (searchCode == SunmiFaceStatusCode.FACE_CODE_OK) {
+            if (searchCode == SunmiFaceStatusCode.FACE_CODE_OK && info.getIsMatched()) {
+                JSONObject metadata = findFirstMetadataRecord(options, info.getId());
+                if (metadata != null) {
+                    payload.put("metadata", metadata);
+                }
                 JSONObject evt = new JSONObject();
                 evt.put("eventType", "recognize_success");
                 evt.put("message", "识别成功");
@@ -1757,7 +1825,7 @@ public class SunmiFaceModule extends UniModule {
             } else {
                 JSONObject evt = new JSONObject();
                 evt.put("eventType", "recognize_failed");
-                evt.put("message", "识别失败: " + SunmiFaceSDK.getErrorString(searchCode));
+                evt.put("message", searchCode == SunmiFaceStatusCode.FACE_CODE_OK ? "未匹配到人脸" : "识别失败: " + SunmiFaceSDK.getErrorString(searchCode));
                 emitFaceEvent(evt);
             }
 
@@ -1774,8 +1842,23 @@ public class SunmiFaceModule extends UniModule {
             res.put("eventType", "final");
             callback.invoke(res);
         } finally {
+            if (record != null) {
+                try {
+                    record.delete();
+                } catch (Exception ignored) {
+                }
+            }
+            if (extractionResult != null && extractionResult.feature != null) {
+                try {
+                    extractionResult.feature.delete();
+                } catch (Exception ignored) {
+                }
+            }
             if (extractionResult != null && extractionResult.imageFeatures != null) {
-                SunmiFaceSDK.releaseImageFeatures(extractionResult.imageFeatures);
+                try {
+                    SunmiFaceSDK.releaseImageFeatures(extractionResult.imageFeatures);
+                } catch (Exception ignored) {
+                }
             }
         }
     }

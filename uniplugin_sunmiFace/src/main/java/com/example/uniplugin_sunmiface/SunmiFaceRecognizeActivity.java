@@ -47,10 +47,10 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     private boolean enableSystemFaceDetection = false;
     private boolean autoStartAnalyze = true;
     private boolean detectionEnabled = true;
-    // 预览显示方向（只影响预览，不自动修正图片像素方向）
-    private int displayOrientationDeg = 90;
-    // 保存图片时是否旋转/镜像到“前端期望”的方向
-    private int captureImageRotationDeg = 0;
+    // 360 表示自动计算
+    private int displayOrientationDeg = 360;
+    // 360 表示自动计算
+    private int captureImageRotationDeg = 360;
     private boolean captureMirrorX = false;
     private boolean pendingAutoCapture = false;
     private boolean lastFacePresent = false;
@@ -65,6 +65,9 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     private int previewDecodeMaxSize = 640;
     private int minFaceSize = 0;
     private float distanceThreshold = 0f;
+    private int openedCameraId = 0;
+    private int appliedDisplayOrientationDeg = 90;
+    private int appliedJpegRotationDeg = 0;
     private final Runnable autoCaptureRunnable = new Runnable() {
         @Override
         public void run() {
@@ -85,8 +88,8 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
         enableSystemFaceDetection = getIntent().getBooleanExtra("enableSystemFaceDetection", false);
         autoStartAnalyze = !getIntent().hasExtra("autoStartAnalyze") || getIntent().getBooleanExtra("autoStartAnalyze", true);
         detectionEnabled = autoStartAnalyze;
-        displayOrientationDeg = getIntent().getIntExtra("displayOrientationDeg", 90);
-        captureImageRotationDeg = getIntent().getIntExtra("captureImageRotationDeg", 0);
+        displayOrientationDeg = getIntent().getIntExtra("displayOrientationDeg", 360);
+        captureImageRotationDeg = getIntent().getIntExtra("captureImageRotationDeg", 360);
         captureMirrorX = getIntent().getBooleanExtra("captureMirrorX", false);
         recognizePredictMode = getIntent().getIntExtra("predictMode", SunmiFaceMode.PredictMode_Feature);
         recognizeLivenessMode = getIntent().getIntExtra("livenessMode", SunmiFaceLivenessMode.LivenessMode_None);
@@ -203,12 +206,16 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
                 finish();
                 return;
             }
-            camera = Camera.open(resolveCameraId());
+            openedCameraId = resolveCameraId();
+            camera = Camera.open(openedCameraId);
             camera.setPreviewDisplay(holder);
-            camera.setDisplayOrientation(displayOrientationDeg);
+            appliedDisplayOrientationDeg = resolveAppliedDisplayOrientation(openedCameraId);
+            camera.setDisplayOrientation(appliedDisplayOrientationDeg);
             Camera.Parameters parameters = camera.getParameters();
             parameters.setPictureFormat(android.graphics.PixelFormat.JPEG);
             applyBestCameraSize(parameters);
+            appliedJpegRotationDeg = resolveCaptureImageRotation(openedCameraId);
+            parameters.setRotation(appliedJpegRotationDeg);
             camera.setParameters(parameters);
             updatePreviewLayout(parameters);
             applyFaceConfig();
@@ -297,14 +304,16 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
             cancelAutoCapture();
             File imageFile = new File(getCacheDir(), "sunmi-face-capture-" + System.currentTimeMillis() + ".jpg");
             // 如果需要对齐前端坐标系/预览方向，就在保存阶段把图片做一次旋转/镜像
-            if (captureImageRotationDeg != 0 || captureMirrorX) {
+            int finalCaptureRotationDeg = captureImageRotationDeg == 360 ? 0 : normalizeRotation(captureImageRotationDeg);
+            boolean shouldMirror = captureMirrorX;
+            if (finalCaptureRotationDeg != 0 || shouldMirror) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                 if (bitmap != null) {
                     Matrix matrix = new Matrix();
-                    if (captureImageRotationDeg != 0) {
-                        matrix.postRotate(captureImageRotationDeg);
+                    if (finalCaptureRotationDeg != 0) {
+                        matrix.postRotate(finalCaptureRotationDeg);
                     }
-                    if (captureMirrorX) {
+                    if (shouldMirror) {
                         // 围绕位图中心做水平翻转，避免平移导致裁剪偏差
                         matrix.postScale(-1, 1, bitmap.getWidth() / 2f, bitmap.getHeight() / 2f);
                     }
@@ -433,6 +442,55 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
             }
         }
         return fallbackId;
+    }
+
+    private int resolveAppliedDisplayOrientation(int cameraId) {
+        if (displayOrientationDeg != 360) {
+            return normalizeRotation(displayOrientationDeg);
+        }
+
+        Camera.CameraInfo info = new Camera.CameraInfo();
+        Camera.getCameraInfo(cameraId, info);
+        int degrees = getWindowRotationDegrees();
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            int result = (info.orientation + degrees) % 360;
+            return (360 - result) % 360;
+        }
+        return (info.orientation - degrees + 360) % 360;
+    }
+
+    private int resolveCaptureImageRotation(int cameraId) {
+        if (captureImageRotationDeg != 360) {
+            return normalizeRotation(captureImageRotationDeg);
+        }
+
+        Camera.CameraInfo info = new Camera.CameraInfo();
+        Camera.getCameraInfo(cameraId, info);
+        int degrees = getWindowRotationDegrees();
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            return (info.orientation + degrees) % 360;
+        }
+        return (info.orientation - degrees + 360) % 360;
+    }
+
+    private int getWindowRotationDegrees() {
+        int rotation = getWindowManager().getDefaultDisplay().getRotation();
+        switch (rotation) {
+            case android.view.Surface.ROTATION_90:
+                return 90;
+            case android.view.Surface.ROTATION_180:
+                return 180;
+            case android.view.Surface.ROTATION_270:
+                return 270;
+            case android.view.Surface.ROTATION_0:
+            default:
+                return 0;
+        }
+    }
+
+    private int normalizeRotation(int deg) {
+        int normalized = deg % 360;
+        return normalized < 0 ? normalized + 360 : normalized;
     }
 
     private void cancelAutoCapture() {

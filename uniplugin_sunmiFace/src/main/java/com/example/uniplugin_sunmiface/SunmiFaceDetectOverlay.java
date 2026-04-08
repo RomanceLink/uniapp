@@ -17,6 +17,7 @@ public class SunmiFaceDetectOverlay implements SunmiFaceCameraView.Listener {
     private final JSONObject options;
     private final UniJSCallback callback;
     private final boolean fullScreen;
+    private boolean stopped = false;
     private FrameLayout container;
     private SunmiFaceCameraView cameraView;
     private Button detectButton;
@@ -31,6 +32,7 @@ public class SunmiFaceDetectOverlay implements SunmiFaceCameraView.Listener {
 
     public void start() {
         activity.runOnUiThread(() -> {
+            stopped = false;
             ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
             container = new FrameLayout(activity);
             container.setBackgroundColor(fullScreen ? Color.BLACK : 0x22000000);
@@ -87,6 +89,10 @@ public class SunmiFaceDetectOverlay implements SunmiFaceCameraView.Listener {
 
     public void stop(String eventType, String message) {
         activity.runOnUiThread(() -> {
+            if (stopped) {
+                return;
+            }
+            stopped = true;
             if (cameraView != null) {
                 cameraView.destroyView();
                 cameraView = null;
@@ -115,6 +121,9 @@ public class SunmiFaceDetectOverlay implements SunmiFaceCameraView.Listener {
 
     public void startDetect() {
         activity.runOnUiThread(() -> {
+            if (stopped) {
+                return;
+            }
             if (cameraView != null) {
                 cameraView.setDetecting(true);
             }
@@ -148,6 +157,13 @@ public class SunmiFaceDetectOverlay implements SunmiFaceCameraView.Listener {
                 opts.containsKey("showCircleGuide") && opts.getBooleanValue("showCircleGuide"),
                 !opts.containsKey("showSquareGuide") || opts.getBooleanValue("showSquareGuide"),
                 opts.containsKey("showRedLineGuide") && opts.getBooleanValue("showRedLineGuide")
+        );
+        view.setGuideLayout(
+                opts.containsKey("showGuideMask") && opts.getBooleanValue("showGuideMask"),
+                opts.containsKey("guideBoxWidthRatio") ? opts.getFloatValue("guideBoxWidthRatio") : 0.62f,
+                opts.containsKey("guideBoxHeightRatio") ? opts.getFloatValue("guideBoxHeightRatio") : 0.62f,
+                opts.containsKey("guideOffsetXRatio") ? opts.getFloatValue("guideOffsetXRatio") : 0f,
+                opts.containsKey("guideOffsetYRatio") ? opts.getFloatValue("guideOffsetYRatio") : 0f
         );
     }
 
@@ -193,9 +209,16 @@ public class SunmiFaceDetectOverlay implements SunmiFaceCameraView.Listener {
 
     @Override
     public void onRecognize(JSONObject event) {
+        if (stopped) {
+            return;
+        }
         emit(event, 0, true);
         if (fullScreen) {
             activity.runOnUiThread(() -> {
+                if (stopped) {
+                    return;
+                }
+                stopped = true;
                 if (cameraView != null) {
                     cameraView.destroyView();
                     cameraView = null;
@@ -213,11 +236,14 @@ public class SunmiFaceDetectOverlay implements SunmiFaceCameraView.Listener {
 
     @Override
     public void onError(JSONObject event) {
+        if (stopped) {
+            return;
+        }
         emit(event, 1, false);
     }
 
     private void emit(JSONObject event, int code, boolean success) {
-        if (callback == null) {
+        if (callback == null || stopped) {
             return;
         }
         JSONObject result = new JSONObject();

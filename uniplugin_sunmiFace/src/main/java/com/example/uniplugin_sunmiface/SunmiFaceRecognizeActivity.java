@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
@@ -77,6 +76,11 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     private boolean showCircleGuide = false;
     private boolean showSquareGuide = true;
     private boolean showRedLineGuide = false;
+    private boolean showGuideMask = false;
+    private float guideBoxWidthRatio = 0.62f;
+    private float guideBoxHeightRatio = 0.62f;
+    private float guideOffsetXRatio = 0f;
+    private float guideOffsetYRatio = 0f;
     private final Runnable autoCaptureRunnable = new Runnable() {
         @Override
         public void run() {
@@ -112,6 +116,11 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
         showCircleGuide = getIntent().getBooleanExtra("showCircleGuide", false);
         showSquareGuide = !getIntent().hasExtra("showSquareGuide") || getIntent().getBooleanExtra("showSquareGuide", true);
         showRedLineGuide = getIntent().getBooleanExtra("showRedLineGuide", false);
+        showGuideMask = getIntent().getBooleanExtra("showGuideMask", false);
+        guideBoxWidthRatio = clampGuideRatio(getIntent().getFloatExtra("guideBoxWidthRatio", 0.62f), 0.2f, 0.95f, 0.62f);
+        guideBoxHeightRatio = clampGuideRatio(getIntent().getFloatExtra("guideBoxHeightRatio", 0.62f), 0.2f, 0.95f, 0.62f);
+        guideOffsetXRatio = clampGuideRatio(getIntent().getFloatExtra("guideOffsetXRatio", 0f), -0.35f, 0.35f, 0f);
+        guideOffsetYRatio = clampGuideRatio(getIntent().getFloatExtra("guideOffsetYRatio", 0f), -0.35f, 0.35f, 0f);
         setContentView(buildContentView());
     }
 
@@ -127,7 +136,16 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
                 ViewGroup.LayoutParams.MATCH_PARENT
         ));
         guideOverlayView = new GuideOverlayView(this);
-        guideOverlayView.setGuideStyle(showCircleGuide, showSquareGuide, showRedLineGuide);
+        guideOverlayView.setGuideStyle(
+                showCircleGuide,
+                showSquareGuide,
+                showRedLineGuide,
+                showGuideMask,
+                guideBoxWidthRatio,
+                guideBoxHeightRatio,
+                guideOffsetXRatio,
+                guideOffsetYRatio
+        );
         rootView.addView(guideOverlayView, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
@@ -514,6 +532,19 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
         return normalized < 0 ? normalized + 360 : normalized;
     }
 
+    private float clampGuideRatio(float value, float min, float max, float fallback) {
+        if (Float.isNaN(value) || Float.isInfinite(value)) {
+            return fallback;
+        }
+        if (value < min) {
+            return min;
+        }
+        if (value > max) {
+            return max;
+        }
+        return value;
+    }
+
     private void cancelAutoCapture() {
         pendingAutoCapture = false;
         mainHandler.removeCallbacks(autoCaptureRunnable);
@@ -625,22 +656,21 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
     }
 
     private static class GuideOverlayView extends View {
-        private final Paint maskPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Paint guidePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Paint cornerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private final Paint redLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private final Paint redGlowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private final Path maskPath = new Path();
         private boolean showCircleGuide;
         private boolean showSquareGuide;
         private boolean showRedLineGuide;
+        private boolean showGuideMask;
+        private float guideBoxWidthRatio = 0.62f;
+        private float guideBoxHeightRatio = 0.62f;
+        private float guideOffsetXRatio = 0f;
+        private float guideOffsetYRatio = 0f;
 
         GuideOverlayView(Activity context) {
             super(context);
             setClickable(false);
             setFocusable(false);
-            maskPaint.setColor(0x8A05070D);
-            maskPaint.setStyle(Paint.Style.FILL);
             guidePaint.setColor(0xFFF7FAFC);
             guidePaint.setStyle(Paint.Style.STROKE);
             guidePaint.setStrokeWidth(7f);
@@ -648,31 +678,35 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
             cornerPaint.setStyle(Paint.Style.STROKE);
             cornerPaint.setStrokeWidth(10f);
             cornerPaint.setStrokeCap(Paint.Cap.ROUND);
-            redLinePaint.setColor(0xFFFF5A5F);
-            redLinePaint.setStyle(Paint.Style.FILL);
-            redGlowPaint.setColor(0x55FF5A5F);
-            redGlowPaint.setStyle(Paint.Style.FILL);
         }
 
-        void setGuideStyle(boolean showCircleGuide, boolean showSquareGuide, boolean showRedLineGuide) {
+        void setGuideStyle(boolean showCircleGuide, boolean showSquareGuide, boolean showRedLineGuide,
+                           boolean showGuideMask, float guideBoxWidthRatio, float guideBoxHeightRatio,
+                           float guideOffsetXRatio, float guideOffsetYRatio) {
             this.showCircleGuide = showCircleGuide;
             this.showSquareGuide = showSquareGuide;
             this.showRedLineGuide = showRedLineGuide;
+            this.showGuideMask = showGuideMask;
+            this.guideBoxWidthRatio = guideBoxWidthRatio;
+            this.guideBoxHeightRatio = guideBoxHeightRatio;
+            this.guideOffsetXRatio = guideOffsetXRatio;
+            this.guideOffsetYRatio = guideOffsetYRatio;
             invalidate();
         }
 
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            float width = getWidth();
-            float height = getHeight();
-            float side = Math.min(width, height) * 0.62f;
-            float left = (width - side) / 2f;
-            float top = (height - side) / 2f;
-            float right = left + side;
-            float bottom = top + side;
-            RectF rect = new RectF(left, top, right, bottom);
-            drawMask(canvas, rect);
+            RectF rect = buildGuideRect(getWidth(), getHeight(), guideBoxWidthRatio, guideBoxHeightRatio, guideOffsetXRatio, guideOffsetYRatio);
+            if (showGuideMask) {
+                Paint maskPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                maskPaint.setColor(0x8A05070D);
+                maskPaint.setStyle(Paint.Style.FILL);
+                canvas.drawRect(0f, 0f, getWidth(), rect.top, maskPaint);
+                canvas.drawRect(0f, rect.bottom, getWidth(), getHeight(), maskPaint);
+                canvas.drawRect(0f, rect.top, rect.left, rect.bottom, maskPaint);
+                canvas.drawRect(rect.right, rect.top, getWidth(), rect.bottom, maskPaint);
+            }
             if (showCircleGuide) {
                 canvas.drawOval(rect, guidePaint);
             }
@@ -680,25 +714,6 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
                 canvas.drawRoundRect(rect, 28f, 28f, guidePaint);
                 drawSquareCorners(canvas, rect);
             }
-            if (showRedLineGuide) {
-                float centerY = (top + bottom) / 2f;
-                RectF glowRect = new RectF(left + side * 0.08f, centerY - 16f, right - side * 0.08f, centerY + 16f);
-                RectF lineRect = new RectF(left + side * 0.12f, centerY - 4f, right - side * 0.12f, centerY + 4f);
-                canvas.drawRoundRect(glowRect, 18f, 18f, redGlowPaint);
-                canvas.drawRoundRect(lineRect, 12f, 12f, redLinePaint);
-            }
-        }
-
-        private void drawMask(Canvas canvas, RectF guideRect) {
-            maskPath.reset();
-            maskPath.setFillType(Path.FillType.EVEN_ODD);
-            maskPath.addRect(0f, 0f, getWidth(), getHeight(), Path.Direction.CW);
-            if (showCircleGuide && !showSquareGuide) {
-                maskPath.addOval(guideRect, Path.Direction.CW);
-            } else {
-                maskPath.addRoundRect(guideRect, 28f, 28f, Path.Direction.CW);
-            }
-            canvas.drawPath(maskPath, maskPaint);
         }
 
         private void drawSquareCorners(Canvas canvas, RectF rect) {
@@ -712,6 +727,20 @@ public class SunmiFaceRecognizeActivity extends Activity implements SurfaceHolde
             canvas.drawLine(rect.left + radius, rect.bottom, rect.left + len, rect.bottom, cornerPaint);
             canvas.drawLine(rect.right, rect.bottom - radius, rect.right, rect.bottom - len, cornerPaint);
             canvas.drawLine(rect.right - radius, rect.bottom, rect.right - len, rect.bottom, cornerPaint);
+        }
+
+        private RectF buildGuideRect(float width, float height, float widthRatio, float heightRatio, float offsetXRatio, float offsetYRatio) {
+            float boxWidth = width * widthRatio;
+            float boxHeight = height * heightRatio;
+            float centerX = width / 2f + width * offsetXRatio;
+            float centerY = height / 2f + height * offsetYRatio;
+            float left = centerX - boxWidth / 2f;
+            float top = centerY - boxHeight / 2f;
+            if (left < 24f) left = 24f;
+            if (top < 24f) top = 24f;
+            if (left + boxWidth > width - 24f) left = width - 24f - boxWidth;
+            if (top + boxHeight > height - 24f) top = height - 24f - boxHeight;
+            return new RectF(left, top, left + boxWidth, top + boxHeight);
         }
     }
 }

@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.ImageFormat;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
@@ -65,6 +64,7 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private final ExecutorService analyzerExecutor = Executors.newSingleThreadExecutor();
     private final Object sdkLock = new Object();
+    private final Object cameraLock = new Object();
 
     private Listener listener;
     private Camera camera;
@@ -83,6 +83,7 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
     private String initializedDbPath = "";
     private int maxRecognizeFailures = 0;
     private int recognizeFailureCount = 0;
+    private volatile int resourceGeneration = 0;
 
     private String cameraFacing = "front";
     private int displayOrientationDeg = 90;
@@ -129,11 +130,14 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
     public void setRunning(boolean running) {
         this.running = running;
         if (running) {
+            resourceGeneration++;
             recognizeFailureCount = 0;
             openCameraIfPossible();
         } else {
+            int generation = ++resourceGeneration;
             clearFaceOverlay();
-            stopPreviewAndRelease();
+            stopCameraOnly();
+            scheduleSdkRelease(generation);
             emitStatus("preview_stopped", "预览已关闭", null);
         }
     }
@@ -236,13 +240,23 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
         faceBoxOverlayView.setGuideStyle(showCircleGuide, showSquareGuide, showRedLineGuide);
     }
 
+    public void setGuideLayout(boolean showGuideMask, float guideBoxWidthRatio, float guideBoxHeightRatio,
+                               float guideOffsetXRatio, float guideOffsetYRatio) {
+        faceBoxOverlayView.setGuideLayout(showGuideMask, guideBoxWidthRatio, guideBoxHeightRatio, guideOffsetXRatio, guideOffsetYRatio);
+    }
+
     public void destroyView() {
+        if (destroyed) {
+            return;
+        }
         destroyed = true;
         running = false;
         detecting = false;
+        int generation = ++resourceGeneration;
         clearFaceOverlay();
-        stopPreviewAndRelease();
-        analyzerExecutor.shutdownNow();
+        stopCameraOnly();
+        scheduleSdkRelease(generation);
+        analyzerExecutor.shutdown();
     }
 
     @Override
@@ -258,7 +272,7 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
         previewReady = false;
-        stopPreviewAndRelease();
+        stopCameraOnly();
         return true;
     }
 
@@ -535,7 +549,9 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
             }
             detecting = false;
             running = false;
-            stopPreviewAndRelease();
+            int generation = ++resourceGeneration;
+            stopCameraOnly();
+            scheduleSdkRelease(generation);
         }, 300);
     }
 
@@ -799,7 +815,9 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
         detecting = false;
         running = false;
         mainHandler.postDelayed(() -> {
-            stopPreviewAndRelease();
+            int generation = ++resourceGeneration;
+            stopCameraOnly();
+            scheduleSdkRelease(generation);
             JSONObject detail = new JSONObject();
             detail.put("maxRecognizeFailures", maxRecognizeFailures);
             detail.put("recognizeFailureCount", recognizeFailureCount);
@@ -832,36 +850,55 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
             emitStatus("preview_ready", detecting ? "正在检测，请将人脸对准镜头" : "预览已开启", null);
         } catch (Exception e) {
             emitError("camera_open_failed", "打开相机失败: " + safeMessage(e));
-            stopPreviewAndRelease();
+            int generation = ++resourceGeneration;
+            stopCameraOnly();
+            scheduleSdkRelease(generation);
         }
     }
 
-    private void stopPreviewAndRelease() {
+    private void stopCameraOnly() {
         clearFaceOverlay();
-        if (camera != null) {
-            try {
-                camera.setPreviewCallback(null);
-            } catch (Exception ignored) {
-            }
-            try {
-                camera.stopPreview();
-            } catch (Exception ignored) {
-            }
-            try {
-                camera.release();
-            } catch (Exception ignored) {
-            }
-            camera = null;
-        }
-        synchronized (sdkLock) {
-            if (sdkHandleReady) {
+        synchronized (cameraLock) {
+            if (camera != null) {
                 try {
-                    SunmiFaceSDK.releaseHandle();
+                    camera.setPreviewCallback(null);
                 } catch (Exception ignored) {
                 }
-                sdkHandleReady = false;
-                initializedDbPath = "";
+                try {
+                    camera.stopPreview();
+                } catch (Exception ignored) {
+                }
+                try {
+                    camera.release();
+                } catch (Exception ignored) {
+                }
+                camera = null;
             }
+        }
+    }
+
+    private void scheduleSdkRelease(int generation) {
+        try {
+            analyzerExecutor.execute(() -> {
+                if (generation != resourceGeneration) {
+                    return;
+                }
+                synchronized (sdkLock) {
+                    if (generation != resourceGeneration) {
+                        return;
+                    }
+                    if (sdkHandleReady) {
+                        try {
+                            SunmiFaceSDK.releaseHandle();
+                        } catch (Exception ignored) {
+                        }
+                        sdkHandleReady = false;
+                        sdkLicenseVerified = false;
+                        initializedDbPath = "";
+                    }
+                }
+            });
+        } catch (Exception ignored) {
         }
     }
 
@@ -869,7 +906,7 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
         if (!running) {
             return;
         }
-        stopPreviewAndRelease();
+        stopCameraOnly();
         openCameraIfPossible();
     }
 
@@ -966,17 +1003,19 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
     private static class FaceBoxOverlayView extends View {
         private final Paint rectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Paint pointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private final Paint maskPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Paint guidePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Paint cornerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private final Paint redLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private final Paint redGlowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private final Path maskPath = new Path();
+        private final Paint maskPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private RectF faceRect;
         private java.util.List<PointF> landmarks;
         private boolean showCircleGuide;
         private boolean showSquareGuide;
         private boolean showRedLineGuide;
+        private boolean showGuideMask;
+        private float guideBoxWidthRatio = 0.62f;
+        private float guideBoxHeightRatio = 0.62f;
+        private float guideOffsetXRatio = 0f;
+        private float guideOffsetYRatio = 0f;
 
         FaceBoxOverlayView(Context context) {
             super(context);
@@ -985,8 +1024,6 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
             rectPaint.setStrokeWidth(6f);
             pointPaint.setColor(0xFFFFD54F);
             pointPaint.setStyle(Paint.Style.FILL);
-            maskPaint.setColor(0x8A05070D);
-            maskPaint.setStyle(Paint.Style.FILL);
             guidePaint.setColor(0xFFF7FAFC);
             guidePaint.setStyle(Paint.Style.STROKE);
             guidePaint.setStrokeWidth(7f);
@@ -994,16 +1031,24 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
             cornerPaint.setStyle(Paint.Style.STROKE);
             cornerPaint.setStrokeWidth(10f);
             cornerPaint.setStrokeCap(Paint.Cap.ROUND);
-            redLinePaint.setColor(0xFFFF5A5F);
-            redLinePaint.setStyle(Paint.Style.FILL);
-            redGlowPaint.setColor(0x55FF5A5F);
-            redGlowPaint.setStyle(Paint.Style.FILL);
+            maskPaint.setColor(0x8A05070D);
+            maskPaint.setStyle(Paint.Style.FILL);
         }
 
         void setGuideStyle(boolean showCircleGuide, boolean showSquareGuide, boolean showRedLineGuide) {
             this.showCircleGuide = showCircleGuide;
             this.showSquareGuide = showSquareGuide;
             this.showRedLineGuide = showRedLineGuide;
+            invalidate();
+        }
+
+        void setGuideLayout(boolean showGuideMask, float guideBoxWidthRatio, float guideBoxHeightRatio,
+                            float guideOffsetXRatio, float guideOffsetYRatio) {
+            this.showGuideMask = showGuideMask;
+            this.guideBoxWidthRatio = clampRatio(guideBoxWidthRatio, 0.2f, 0.95f, 0.62f);
+            this.guideBoxHeightRatio = clampRatio(guideBoxHeightRatio, 0.2f, 0.95f, 0.62f);
+            this.guideOffsetXRatio = clampRatio(guideOffsetXRatio, -0.35f, 0.35f, 0f);
+            this.guideOffsetYRatio = clampRatio(guideOffsetYRatio, -0.35f, 0.35f, 0f);
             invalidate();
         }
 
@@ -1036,26 +1081,19 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
             super.onDraw(canvas);
             float width = getWidth();
             float height = getHeight();
-            float side = Math.min(width, height) * 0.62f;
-            float left = (width - side) / 2f;
-            float top = (height - side) / 2f;
-            float right = left + side;
-            float bottom = top + side;
-            RectF guideRect = new RectF(left, top, right, bottom);
-            drawMask(canvas, guideRect);
+            RectF guideRect = buildGuideRect(width, height);
+            if (showGuideMask) {
+                canvas.drawRect(0f, 0f, width, guideRect.top, maskPaint);
+                canvas.drawRect(0f, guideRect.bottom, width, height, maskPaint);
+                canvas.drawRect(0f, guideRect.top, guideRect.left, guideRect.bottom, maskPaint);
+                canvas.drawRect(guideRect.right, guideRect.top, width, guideRect.bottom, maskPaint);
+            }
             if (showCircleGuide) {
                 canvas.drawOval(guideRect, guidePaint);
             }
             if (showSquareGuide) {
                 canvas.drawRoundRect(guideRect, 28f, 28f, guidePaint);
                 drawSquareCorners(canvas, guideRect);
-            }
-            if (showRedLineGuide) {
-                float centerY = (top + bottom) / 2f;
-                RectF glowRect = new RectF(left + side * 0.08f, centerY - 16f, right - side * 0.08f, centerY + 16f);
-                RectF lineRect = new RectF(left + side * 0.12f, centerY - 4f, right - side * 0.12f, centerY + 4f);
-                canvas.drawRoundRect(glowRect, 18f, 18f, redGlowPaint);
-                canvas.drawRoundRect(lineRect, 12f, 12f, redLinePaint);
             }
             if (faceRect != null) {
                 RectF drawRect = new RectF(
@@ -1073,18 +1111,6 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
             }
         }
 
-        private void drawMask(Canvas canvas, RectF guideRect) {
-            maskPath.reset();
-            maskPath.setFillType(Path.FillType.EVEN_ODD);
-            maskPath.addRect(0f, 0f, getWidth(), getHeight(), Path.Direction.CW);
-            if (showCircleGuide && !showSquareGuide) {
-                maskPath.addOval(guideRect, Path.Direction.CW);
-            } else {
-                maskPath.addRoundRect(guideRect, 28f, 28f, Path.Direction.CW);
-            }
-            canvas.drawPath(maskPath, maskPaint);
-        }
-
         private void drawSquareCorners(Canvas canvas, RectF rect) {
             float len = rect.width() * 0.14f;
             float radius = 28f;
@@ -1096,6 +1122,33 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
             canvas.drawLine(rect.left + radius, rect.bottom, rect.left + len, rect.bottom, cornerPaint);
             canvas.drawLine(rect.right, rect.bottom - radius, rect.right, rect.bottom - len, cornerPaint);
             canvas.drawLine(rect.right - radius, rect.bottom, rect.right - len, rect.bottom, cornerPaint);
+        }
+
+        private RectF buildGuideRect(float width, float height) {
+            float boxWidth = width * guideBoxWidthRatio;
+            float boxHeight = height * guideBoxHeightRatio;
+            float centerX = width / 2f + width * guideOffsetXRatio;
+            float centerY = height / 2f + height * guideOffsetYRatio;
+            float left = centerX - boxWidth / 2f;
+            float top = centerY - boxHeight / 2f;
+            if (left < 24f) left = 24f;
+            if (top < 24f) top = 24f;
+            if (left + boxWidth > width - 24f) left = width - 24f - boxWidth;
+            if (top + boxHeight > height - 24f) top = height - 24f - boxHeight;
+            return new RectF(left, top, left + boxWidth, top + boxHeight);
+        }
+
+        private float clampRatio(float value, float min, float max, float fallback) {
+            if (Float.isNaN(value) || Float.isInfinite(value)) {
+                return fallback;
+            }
+            if (value < min) {
+                return min;
+            }
+            if (value > max) {
+                return max;
+            }
+            return value;
         }
     }
 }

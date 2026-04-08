@@ -269,6 +269,11 @@ public class SunmiFaceModule extends UniModule {
         intent.putExtra("showCircleGuide", recognizeOptions.containsKey("showCircleGuide") && recognizeOptions.getBooleanValue("showCircleGuide"));
         intent.putExtra("showSquareGuide", !recognizeOptions.containsKey("showSquareGuide") || recognizeOptions.getBooleanValue("showSquareGuide"));
         intent.putExtra("showRedLineGuide", recognizeOptions.containsKey("showRedLineGuide") && recognizeOptions.getBooleanValue("showRedLineGuide"));
+        intent.putExtra("showGuideMask", recognizeOptions.containsKey("showGuideMask") && recognizeOptions.getBooleanValue("showGuideMask"));
+        intent.putExtra("guideBoxWidthRatio", recognizeOptions.containsKey("guideBoxWidthRatio") ? recognizeOptions.getFloatValue("guideBoxWidthRatio") : 0.62f);
+        intent.putExtra("guideBoxHeightRatio", recognizeOptions.containsKey("guideBoxHeightRatio") ? recognizeOptions.getFloatValue("guideBoxHeightRatio") : 0.62f);
+        intent.putExtra("guideOffsetXRatio", recognizeOptions.containsKey("guideOffsetXRatio") ? recognizeOptions.getFloatValue("guideOffsetXRatio") : 0f);
+        intent.putExtra("guideOffsetYRatio", recognizeOptions.containsKey("guideOffsetYRatio") ? recognizeOptions.getFloatValue("guideOffsetYRatio") : 0f);
         intent.putExtra("predictMode", recognizeOptions.containsKey("predictMode")
                 ? recognizeOptions.getIntValue("predictMode")
                 : SunmiFaceMode.PredictMode_Feature);

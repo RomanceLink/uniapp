@@ -52,6 +52,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class SunmiFaceCameraView extends FrameLayout implements TextureView.SurfaceTextureListener, Camera.PreviewCallback {
+    private static final Object SDK_LOCK = new Object();
+    private static boolean sharedSdkHandleReady = false;
+    private static boolean sharedSdkLicenseVerified = false;
+    private static boolean sharedAuthorizeSdkReady = false;
+    private static String sharedInitializedDbPath = "";
+
     public interface Listener {
         void onStatus(JSONObject event);
         void onRecognize(JSONObject event);
@@ -63,7 +69,6 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
     private final TextView overlayView;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private final ExecutorService analyzerExecutor = Executors.newSingleThreadExecutor();
-    private final Object sdkLock = new Object();
     private final Object cameraLock = new Object();
 
     private Listener listener;
@@ -74,9 +79,6 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
     private boolean previewReady = false;
     private boolean destroyed = false;
     private boolean analyzingFrame = false;
-    private boolean sdkHandleReady = false;
-    private boolean sdkLicenseVerified = false;
-    private boolean authorizeSdkReady = false;
     private boolean showStatusText = true;
     private long lastAnalyzeAt = 0L;
     private String lastMessage = "";
@@ -211,12 +213,16 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
 
     public void setLicensePath(String licensePath) {
         this.licensePath = licensePath == null ? "" : licensePath;
-        this.sdkLicenseVerified = false;
+        synchronized (SDK_LOCK) {
+            sharedSdkLicenseVerified = false;
+        }
     }
 
     public void setAppId(String appId) {
         this.appId = appId == null ? "" : appId;
-        this.sdkLicenseVerified = false;
+        synchronized (SDK_LOCK) {
+            sharedSdkLicenseVerified = false;
+        }
     }
 
     public void setForceRefresh(boolean forceRefresh) {
@@ -397,12 +403,6 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
             clearFaceOverlay();
             emitError("recognize_exception", "识别异常: " + safeMessage(e));
         } finally {
-            if (record != null) {
-                try {
-                    record.delete();
-                } catch (Exception ignored) {
-                }
-            }
             if (feature != null) {
                 try {
                     feature.delete();
@@ -420,13 +420,13 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
     }
 
     private void ensureSdkReady() {
-        synchronized (sdkLock) {
-            if (!sdkHandleReady) {
+        synchronized (SDK_LOCK) {
+            if (!sharedSdkHandleReady) {
                 int code = SunmiFaceSDK.createHandle();
                 if (code != SunmiFaceStatusCode.FACE_CODE_OK) {
                     throw new IllegalStateException("createHandle failed: " + SunmiFaceSDK.getErrorString(code));
                 }
-                sdkHandleReady = true;
+                sharedSdkHandleReady = true;
             }
 
             ensureLicenseVerified();
@@ -460,19 +460,19 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
             if (!TextUtils.isEmpty(dbPath)) {
                 File dbFile = new File(dbPath);
                 String finalDbPath = dbFile.isDirectory() ? new File(dbFile, "sunmi_face.db").getAbsolutePath() : dbFile.getAbsolutePath();
-                if (!finalDbPath.equals(initializedDbPath)) {
+                if (!finalDbPath.equals(sharedInitializedDbPath)) {
                     int dbCode = SunmiFaceSDK.initDB(finalDbPath);
                     if (dbCode != SunmiFaceStatusCode.FACE_CODE_OK) {
                         throw new IllegalStateException("initDB failed: " + SunmiFaceSDK.getErrorString(dbCode));
                     }
-                    initializedDbPath = finalDbPath;
+                    sharedInitializedDbPath = finalDbPath;
                 }
             }
         }
     }
 
     private void ensureLicenseVerified() {
-        if (sdkLicenseVerified) {
+        if (sharedSdkLicenseVerified) {
             return;
         }
         Context context = getContext();
@@ -492,9 +492,9 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
             }
             verifyCode = SunmiFaceSDK.verifyLicense(context, licenseContent);
         } else if (!TextUtils.isEmpty(appId)) {
-            if (!authorizeSdkReady) {
+            if (!sharedAuthorizeSdkReady) {
                 SunmiAuthorizeSDK.init(context);
-                authorizeSdkReady = true;
+                sharedAuthorizeSdkReady = true;
             }
             java.util.Map<String, Object> params = new java.util.HashMap<>();
             params.put(SunmiAuthorizeSDK.APP_ID, appId);
@@ -513,7 +513,7 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
         if (verifyCode != SunmiFaceStatusCode.FACE_CODE_OK) {
             throw new IllegalStateException("verifyLicense failed: " + SunmiFaceSDK.getErrorString(verifyCode));
         }
-        sdkLicenseVerified = true;
+        sharedSdkLicenseVerified = true;
     }
 
     private String readTextFile(File file) {
@@ -878,28 +878,8 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
     }
 
     private void scheduleSdkRelease(int generation) {
-        try {
-            analyzerExecutor.execute(() -> {
-                if (generation != resourceGeneration) {
-                    return;
-                }
-                synchronized (sdkLock) {
-                    if (generation != resourceGeneration) {
-                        return;
-                    }
-                    if (sdkHandleReady) {
-                        try {
-                            SunmiFaceSDK.releaseHandle();
-                        } catch (Exception ignored) {
-                        }
-                        sdkHandleReady = false;
-                        sdkLicenseVerified = false;
-                        initializedDbPath = "";
-                    }
-                }
-            });
-        } catch (Exception ignored) {
-        }
+        // 实时识别场景下不在每次开关相机时释放 SDK 句柄。
+        // 商米设备在授权成功后反复 create/release handle，第二次/第三次打开极易触发 native 崩溃。
     }
 
     private void restartIfRunning() {
@@ -908,6 +888,21 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
         }
         stopCameraOnly();
         openCameraIfPossible();
+    }
+
+    public static void releaseSharedSdk() {
+        synchronized (SDK_LOCK) {
+            if (sharedSdkHandleReady) {
+                try {
+                    SunmiFaceSDK.releaseHandle();
+                } catch (Exception ignored) {
+                }
+            }
+            sharedSdkHandleReady = false;
+            sharedSdkLicenseVerified = false;
+            sharedAuthorizeSdkReady = false;
+            sharedInitializedDbPath = "";
+        }
     }
 
     private int resolveCameraId() {

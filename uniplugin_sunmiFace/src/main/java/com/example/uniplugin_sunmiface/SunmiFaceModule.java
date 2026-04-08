@@ -626,12 +626,6 @@ public class SunmiFaceModule extends UniModule {
         } catch (Exception e) {
             callback.invoke(exception(e));
         } finally {
-            if (record != null) {
-                try {
-                    record.delete();
-                } catch (Exception ignored) {
-                }
-            }
             releaseCarrier(carrier);
         }
     }
@@ -661,12 +655,6 @@ public class SunmiFaceModule extends UniModule {
         } catch (Exception e) {
             callback.invoke(exception(e));
         } finally {
-            if (record != null) {
-                try {
-                    record.delete();
-                } catch (Exception ignored) {
-                }
-            }
             releaseCarrier(carrier);
         }
     }
@@ -803,13 +791,14 @@ public class SunmiFaceModule extends UniModule {
     @UniJSMethod(uiThread = false)
     public void releaseHandle(UniJSCallback callback) {
         releaseAllCachedFeatures();
-        if (!handleCreated) {
+        boolean hadModuleHandle = handleCreated;
+        handleCreated = false;
+        SunmiFaceCameraView.releaseSharedSdk();
+        if (!hadModuleHandle) {
             callback.invoke(success(null, "handle already released"));
             return;
         }
-        int code = SunmiFaceSDK.releaseHandle();
-        handleCreated = false;
-        callback.invoke(status(code, null, code == SunmiFaceStatusCode.FACE_CODE_OK ? "release handle success" : null));
+        callback.invoke(success(null, "release handle success"));
     }
 
     private void ensureHandle() {
@@ -1851,12 +1840,6 @@ public class SunmiFaceModule extends UniModule {
             res.put("eventType", "final");
             callback.invoke(res);
         } finally {
-            if (record != null) {
-                try {
-                    record.delete();
-                } catch (Exception ignored) {
-                }
-            }
             if (extractionResult != null && extractionResult.feature != null) {
                 try {
                     extractionResult.feature.delete();

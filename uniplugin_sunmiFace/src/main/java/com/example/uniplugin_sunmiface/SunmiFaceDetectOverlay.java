@@ -2,6 +2,7 @@ package com.example.uniplugin_sunmiface;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,8 @@ public class SunmiFaceDetectOverlay implements SunmiFaceCameraView.Listener {
             stopped = false;
             ViewGroup decor = (ViewGroup) activity.getWindow().getDecorView();
             container = new FrameLayout(activity);
-            container.setBackgroundColor(fullScreen ? Color.BLACK : 0x22000000);
+            boolean floatingWindowMode = isFloatingWindowMode(options, fullScreen);
+            container.setBackgroundColor(resolveContainerBackgroundColor(floatingWindowMode));
 
             cameraView = new SunmiFaceCameraView(activity);
             cameraView.setListener(this);
@@ -52,13 +54,7 @@ public class SunmiFaceDetectOverlay implements SunmiFaceCameraView.Listener {
                 closeButton = new Button(activity);
                 closeButton.setText("关闭");
                 closeButton.setOnClickListener(v -> stop("closed", "已关闭人脸识别"));
-                FrameLayout.LayoutParams closeParams = new FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                );
-                closeParams.gravity = Gravity.TOP | Gravity.END;
-                closeParams.topMargin = 80;
-                closeParams.rightMargin = 24;
+                FrameLayout.LayoutParams closeParams = buildCloseButtonLayoutParams(cameraParams, floatingWindowMode);
                 container.addView(closeButton, closeParams);
             } else {
                 closeButton = null;
@@ -71,12 +67,7 @@ public class SunmiFaceDetectOverlay implements SunmiFaceCameraView.Listener {
                 detectButton = new Button(activity);
                 detectButton.setText("开始检测");
                 detectButton.setOnClickListener(v -> startDetect());
-                FrameLayout.LayoutParams detectParams = new FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                );
-                detectParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
-                detectParams.bottomMargin = 48;
+                FrameLayout.LayoutParams detectParams = buildDetectButtonLayoutParams(cameraParams, floatingWindowMode);
                 container.addView(detectButton, detectParams);
             } else {
                 detectButton = null;
@@ -191,15 +182,121 @@ public class SunmiFaceDetectOverlay implements SunmiFaceCameraView.Listener {
         if (full) {
             return new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         }
-        int width = opts.containsKey("width") ? opts.getIntValue("width") : ViewGroup.LayoutParams.MATCH_PARENT;
-        int height = opts.containsKey("height") ? opts.getIntValue("height") : ViewGroup.LayoutParams.MATCH_PARENT;
-        if (width <= 0) width = ViewGroup.LayoutParams.MATCH_PARENT;
-        if (height <= 0) height = ViewGroup.LayoutParams.MATCH_PARENT;
+        DisplayMetrics dm = activity.getResources().getDisplayMetrics();
+        boolean floatingWindowMode = isFloatingWindowMode(opts, false);
+        int width;
+        int height;
+        if (opts.containsKey("width")) {
+            width = opts.getIntValue("width");
+        } else if (opts.containsKey("windowWidthRatio")) {
+            width = Math.round(dm.widthPixels * clampRatio(opts.getFloatValue("windowWidthRatio"), 0.15f, 1f, 0.62f));
+        } else {
+            width = floatingWindowMode ? Math.round(dm.widthPixels * 0.62f) : ViewGroup.LayoutParams.MATCH_PARENT;
+        }
+        if (opts.containsKey("height")) {
+            height = opts.getIntValue("height");
+        } else if (opts.containsKey("windowHeightRatio")) {
+            height = Math.round(dm.heightPixels * clampRatio(opts.getFloatValue("windowHeightRatio"), 0.15f, 1f, 0.52f));
+        } else {
+            height = floatingWindowMode ? Math.round(dm.heightPixels * 0.52f) : ViewGroup.LayoutParams.MATCH_PARENT;
+        }
+        if (width <= 0) width = floatingWindowMode ? Math.round(dm.widthPixels * 0.62f) : ViewGroup.LayoutParams.MATCH_PARENT;
+        if (height <= 0) height = floatingWindowMode ? Math.round(dm.heightPixels * 0.52f) : ViewGroup.LayoutParams.MATCH_PARENT;
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height);
-        params.gravity = Gravity.TOP | Gravity.START;
-        params.leftMargin = opts.containsKey("offsetX") ? opts.getIntValue("offsetX") : 0;
-        params.topMargin = opts.containsKey("offsetY") ? opts.getIntValue("offsetY") : 0;
+        if (floatingWindowMode) {
+            params.gravity = Gravity.CENTER;
+            int offsetX = opts.containsKey("windowOffsetX")
+                    ? opts.getIntValue("windowOffsetX")
+                    : Math.round(dm.widthPixels * (opts.containsKey("windowOffsetXRatio") ? opts.getFloatValue("windowOffsetXRatio") : 0f));
+            int offsetY = opts.containsKey("windowOffsetY")
+                    ? opts.getIntValue("windowOffsetY")
+                    : Math.round(dm.heightPixels * (opts.containsKey("windowOffsetYRatio") ? opts.getFloatValue("windowOffsetYRatio") : 0f));
+            params.leftMargin = offsetX;
+            params.topMargin = offsetY;
+        } else {
+            params.gravity = Gravity.TOP | Gravity.START;
+            params.leftMargin = opts.containsKey("offsetX") ? opts.getIntValue("offsetX") : 0;
+            params.topMargin = opts.containsKey("offsetY") ? opts.getIntValue("offsetY") : 0;
+        }
         return params;
+    }
+
+    private boolean isFloatingWindowMode(JSONObject opts, boolean full) {
+        if (full) {
+            return false;
+        }
+        if (opts == null) {
+            return true;
+        }
+        if (opts.containsKey("floatingWindowMode")) {
+            return opts.getBooleanValue("floatingWindowMode");
+        }
+        return true;
+    }
+
+    private int resolveContainerBackgroundColor(boolean floatingWindowMode) {
+        if (options.containsKey("containerBackgroundColor")) {
+            return parseColor(options.getString("containerBackgroundColor"), floatingWindowMode ? Color.TRANSPARENT : 0x22000000);
+        }
+        if (floatingWindowMode) {
+            return Color.TRANSPARENT;
+        }
+        return fullScreen ? Color.BLACK : 0x22000000;
+    }
+
+    private FrameLayout.LayoutParams buildCloseButtonLayoutParams(FrameLayout.LayoutParams cameraParams, boolean floatingWindowMode) {
+        FrameLayout.LayoutParams closeParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        if (!floatingWindowMode) {
+            closeParams.gravity = Gravity.TOP | Gravity.END;
+            closeParams.topMargin = 80;
+            closeParams.rightMargin = 24;
+            return closeParams;
+        }
+        closeParams.gravity = Gravity.TOP | Gravity.START;
+        closeParams.leftMargin = cameraParams.leftMargin + Math.max(0, cameraParams.width - dp(76));
+        closeParams.topMargin = Math.max(0, cameraParams.topMargin - dp(18));
+        return closeParams;
+    }
+
+    private FrameLayout.LayoutParams buildDetectButtonLayoutParams(FrameLayout.LayoutParams cameraParams, boolean floatingWindowMode) {
+        FrameLayout.LayoutParams detectParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        if (!floatingWindowMode) {
+            detectParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+            detectParams.bottomMargin = 48;
+            return detectParams;
+        }
+        detectParams.gravity = Gravity.TOP | Gravity.START;
+        detectParams.leftMargin = cameraParams.leftMargin + Math.max(0, (cameraParams.width - dp(120)) / 2);
+        detectParams.topMargin = cameraParams.topMargin + cameraParams.height + dp(16);
+        return detectParams;
+    }
+
+    private int dp(int value) {
+        return Math.round(activity.getResources().getDisplayMetrics().density * value);
+    }
+
+    private float clampRatio(float value, float min, float max, float fallback) {
+        if (Float.isNaN(value) || value < min || value > max) {
+            return fallback;
+        }
+        return value;
+    }
+
+    private int parseColor(String colorValue, int fallback) {
+        if (colorValue == null || colorValue.trim().isEmpty()) {
+            return fallback;
+        }
+        try {
+            return Color.parseColor(colorValue.trim());
+        } catch (Exception ignored) {
+            return fallback;
+        }
     }
 
     @Override

@@ -1,0 +1,26 @@
+## 1.0.0
+
+- 初始化 UTS 插件发布骨架
+- Android 侧改为直接依赖商米底层 SDK：
+  - `facelib-release.aar`
+  - `opencv.aar`
+  - `SunmiAuthorize-SDK-1.0.1.aar`
+- 已迁移 Android 核心能力：
+  - 设备信息
+  - 授权初始化
+  - 同步/异步授权码获取
+  - 文件激活 / AppId 激活
+  - 句柄创建 / 释放
+  - SDK 初始化
+  - 配置读写
+  - 图片特征提取 / 释放
+  - 人脸库初始化
+  - 入库 / 搜库
+  - 1:1 比对
+  - 删除 / 清空 / 获取人脸库记录
+- 已接入实时相机识别桥接：
+  - `startFaceDetect`
+  - `stopFaceDetect`
+  - `openFaceDetect`
+  - `startFaceRecognize` 兼容别名
+- 当前仍需在 HBuilderX 中做首次 UTS 编译验证

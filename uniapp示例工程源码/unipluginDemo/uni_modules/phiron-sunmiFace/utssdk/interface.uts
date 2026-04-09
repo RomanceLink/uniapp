@@ -1,0 +1,115 @@
+export type SunmiFaceCommonResult = any
+
+export type SunmiFaceAuthorizeOptions = {
+  appId ?: string
+  forceRefresh ?: boolean
+}
+
+export type SunmiFaceLicenseOptions = {
+  licensePath : string
+}
+
+export type SunmiFaceInitOptions = {
+  useAssetConfig ?: boolean
+  configPath ?: string
+  dbPath ?: string
+}
+
+export type SunmiFaceConfigOptions = {
+  threadNum ?: number
+  distanceThreshold ?: number
+  faceScoreThreshold ?: number
+  minFaceSize ?: number
+  depthXOffset ?: number
+  depthYOffset ?: number
+  boxSortMode ?: number
+}
+
+export type SunmiFaceImageOptions = {
+  imagePath ?: string
+  base64 ?: string
+  token ?: string
+  feature ?: Array<number>
+  keepAlive ?: boolean
+  retainToken ?: boolean
+  maxFaceCount ?: number
+  predictMode ?: number
+  livenessMode ?: number
+  qualityMode ?: number
+  decodeMaxSize ?: number
+  rectRotation ?: number
+  rectMirrorX ?: boolean
+  distanceThreshold ?: number
+  minFaceSize ?: number
+}
+
+export type SunmiFaceDBRecordOptions = {
+  imagePath ?: string
+  base64 ?: string
+  token ?: string
+  feature ?: Array<number>
+  keepAlive ?: boolean
+  retainToken ?: boolean
+  maxFaceCount ?: number
+  predictMode ?: number
+  livenessMode ?: number
+  qualityMode ?: number
+  decodeMaxSize ?: number
+  rectRotation ?: number
+  rectMirrorX ?: boolean
+  distanceThreshold ?: number
+  minFaceSize ?: number
+  dbPath ?: string
+  id ?: string
+  name ?: string
+  phone ?: string
+  imgId ?: string
+  photoPath ?: string
+}
+
+export type SunmiFaceCompareOptions = {
+  first : SunmiFaceImageOptions
+  second : SunmiFaceImageOptions
+}
+
+export type SunmiFaceDetectOptions = {
+  appId ?: string
+  licensePath ?: string
+  forceRefresh ?: boolean
+  dbPath ?: string
+  cameraFacing ?: string
+  showCloseButton ?: boolean
+  showStartButton ?: boolean
+  showStatusText ?: boolean
+  autoStartAnalyze ?: boolean
+  autoStopOnRecognize ?: boolean
+  maxRecognizeFailures ?: number
+  predictMode ?: number
+  livenessMode ?: number
+  qualityMode ?: number
+  maxFaceCount ?: number
+  faceScoreThreshold ?: number
+  threadNum ?: number
+  analyzeIntervalMs ?: number
+  previewDecodeMaxSize ?: number
+  displayOrientationDeg ?: number
+  captureImageRotationDeg ?: number
+  captureMirrorX ?: boolean
+  rectRotation ?: number
+  rectMirrorX ?: boolean
+  showSquareGuide ?: boolean
+  showGuideMask ?: boolean
+  guideBoxWidthRatio ?: number
+  guideBoxHeightRatio ?: number
+  guideOffsetXRatio ?: number
+  guideOffsetYRatio ?: number
+  floatingWindowMode ?: boolean
+  containerBackgroundColor ?: string
+  windowWidthRatio ?: number
+  windowHeightRatio ?: number
+  windowOffsetXRatio ?: number
+  windowOffsetYRatio ?: number
+}
+
+export type SunmiFaceCallback = (res : SunmiFaceCommonResult) => void
+export type SunmiFaceRealtimeCallback = (res : SunmiFaceCommonResult) => void

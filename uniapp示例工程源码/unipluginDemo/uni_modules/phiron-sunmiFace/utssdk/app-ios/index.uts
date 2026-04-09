@@ -1,0 +1,41 @@
+import { SunmiFaceCommonResult } from "../interface.uts"
+
+function unsupported(message : string) : SunmiFaceCommonResult {
+  return {
+    code: -1,
+    success: false,
+    message: message,
+    data: null
+  } as SunmiFaceCommonResult
+}
+
+export function getVersion() : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function getDeviceInfo() : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function initAuthorizeSDK(_options : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function getAuthorizeSDKVersion() : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function syncGetAuthorizeCode(_options : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function asyncGetAuthorizeToken(_options : any | null = null, _callback : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function clearLocalToken() : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function createHandle() : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function init(_options : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function activateByLicensePath(_options : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function activateByAppId(_options : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function verifyLicense(_options : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function getErrorString(_options : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function setConfig(_options : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function getConfig() : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function initDB(_options : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function getImageFeatures(_options : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function releaseImageFeatures(_options : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function addDBRecord(_options : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function searchDB(_options : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function compare1v1(_options : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function deleteDBRecord(_options : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function getAllDBRecords(_options : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function clearFaceDatabase(_options : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function releaseHandle() : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function checkPermissions() : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function startFaceRecognize(_options : any | null = null, _callback : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function startFaceDetect(_options : any | null = null, _callback : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function stopFaceDetect() : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }
+export function openFaceDetect(_options : any | null = null, _callback : any | null = null) : SunmiFaceCommonResult { return unsupported("iOS 暂不支持") }

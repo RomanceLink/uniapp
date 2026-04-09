@@ -1,0 +1,144 @@
+import { SunmiFaceCommonResult, SunmiFaceAuthorizeOptions, SunmiFaceLicenseOptions, SunmiFaceInitOptions, SunmiFaceConfigOptions, SunmiFaceImageOptions, SunmiFaceDBRecordOptions, SunmiFaceCompareOptions, SunmiFaceDetectOptions, SunmiFaceCallback, SunmiFaceRealtimeCallback } from "../interface.uts"
+import SunmiFaceNative from "uts.sdk.modules.phironsunmiFace.SunmiFaceNative"
+import SunmiFaceRealtimeNative from "uts.sdk.modules.phironsunmiFace.SunmiFaceRealtimeNative"
+
+function parseResult(resultJson : string) : SunmiFaceCommonResult {
+  return JSON.parse(resultJson) as any
+}
+
+function stringifyOptions(options : any | null) : string | null {
+  return options == null ? null : JSON.stringify(options)
+}
+
+export function getVersion() : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.getVersionJson())
+}
+
+export function getDeviceInfo() : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.getDeviceInfoJson())
+}
+
+export function initAuthorizeSDK(options : any | null = null) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.initAuthorizeSDKJson(stringifyOptions(options)))
+}
+
+export function getAuthorizeSDKVersion() : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.getAuthorizeSDKVersionJson())
+}
+
+export function syncGetAuthorizeCode(options : SunmiFaceAuthorizeOptions) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.syncGetAuthorizeCodeJson(stringifyOptions(options)))
+}
+
+export function asyncGetAuthorizeToken(options : SunmiFaceAuthorizeOptions, callback : SunmiFaceCallback | null = null) : SunmiFaceCommonResult {
+  const result = parseResult(SunmiFaceNative.syncGetAuthorizeCodeJson(stringifyOptions(options)))
+  if (callback != null) {
+    callback(result)
+  }
+  return result
+}
+
+export function clearLocalToken() : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.clearLocalTokenJson())
+}
+
+export function createHandle() : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.createHandleJson())
+}
+
+export function init(options : SunmiFaceInitOptions | null = null) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.initJson(stringifyOptions(options)))
+}
+
+export function activateByLicensePath(options : SunmiFaceLicenseOptions) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.activateByLicensePathJson(stringifyOptions(options)))
+}
+
+export function activateByAppId(options : SunmiFaceAuthorizeOptions) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.activateByAppIdJson(stringifyOptions(options)))
+}
+
+export function verifyLicense(options : any) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.verifyLicenseJson(stringifyOptions(options)))
+}
+
+export function getErrorString(options : any) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.getErrorStringJson(stringifyOptions(options)))
+}
+
+export function setConfig(options : SunmiFaceConfigOptions) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.setConfigJson(stringifyOptions(options)))
+}
+
+export function getConfig() : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.getConfigJson())
+}
+
+export function initDB(options : any | null = null) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.initDBJson(stringifyOptions(options)))
+}
+
+export function getImageFeatures(options : SunmiFaceImageOptions) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.getImageFeaturesJson(stringifyOptions(options)))
+}
+
+export function releaseImageFeatures(options : any) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.releaseImageFeaturesJson(stringifyOptions(options)))
+}
+
+export function addDBRecord(options : SunmiFaceDBRecordOptions) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.addDBRecordJson(stringifyOptions(options)))
+}
+
+export function searchDB(options : SunmiFaceDBRecordOptions | SunmiFaceImageOptions) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.searchDBJson(stringifyOptions(options)))
+}
+
+export function compare1v1(options : SunmiFaceCompareOptions) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.compare1v1Json(stringifyOptions(options)))
+}
+
+export function deleteDBRecord(options : any) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.deleteDBRecordJson(stringifyOptions(options)))
+}
+
+export function getAllDBRecords(options : any | null = null) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.getAllDBRecordsJson(stringifyOptions(options)))
+}
+
+export function clearFaceDatabase(options : any | null = null) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.clearFaceDatabaseJson(stringifyOptions(options)))
+}
+
+export function releaseHandle() : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceNative.releaseHandleJson())
+}
+
+export function checkPermissions() : SunmiFaceCommonResult {
+  return parseResult('{"code":0,"success":true,"message":"请在业务侧自行申请运行时权限，UTS 首版先返回权限检查提示","data":{"note":"建议在页面进入前申请 CAMERA、READ_EXTERNAL_STORAGE、WRITE_EXTERNAL_STORAGE、READ_PHONE_STATE"}}')
+}
+
+function wrapRealtimeCallback(callback : SunmiFaceRealtimeCallback | null) : ((resultJson : string) => void) | null {
+  if (callback == null) {
+    return null
+  }
+  return (resultJson : string) => {
+    callback(parseResult(resultJson))
+  }
+}
+
+export function startFaceRecognize(options : SunmiFaceDetectOptions, callback : SunmiFaceRealtimeCallback | null = null) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceRealtimeNative.startFaceRecognizeJson(stringifyOptions(options), wrapRealtimeCallback(callback)))
+}
+
+export function startFaceDetect(options : SunmiFaceDetectOptions, callback : SunmiFaceRealtimeCallback | null = null) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceRealtimeNative.startFaceDetectJson(stringifyOptions(options), wrapRealtimeCallback(callback)))
+}
+
+export function stopFaceDetect() : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceRealtimeNative.stopFaceDetectJson())
+}
+
+export function openFaceDetect(options : SunmiFaceDetectOptions, callback : SunmiFaceRealtimeCallback | null = null) : SunmiFaceCommonResult {
+  return parseResult(SunmiFaceRealtimeNative.openFaceDetectJson(stringifyOptions(options), wrapRealtimeCallback(callback)))
+}

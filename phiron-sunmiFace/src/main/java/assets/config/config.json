@@ -1,0 +1,11 @@
+{
+  "face_model_path":"face.model",
+  "detect_model_path":"detect.model",
+  "rgb_liveness_model_path":"rgb_liveness.model",
+  "nir_liveness_model_path":"nir_liveness.model",
+  "attr_model_path":"attribute.model",
+  "occlusion_model_path":"face_occlusion.model",
+  "headpose_model_path":"head_pose.model",
+  "depth_detector":"depth_detector.yml",
+  "face_db_file":"sunmi_face.db"
+}

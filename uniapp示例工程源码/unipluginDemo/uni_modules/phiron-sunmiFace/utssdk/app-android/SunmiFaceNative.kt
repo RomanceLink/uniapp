@@ -1,11 +1,16 @@
 package uts.sdk.modules.phironsunmiFace
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.text.TextUtils
 import android.util.Base64
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
@@ -44,6 +49,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 object SunmiFaceNative {
     private const val METADATA_FILE_NAME = "face_records_meta.json"
+    private const val FACE_PERMISSION_REQUEST_CODE = 20041
     private val featuresCache = ConcurrentHashMap<String, SunmiFaceImageFeatures>()
     private var handleCreated = false
     private var authorizeSdkInitialized = false
@@ -81,6 +87,7 @@ object SunmiFaceNative {
     @JvmStatic
     fun initAuthorizeSDKJson(optionsJson: String?): String {
         return wrap {
+            ensureAuthorizeRuntimeAvailable()
             val context = requireContext()
             val options = parseOptions(optionsJson)
             SunmiAuthorizeSDK.setDebuggable(options.getBooleanValue("debuggable"))
@@ -106,6 +113,7 @@ object SunmiFaceNative {
     @JvmStatic
     fun syncGetAuthorizeCodeJson(optionsJson: String?): String {
         return wrap {
+            ensureAuthorizeRuntimeAvailable()
             ensureAuthorizeSdk()
             val options = parseOptions(optionsJson)
             val result = SunmiAuthorizeSDK.syncGetAuthorizeCode(buildAuthorizeParams(options))
@@ -116,6 +124,7 @@ object SunmiFaceNative {
     @JvmStatic
     fun clearLocalTokenJson(): String {
         return wrap {
+            ensureAuthorizeRuntimeAvailable()
             ensureAuthorizeSdk()
             SunmiAuthorizeSDK.clearLocalToken()
             success(null, "clear local token success")
@@ -166,6 +175,7 @@ object SunmiFaceNative {
     @JvmStatic
     fun activateByAppIdJson(optionsJson: String?): String {
         return wrap {
+            ensureAuthorizeRuntimeAvailable()
             val context = requireContext()
             val options = parseOptions(optionsJson)
             ensureAuthorizeSdk()
@@ -192,6 +202,7 @@ object SunmiFaceNative {
             val license = options.getString("license")
             val licensePath = options.getString("licensePath")
             if (!appId.isNullOrEmpty()) {
+                ensureAuthorizeRuntimeAvailable()
                 ensureAuthorizeSdk()
                 val authResult = SunmiAuthorizeSDK.syncGetAuthorizeCode(buildAuthorizeParams(options))
                 if (authResult == null || authResult.code != ErrorCode.IS_SUCCESS || authResult.token.isNullOrEmpty()) {
@@ -222,6 +233,33 @@ object SunmiFaceNative {
         data["code"] = code
         data["errorString"] = SunmiFaceSDK.getErrorString(code)
         return success(data, "get error string success").toJSONString()
+    }
+
+    @JvmStatic
+    fun checkPermissionsJson(): String {
+        return wrap {
+            val activity = requireActivity()
+            val requiredPermissions = requiredRuntimePermissions()
+            val missingPermissions = requiredPermissions.filter {
+                ContextCompat.checkSelfPermission(activity, it) != PackageManager.PERMISSION_GRANTED
+            }
+            val data = JSONObject()
+            data["requiredPermissions"] = JSONArray().apply { addAll(requiredPermissions) }
+            data["missingPermissions"] = JSONArray().apply { addAll(missingPermissions) }
+            data["allGranted"] = missingPermissions.isEmpty()
+            data["requested"] = false
+            if (missingPermissions.isEmpty()) {
+                success(data, "权限已全部授予")
+            } else {
+                ActivityCompat.requestPermissions(
+                    activity,
+                    missingPermissions.toTypedArray(),
+                    FACE_PERMISSION_REQUEST_CODE
+                )
+                data["requested"] = true
+                success(data, "已拉起系统权限授权弹窗")
+            }
+        }
     }
 
     @JvmStatic
@@ -812,6 +850,28 @@ object SunmiFaceNative {
         }
     }
 
+    private fun ensureAuthorizeRuntimeAvailable() {
+        val missing = mutableListOf<String>()
+        val requiredClasses = listOf(
+            "com.sunmilib.service.HttpConfig\$Builder",
+            "com.sunmilib.http.Request",
+            "com.sunmilib.http.BaseResponse",
+            "io.reactivex.Single"
+        )
+        for (name in requiredClasses) {
+            try {
+                Class.forName(name)
+            } catch (_: Throwable) {
+                missing.add(name)
+            }
+        }
+        if (missing.isNotEmpty()) {
+            throw IllegalStateException(
+                "SunmiAuthorize-SDK runtime dependencies are missing: ${missing.joinToString(", ")}"
+            )
+        }
+    }
+
     private fun ensureHandle() {
         if (!handleCreated) {
             val code = SunmiFaceSDK.createHandle()
@@ -820,6 +880,22 @@ object SunmiFaceNative {
                 throw IllegalStateException("createHandle failed: ${SunmiFaceSDK.getErrorString(code)}")
             }
         }
+    }
+
+    private fun requiredRuntimePermissions(): List<String> {
+        val permissions = mutableListOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.READ_PHONE_STATE
+        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions.add(Manifest.permission.READ_MEDIA_IMAGES)
+        } else {
+            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+        return permissions.distinct()
     }
 
     private fun ensureConfigDirectory(context: Context, options: JSONObject): File {
@@ -1085,7 +1161,7 @@ object SunmiFaceNative {
     private fun wrap(block: () -> JSONObject): String {
         return try {
             block().toJSONString()
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             val result = JSONObject()
             result["code"] = SunmiFaceStatusCode.FACE_CODE_OTHER_ERROR
             result["success"] = false
@@ -1098,6 +1174,10 @@ object SunmiFaceNative {
 
     private fun requireContext(): Context {
         return UTSAndroid.getAppContext() ?: throw IllegalStateException("context is null")
+    }
+
+    private fun requireActivity(): Activity {
+        return UTSAndroid.getUniActivity() ?: throw IllegalStateException("activity is null")
     }
 
     private fun getContext(): Context? = UTSAndroid.getAppContext()

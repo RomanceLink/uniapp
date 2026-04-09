@@ -115,7 +115,7 @@ export function releaseHandle() : SunmiFaceCommonResult {
 }
 
 export function checkPermissions() : SunmiFaceCommonResult {
-  return parseResult('{"code":0,"success":true,"message":"请在业务侧自行申请运行时权限，UTS 首版先返回权限检查提示","data":{"note":"建议在页面进入前申请 CAMERA、READ_EXTERNAL_STORAGE、WRITE_EXTERNAL_STORAGE、READ_PHONE_STATE"}}')
+  return parseResult(SunmiFaceNative.checkPermissionsJson())
 }
 
 function wrapRealtimeCallback(callback : SunmiFaceRealtimeCallback | null) : ((resultJson : string) => void) | null {

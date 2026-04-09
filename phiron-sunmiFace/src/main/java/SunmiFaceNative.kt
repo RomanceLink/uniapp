@@ -87,6 +87,7 @@ object SunmiFaceNative {
     @JvmStatic
     fun initAuthorizeSDKJson(optionsJson: String?): String {
         return wrap {
+            ensureAuthorizeRuntimeAvailable()
             val context = requireContext()
             val options = parseOptions(optionsJson)
             SunmiAuthorizeSDK.setDebuggable(options.getBooleanValue("debuggable"))
@@ -112,6 +113,7 @@ object SunmiFaceNative {
     @JvmStatic
     fun syncGetAuthorizeCodeJson(optionsJson: String?): String {
         return wrap {
+            ensureAuthorizeRuntimeAvailable()
             ensureAuthorizeSdk()
             val options = parseOptions(optionsJson)
             val result = SunmiAuthorizeSDK.syncGetAuthorizeCode(buildAuthorizeParams(options))
@@ -122,6 +124,7 @@ object SunmiFaceNative {
     @JvmStatic
     fun clearLocalTokenJson(): String {
         return wrap {
+            ensureAuthorizeRuntimeAvailable()
             ensureAuthorizeSdk()
             SunmiAuthorizeSDK.clearLocalToken()
             success(null, "clear local token success")
@@ -172,6 +175,7 @@ object SunmiFaceNative {
     @JvmStatic
     fun activateByAppIdJson(optionsJson: String?): String {
         return wrap {
+            ensureAuthorizeRuntimeAvailable()
             val context = requireContext()
             val options = parseOptions(optionsJson)
             ensureAuthorizeSdk()
@@ -198,6 +202,7 @@ object SunmiFaceNative {
             val license = options.getString("license")
             val licensePath = options.getString("licensePath")
             if (!appId.isNullOrEmpty()) {
+                ensureAuthorizeRuntimeAvailable()
                 ensureAuthorizeSdk()
                 val authResult = SunmiAuthorizeSDK.syncGetAuthorizeCode(buildAuthorizeParams(options))
                 if (authResult == null || authResult.code != ErrorCode.IS_SUCCESS || authResult.token.isNullOrEmpty()) {
@@ -845,6 +850,28 @@ object SunmiFaceNative {
         }
     }
 
+    private fun ensureAuthorizeRuntimeAvailable() {
+        val missing = mutableListOf<String>()
+        val requiredClasses = listOf(
+            "com.sunmilib.service.HttpConfig\$Builder",
+            "com.sunmilib.http.Request",
+            "com.sunmilib.http.BaseResponse",
+            "io.reactivex.Single"
+        )
+        for (name in requiredClasses) {
+            try {
+                Class.forName(name)
+            } catch (_: Throwable) {
+                missing.add(name)
+            }
+        }
+        if (missing.isNotEmpty()) {
+            throw IllegalStateException(
+                "SunmiAuthorize-SDK runtime dependencies are missing: ${missing.joinToString(", ")}"
+            )
+        }
+    }
+
     private fun ensureHandle() {
         if (!handleCreated) {
             val code = SunmiFaceSDK.createHandle()
@@ -1134,7 +1161,7 @@ object SunmiFaceNative {
     private fun wrap(block: () -> JSONObject): String {
         return try {
             block().toJSONString()
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             val result = JSONObject()
             result["code"] = SunmiFaceStatusCode.FACE_CODE_OTHER_ERROR
             result["success"] = false

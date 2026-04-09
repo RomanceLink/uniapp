@@ -13,6 +13,7 @@
 -dontwarn com.sunmilib.service.HttpConfig$SecretMode
 -dontwarn com.sunmilib.service.HttpConfig
 -dontwarn io.dcloud.feature.audio.mp3.SimpleLame
+-dontwarn io.dcloud.sdk.base.utils.DensityUtil
 -dontwarn io.reactivex.Scheduler
 -dontwarn io.reactivex.Single
 -dontwarn io.reactivex.android.schedulers.AndroidSchedulers

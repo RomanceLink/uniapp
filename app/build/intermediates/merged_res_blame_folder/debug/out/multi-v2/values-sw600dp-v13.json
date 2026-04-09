@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.android.UniPlugin.app-mergeDebugResources-18:/values-sw600dp-v13/values-sw600dp-v13.xml",
+            "outputFile": "com.android.UniPlugin.app-mergeDebugResources-19:/values-sw600dp-v13/values-sw600dp-v13.xml",
             "map": [
                 {
-                    "source": "/Users/panlong/.gradle/caches/transforms-3/e36166d39b8ccbaf01fe46dc847f367e/transformed/appcompat-1.1.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
+                    "source": "/Users/panlong/.gradle/caches/transforms-3/e064caec7585c0179469b2a2da7d1d25/transformed/appcompat-1.1.0/res/values-sw600dp-v13/values-sw600dp-v13.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",

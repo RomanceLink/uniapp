@@ -1,0 +1,57 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.example.phiron_sunmiface'
+    compileSdkVersion 34
+
+    defaultConfig {
+        minSdkVersion 21
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            java.srcDirs = ['src/main/java']
+        }
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'src/main/java/libs', '../app/libs'
+    }
+}
+
+dependencies {
+    compileOnly fileTree(dir: '../app/libs', include: ['*.aar'])
+    compileOnly fileTree(dir: '../app/libs', include: ['*.jar'])
+
+    implementation(name: 'facelib-release', ext: 'aar')
+    implementation(name: 'opencv', ext: 'aar')
+    implementation(name: 'SunmiAuthorize-SDK-1.0.1', ext: 'aar')
+
+    compileOnly 'com.alibaba:fastjson:1.1.46.android'
+    compileOnly 'androidx.core:core-ktx:1.6.0'
+    compileOnly 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.0'
+    compileOnly 'org.jetbrains.kotlin:kotlin-reflect:1.6.0'
+    compileOnly 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8'
+    compileOnly 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.8'
+}

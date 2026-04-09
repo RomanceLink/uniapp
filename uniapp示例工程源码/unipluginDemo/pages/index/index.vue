@@ -38,6 +38,12 @@
 					name:'插件示例RichAlert',
 					open:false,
 					url:'/pages/sample/richAlert'
+				},
+				{
+					id:'sunmiFaceUTS',
+					name:'插件示例SunmiFace UTS',
+					open:false,
+					url:'/pages/sample/sunmiFaceUTS'
 				}],
 				navigateFlag: false
 			}

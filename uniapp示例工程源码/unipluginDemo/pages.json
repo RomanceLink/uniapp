@@ -29,6 +29,12 @@
 			"style": {
 				"navigationBarTitleText": "SunmiFace相机"
 			}
+		},
+		{
+			"path": "pages/sample/sunmiFaceUTS",
+			"style": {
+				"navigationBarTitleText": "SunmiFace UTS"
+			}
 		}
 	],
 	"globalStyle": {

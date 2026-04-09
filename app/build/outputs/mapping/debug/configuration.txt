@@ -354,16 +354,19 @@
 
 
 # End of content from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/build/intermediates/aapt_proguard_file/debug/aapt_rules.txt
-# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/03a9ae7710227d079fd17d48d4049b87/transformed/jetified-android-gif-drawable-release@1.2.23/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/9c1da43bab8f65aa0dcebf299652045f/transformed/jetified-android-gif-drawable-release@1.2.23/proguard.txt
 -keep public class pl.droidsonroids.gif.GifIOException{<init>(int, java.lang.String);}
 #Prevents warnings for consumers not using AndroidX
 -dontwarn androidx.annotation.**
 
-# End of content from /Users/panlong/.gradle/caches/transforms-3/03a9ae7710227d079fd17d48d4049b87/transformed/jetified-android-gif-drawable-release@1.2.23/proguard.txt
-# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/410d98cc3c1492d22a9c92d72dbf13c9/transformed/jetified-oaid_sdk_1.0.25/proguard.txt
+# End of content from /Users/panlong/.gradle/caches/transforms-3/9c1da43bab8f65aa0dcebf299652045f/transformed/jetified-android-gif-drawable-release@1.2.23/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/1bdfae81b2d6d9962ed73934fc4bb0e7/transformed/jetified-oaid_sdk_1.0.25/proguard.txt
 
-# End of content from /Users/panlong/.gradle/caches/transforms-3/410d98cc3c1492d22a9c92d72dbf13c9/transformed/jetified-oaid_sdk_1.0.25/proguard.txt
-# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/62c7b45c02a319d21e2673c065692f06/transformed/recyclerview-1.1.0/proguard.txt
+# End of content from /Users/panlong/.gradle/caches/transforms-3/1bdfae81b2d6d9962ed73934fc4bb0e7/transformed/jetified-oaid_sdk_1.0.25/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/e093970e3254aab1407cfa452d76e429/transformed/jetified-utsplugin-release/proguard.txt
+
+# End of content from /Users/panlong/.gradle/caches/transforms-3/e093970e3254aab1407cfa452d76e429/transformed/jetified-utsplugin-release/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/265f2dc1c77eba035d1716b3bc41d054/transformed/recyclerview-1.1.0/proguard.txt
 # Copyright (C) 2015 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -389,8 +392,8 @@
     public void suppressLayout(boolean);
     public boolean isLayoutSuppressed();
 }
-# End of content from /Users/panlong/.gradle/caches/transforms-3/62c7b45c02a319d21e2673c065692f06/transformed/recyclerview-1.1.0/proguard.txt
-# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/744c08b4aebc704d435569b5008bf646/transformed/jetified-glide-4.9.0/proguard.txt
+# End of content from /Users/panlong/.gradle/caches/transforms-3/265f2dc1c77eba035d1716b3bc41d054/transformed/recyclerview-1.1.0/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/3576247cb2c6fd293fbb738e69635a1c/transformed/jetified-glide-4.9.0/proguard.txt
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public class * extends com.bumptech.glide.module.AppGlideModule
 -keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
@@ -400,8 +403,8 @@
 
 # Uncomment for DexGuard only
 #-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
-# End of content from /Users/panlong/.gradle/caches/transforms-3/744c08b4aebc704d435569b5008bf646/transformed/jetified-glide-4.9.0/proguard.txt
-# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/c5191e028fe60e896282e064ca214a36/transformed/webkit-1.3.0/proguard.txt
+# End of content from /Users/panlong/.gradle/caches/transforms-3/3576247cb2c6fd293fbb738e69635a1c/transformed/jetified-glide-4.9.0/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/a685bd9084a54f47a677d0d85feddc76/transformed/webkit-1.3.0/proguard.txt
 # Copyright 2018 The Chromium Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
@@ -430,8 +433,8 @@
 -keepnames public class androidx.webkit.WebViewClientCompat
 
 
-# End of content from /Users/panlong/.gradle/caches/transforms-3/c5191e028fe60e896282e064ca214a36/transformed/webkit-1.3.0/proguard.txt
-# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/e36166d39b8ccbaf01fe46dc847f367e/transformed/appcompat-1.1.0/proguard.txt
+# End of content from /Users/panlong/.gradle/caches/transforms-3/a685bd9084a54f47a677d0d85feddc76/transformed/webkit-1.3.0/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/e064caec7585c0179469b2a2da7d1d25/transformed/appcompat-1.1.0/proguard.txt
 # Copyright (C) 2018 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -453,11 +456,11 @@
 # aapt is not able to read app::actionViewClass and app:actionProviderClass to produce proguard
 # keep rules. Add a commonly used SearchView to the keep list until b/109831488 is resolved.
 -keep class androidx.appcompat.widget.SearchView { <init>(...); }
-# End of content from /Users/panlong/.gradle/caches/transforms-3/e36166d39b8ccbaf01fe46dc847f367e/transformed/appcompat-1.1.0/proguard.txt
+# End of content from /Users/panlong/.gradle/caches/transforms-3/e064caec7585c0179469b2a2da7d1d25/transformed/appcompat-1.1.0/proguard.txt
 # The proguard configuration file for the following section is /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/consumer_proguard_dir/debug/lib0/proguard.txt
 
 # End of content from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/consumer_proguard_dir/debug/lib0/proguard.txt
-# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/8bba52d669908ffe7e363df39f09f71e/transformed/vectordrawable-animated-1.1.0/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/650f9c7583979ec4a4a280f7ab4cdd65/transformed/vectordrawable-animated-1.1.0/proguard.txt
 # Copyright (C) 2016 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -478,8 +481,8 @@
    *** get*();
 }
 
-# End of content from /Users/panlong/.gradle/caches/transforms-3/8bba52d669908ffe7e363df39f09f71e/transformed/vectordrawable-animated-1.1.0/proguard.txt
-# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/f5e4bff6dddc95c1e4569b2a41c648ee/transformed/core-1.9.0/proguard.txt
+# End of content from /Users/panlong/.gradle/caches/transforms-3/650f9c7583979ec4a4a280f7ab4cdd65/transformed/vectordrawable-animated-1.1.0/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/b101d2237ddd1767d9659103306eaba9/transformed/core-1.9.0/proguard.txt
 # Never inline methods, but allow shrinking and obfuscation.
 -keepclassmembernames,allowobfuscation,allowshrinking class androidx.core.view.ViewCompat$Api* {
   <methods>;
@@ -497,18 +500,117 @@
   <methods>;
 }
 
-# End of content from /Users/panlong/.gradle/caches/transforms-3/f5e4bff6dddc95c1e4569b2a41c648ee/transformed/core-1.9.0/proguard.txt
+# End of content from /Users/panlong/.gradle/caches/transforms-3/b101d2237ddd1767d9659103306eaba9/transformed/core-1.9.0/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/538c0277bb8feab5ebb2577d80f1d712/transformed/rules/lib/META-INF/proguard/okhttp3.pro
+# JSR 305 annotations are for embedding nullability information.
+-dontwarn javax.annotation.**
+
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+
+# Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+
+# OkHttp platform used only on JVM and when Conscrypt dependency is available.
+-dontwarn okhttp3.internal.platform.ConscryptPlatform
+
+# End of content from /Users/panlong/.gradle/caches/transforms-3/538c0277bb8feab5ebb2577d80f1d712/transformed/rules/lib/META-INF/proguard/okhttp3.pro
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/7c24ba142bdf7a32488d169496001295/transformed/rules/lib/META-INF/com.android.tools/r8-from-1.6.0/kotlin-reflect.pro
+# When editing this file, update the following files as well:
+# - META-INF/com.android.tools/proguard/kotlin-reflect.pro
+# - META-INF/com.android.tools/r8-upto-1.6.0/kotlin-reflect.pro
+# - META-INF/proguard/kotlin-reflect.pro
+# Keep Metadata annotations so they can be parsed at runtime.
+-keep class kotlin.Metadata { *; }
+
+# Keep generic signatures and annotations at runtime.
+# R8 requires InnerClasses and EnclosingMethod if you keepattributes Signature.
+-keepattributes InnerClasses,Signature,RuntimeVisible*Annotations,EnclosingMethod
+
+# Don't note on API calls from different JVM versions as they're gated properly at runtime.
+-dontnote kotlin.internal.PlatformImplementationsKt
+
+# Don't note on internal APIs, as there is some class relocating that shrinkers may unnecessarily find suspicious.
+-dontwarn kotlin.reflect.jvm.internal.**
+
+# Statically guarded by try-catch block and not used on Android, see CacheByClass
+-dontwarn java.lang.ClassValue
+
+# Do not even execute try-catch block for ClassValue
+-assumenosideeffects class kotlin.reflect.jvm.internal.CacheByClassKt {
+    boolean useClassValue return false;
+}
+
+# End of content from /Users/panlong/.gradle/caches/transforms-3/7c24ba142bdf7a32488d169496001295/transformed/rules/lib/META-INF/com.android.tools/r8-from-1.6.0/kotlin-reflect.pro
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/e17cded2c96a1f1563612f54eacc75b6/transformed/rules/lib/META-INF/com.android.tools/r8/coroutines.pro
+# When editing this file, update the following files as well:
+# - META-INF/proguard/coroutines.pro
+# - META-INF/com.android.tools/proguard/coroutines.pro
+
+# Most of volatile fields are updated with AFU and should not be mangled
+-keepclassmembers class kotlinx.coroutines.** {
+    volatile <fields>;
+}
+
+# Same story for the standard library's SafeContinuation that also uses AtomicReferenceFieldUpdater
+-keepclassmembers class kotlin.coroutines.SafeContinuation {
+    volatile <fields>;
+}
+
+# These classes are only required by kotlinx.coroutines.debug.AgentPremain, which is only loaded when
+# kotlinx-coroutines-core is used as a Java agent, so these are not needed in contexts where ProGuard is used.
+-dontwarn java.lang.instrument.ClassFileTransformer
+-dontwarn sun.misc.SignalHandler
+-dontwarn java.lang.instrument.Instrumentation
+-dontwarn sun.misc.Signal
+
+# Only used in `kotlinx.coroutines.internal.ExceptionsConstructor`.
+# The case when it is not available is hidden in a `try`-`catch`, as well as a check for Android.
+-dontwarn java.lang.ClassValue
+
+# An annotation used for build tooling, won't be directly accessed.
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+# End of content from /Users/panlong/.gradle/caches/transforms-3/e17cded2c96a1f1563612f54eacc75b6/transformed/rules/lib/META-INF/com.android.tools/r8/coroutines.pro
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/36c3f9430945be6ee7643624c5ece751/transformed/rules/lib/META-INF/com.android.tools/r8-from-1.6.0/coroutines.pro
+# Allow R8 to optimize away the FastServiceLoader.
+# Together with ServiceLoader optimization in R8
+# this results in direct instantiation when loading Dispatchers.Main
+-assumenosideeffects class kotlinx.coroutines.internal.MainDispatcherLoader {
+    boolean FAST_SERVICE_LOADER_ENABLED return false;
+}
+
+-assumenosideeffects class kotlinx.coroutines.internal.FastServiceLoaderKt {
+    boolean ANDROID_DETECTED return true;
+}
+
+# Disable support for "Missing Main Dispatcher", since we always have Android main dispatcher
+-assumenosideeffects class kotlinx.coroutines.internal.MainDispatchersKt {
+    boolean SUPPORT_MISSING return false;
+}
+
+# Statically turn off all debugging facilities and assertions
+-assumenosideeffects class kotlinx.coroutines.DebugKt {
+    boolean getASSERTIONS_ENABLED() return false;
+    boolean getDEBUG() return false;
+    boolean getRECOVER_STACK_TRACES() return false;
+}
+
+# End of content from /Users/panlong/.gradle/caches/transforms-3/36c3f9430945be6ee7643624c5ece751/transformed/rules/lib/META-INF/com.android.tools/r8-from-1.6.0/coroutines.pro
 # The proguard configuration file for the following section is /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_camera/build/intermediates/consumer_proguard_dir/debug/lib0/proguard.txt
 
 # End of content from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_camera/build/intermediates/consumer_proguard_dir/debug/lib0/proguard.txt
-# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/05c292596d671412479aee05f01fdb8d/transformed/versionedparcelable-1.1.1/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/consumer_proguard_dir/debug/lib0/proguard.txt
+
+
+# End of content from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/consumer_proguard_dir/debug/lib0/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/6819ac427e14602cd9556f8d280f9b9f/transformed/versionedparcelable-1.1.1/proguard.txt
 -keep class * implements androidx.versionedparcelable.VersionedParcelable
 -keep public class android.support.**Parcelizer { *; }
 -keep public class androidx.**Parcelizer { *; }
 -keep public class androidx.versionedparcelable.ParcelImpl
 
-# End of content from /Users/panlong/.gradle/caches/transforms-3/05c292596d671412479aee05f01fdb8d/transformed/versionedparcelable-1.1.1/proguard.txt
-# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/a2a7544e3f9fd31422ad5c922ec15ab6/transformed/lifecycle-viewmodel-2.1.0/proguard.txt
+# End of content from /Users/panlong/.gradle/caches/transforms-3/6819ac427e14602cd9556f8d280f9b9f/transformed/versionedparcelable-1.1.1/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/05411a2bc143aaf0c393e8c650558998/transformed/lifecycle-viewmodel-2.1.0/proguard.txt
 -keepclassmembers,allowobfuscation class * extends androidx.lifecycle.ViewModel {
     <init>();
 }
@@ -517,8 +619,8 @@
     <init>(android.app.Application);
 }
 
-# End of content from /Users/panlong/.gradle/caches/transforms-3/a2a7544e3f9fd31422ad5c922ec15ab6/transformed/lifecycle-viewmodel-2.1.0/proguard.txt
-# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/f86eb01fdab5c808c5279d124009b14e/transformed/jetified-savedstate-1.0.0/proguard.txt
+# End of content from /Users/panlong/.gradle/caches/transforms-3/05411a2bc143aaf0c393e8c650558998/transformed/lifecycle-viewmodel-2.1.0/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/c343672d475d024fb938eaa4457d638c/transformed/jetified-savedstate-1.0.0/proguard.txt
 # Copyright (C) 2019 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -537,8 +639,8 @@
     <init>();
 }
 
-# End of content from /Users/panlong/.gradle/caches/transforms-3/f86eb01fdab5c808c5279d124009b14e/transformed/jetified-savedstate-1.0.0/proguard.txt
-# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/e287cb56931d6306e82c16cf7791d90e/transformed/lifecycle-runtime-2.3.1/proguard.txt
+# End of content from /Users/panlong/.gradle/caches/transforms-3/c343672d475d024fb938eaa4457d638c/transformed/jetified-savedstate-1.0.0/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/9d82f672b6eb3113692ba70e2f8b53ec/transformed/lifecycle-runtime-2.3.1/proguard.txt
 -keepattributes *Annotation*
 
 -keepclassmembers enum androidx.lifecycle.Lifecycle$Event {
@@ -559,8 +661,8 @@
 # this rule is need to work properly when app is compiled with api 28, see b/142778206
 # Also this rule prevents registerIn from being inlined.
 -keepclassmembers class androidx.lifecycle.ReportFragment$LifecycleCallbacks { *; }
-# End of content from /Users/panlong/.gradle/caches/transforms-3/e287cb56931d6306e82c16cf7791d90e/transformed/lifecycle-runtime-2.3.1/proguard.txt
-# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/5acadee779b01a4c4f73b119029584bc/transformed/rules/lib/META-INF/proguard/androidx-annotations.pro
+# End of content from /Users/panlong/.gradle/caches/transforms-3/9d82f672b6eb3113692ba70e2f8b53ec/transformed/lifecycle-runtime-2.3.1/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/2c7a6e1a5f96f009a7a345a7c5fe7bf7/transformed/rules/lib/META-INF/proguard/androidx-annotations.pro
 -keep,allowobfuscation @interface androidx.annotation.Keep
 -keep @androidx.annotation.Keep class * {*;}
 
@@ -580,8 +682,8 @@
   @androidx.annotation.DoNotInline <methods>;
 }
 
-# End of content from /Users/panlong/.gradle/caches/transforms-3/5acadee779b01a4c4f73b119029584bc/transformed/rules/lib/META-INF/proguard/androidx-annotations.pro
-# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/c417bd6528f6638e3a55517d58d4a275/transformed/jetified-fbcore-1.13.0/proguard.txt
+# End of content from /Users/panlong/.gradle/caches/transforms-3/2c7a6e1a5f96f009a7a345a7c5fe7bf7/transformed/rules/lib/META-INF/proguard/androidx-annotations.pro
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/7877c2eb77a32ac44fc0987f3abe4dec/transformed/jetified-fbcore-1.13.0/proguard.txt
 # Keep our interfaces so they can be used by other ProGuard rules.
 # See http://sourceforge.net/p/proguard/bugs/466/
 -keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
@@ -611,11 +713,11 @@
 -dontwarn com.android.volley.toolbox.**
 -dontwarn com.facebook.infer.**
 
-# End of content from /Users/panlong/.gradle/caches/transforms-3/c417bd6528f6638e3a55517d58d4a275/transformed/jetified-fbcore-1.13.0/proguard.txt
-# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/72d7553a8ec7c4dbce688b168549c0a0/transformed/jetified-facelib-release/proguard.txt
+# End of content from /Users/panlong/.gradle/caches/transforms-3/7877c2eb77a32ac44fc0987f3abe4dec/transformed/jetified-fbcore-1.13.0/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/4c2ec77f9a2576a5c7cfc20bd552ecec/transformed/jetified-facelib-release/proguard.txt
 
-# End of content from /Users/panlong/.gradle/caches/transforms-3/72d7553a8ec7c4dbce688b168549c0a0/transformed/jetified-facelib-release/proguard.txt
-# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/f034beca1dee57a3789f790521fb2c78/transformed/jetified-SunmiAuthorize-SDK-1.0.1/proguard.txt
+# End of content from /Users/panlong/.gradle/caches/transforms-3/4c2ec77f9a2576a5c7cfc20bd552ecec/transformed/jetified-facelib-release/proguard.txt
+# The proguard configuration file for the following section is /Users/panlong/.gradle/caches/transforms-3/0f1e7e7547266f32971b17cc066b7c3c/transformed/jetified-SunmiAuthorize-SDK-1.0.1/proguard.txt
 
 
 -keep class com.sunmi.authorizelibrary.bean.AuthorizeResult { *; }
@@ -633,7 +735,7 @@ public  <fields>;
 
 -keep class com.sunmi.authorizelibrary.AuthorizeCallBack{ *; }
 -keep class com.sunmi.authorizelibrary.SunmiAuthorizeSDK{ *; }
-# End of content from /Users/panlong/.gradle/caches/transforms-3/f034beca1dee57a3789f790521fb2c78/transformed/jetified-SunmiAuthorize-SDK-1.0.1/proguard.txt
+# End of content from /Users/panlong/.gradle/caches/transforms-3/0f1e7e7547266f32971b17cc066b7c3c/transformed/jetified-SunmiAuthorize-SDK-1.0.1/proguard.txt
 # The proguard configuration file for the following section is <unknown>
 -ignorewarnings
 # End of content from <unknown>

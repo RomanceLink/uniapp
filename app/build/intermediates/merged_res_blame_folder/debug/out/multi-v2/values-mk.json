@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.android.UniPlugin.app-mergeDebugResources-18:/values-mk/values-mk.xml",
+            "outputFile": "com.android.UniPlugin.app-mergeDebugResources-19:/values-mk/values-mk.xml",
             "map": [
                 {
-                    "source": "/Users/panlong/.gradle/caches/transforms-3/e36166d39b8ccbaf01fe46dc847f367e/transformed/appcompat-1.1.0/res/values-mk/values-mk.xml",
+                    "source": "/Users/panlong/.gradle/caches/transforms-3/e064caec7585c0179469b2a2da7d1d25/transformed/appcompat-1.1.0/res/values-mk/values-mk.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "/Users/panlong/.gradle/caches/transforms-3/f5e4bff6dddc95c1e4569b2a41c648ee/transformed/core-1.9.0/res/values-mk/values-mk.xml",
+                    "source": "/Users/panlong/.gradle/caches/transforms-3/b101d2237ddd1767d9659103306eaba9/transformed/core-1.9.0/res/values-mk/values-mk.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

@@ -38,7 +38,7 @@ android {
         debug {
             signingConfig signingConfigs.config
             zipAlignEnabled true
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -80,6 +80,16 @@ dependencies {
     implementation 'androidx.core:core:1.1.0'
     implementation "androidx.fragment:fragment:1.1.0"
     implementation 'androidx.appcompat:appcompat:1.1.0'
+
+    // uts打包依赖
+    implementation "com.squareup.okhttp3:okhttp:3.12.12"
+    implementation "androidx.core:core-ktx:1.6.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:2.2.0"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:2.2.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1"
+    implementation "com.github.getActivity:XXPermissions:18.63"
+    implementation files('libs/utsplugin-release.aar')
     // 添加uni-app插件
     implementation project(':uniplugin_component')
     implementation project(':uniplugin_module')
@@ -87,4 +97,7 @@ dependencies {
     implementation project(':uniplugin_electronic')
     implementation project(':uniplugin_camera')
     implementation project(':uniplugin_sunmiFace')
+    // uts原生插件
+    implementation project(':uts-toast')
+    implementation project(':phiron-sunmiFace')
 }

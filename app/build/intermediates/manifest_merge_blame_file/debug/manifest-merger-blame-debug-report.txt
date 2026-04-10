@@ -448,26 +448,27 @@
 238        </receiver>
 239
 240        <activity
-240-->[:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:9-10:84
-241            android:name="io.dcloud.uniplugin.NativePageActivity"
-241-->[:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:13-66
+240-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:20:9-22:84
+241            android:name="com.example.uniplugin_sunmiface.SunmiFaceRecognizeActivity"
+241-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:21:13-86
 242            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" />
-242-->[:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:13-81
-243        <activity
-243-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:20:9-22:84
-244            android:name="com.example.uniplugin_sunmiface.SunmiFaceRecognizeActivity"
-244-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:21:13-86
-245            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" />
-245-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:22:13-81
-246
-247        <service
-247-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:24:9-27:54
-248            android:name="com.example.uniplugin_sunmiface.SunmiFaceKeepAliveService"
-248-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:25:13-85
-249            android:exported="false"
-249-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:26:13-37
-250            android:foregroundServiceType="camera" />
-250-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:27:13-51
-251    </application>
-252
-253</manifest>
+242-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:22:13-81
+243
+244        <service
+244-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:24:9-27:54
+245            android:name="com.example.uniplugin_sunmiface.SunmiFaceKeepAliveService"
+245-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:25:13-85
+246            android:exported="false"
+246-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:26:13-37
+247            android:foregroundServiceType="camera" />
+247-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:27:13-51
+248
+249        <activity
+249-->[:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:9-10:84
+250            android:name="io.dcloud.uniplugin.NativePageActivity"
+250-->[:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:13-66
+251            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" />
+251-->[:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:13-81
+252    </application>
+253
+254</manifest>

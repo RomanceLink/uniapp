@@ -36,7 +36,7 @@ dependencies {
 
     implementation(name: 'facelib-release', ext: 'aar')
     implementation(name: 'opencv', ext: 'aar')
-    implementation(name: 'SunmiAuthorize-SDK-1.0.1', ext: 'aar')
+    implementation 'com.sunmi:SunmiAuthorize-SDK:1.0.1'
 
     compileOnly 'androidx.appcompat:appcompat:1.3.1'
     implementation 'androidx.core:core:1.9.0'

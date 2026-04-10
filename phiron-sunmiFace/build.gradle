@@ -46,12 +46,12 @@ dependencies {
 
     implementation(name: 'facelib-release', ext: 'aar')
     implementation(name: 'opencv', ext: 'aar')
-    implementation(name: 'SunmiAuthorize-SDK-1.0.1', ext: 'aar')
+    implementation 'com.sunmi:SunmiAuthorize-SDK:1.0.1'
 
     compileOnly 'com.alibaba:fastjson:1.1.46.android'
     compileOnly 'androidx.core:core-ktx:1.6.0'
-    compileOnly 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.0'
-    compileOnly 'org.jetbrains.kotlin:kotlin-reflect:1.6.0'
-    compileOnly 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8'
-    compileOnly 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.8'
+    compileOnly 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.31'
+    compileOnly 'org.jetbrains.kotlin:kotlin-reflect:1.5.31'
+    compileOnly 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
+    compileOnly 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
 }

@@ -12,44 +12,62 @@ MERGED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transfor
 MERGED from [utsplugin-release.aar] /Users/panlong/.gradle/caches/transforms-3/e093970e3254aab1407cfa452d76e429/transformed/jetified-utsplugin-release/AndroidManifest.xml:2:1-7:12
 MERGED from [media-livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/323595daf26cb3c636165048814cfef9/transformed/jetified-media-livepusher-release/AndroidManifest.xml:2:1-9:12
 MERGED from [breakpad-build-release.aar] /Users/panlong/.gradle/caches/transforms-3/ab95f26b446353578be68bf789b526bd/transformed/jetified-breakpad-build-release/AndroidManifest.xml:2:1-9:12
+MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-30:12
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-19:12
+MERGED from [com.sunmi:SunmiAuthorize-SDK:1.0.1] /Users/panlong/.gradle/caches/transforms-3/0f1e7e7547266f32971b17cc066b7c3c/transformed/jetified-SunmiAuthorize-SDK-1.0.1/AndroidManifest.xml:2:1-9:12
+MERGED from [com.google.android.material:material:1.4.0] /Users/panlong/.gradle/caches/transforms-3/b0bfb7ae827debfa1ea0c60ac0911172/transformed/material-1.4.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] /Users/panlong/.gradle/caches/transforms-3/98503d805cecb330c78d5ff47931c3ef/transformed/jetified-viewpager2-1.0.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.recyclerview:recyclerview:1.1.0] /Users/panlong/.gradle/caches/transforms-3/265f2dc1c77eba035d1716b3bc41d054/transformed/recyclerview-1.1.0/AndroidManifest.xml:17:1-24:12
 MERGED from [:uniplugin_component] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_component/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
 MERGED from [:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-13:12
 MERGED from [com.facebook.fresco:fresco:1.13.0] /Users/panlong/.gradle/caches/transforms-3/752d4c473a641e6866b7fa119c93c9f9/transformed/jetified-fresco-1.13.0/AndroidManifest.xml:2:1-9:12
 MERGED from [com.facebook.fresco:animated-gif:1.13.0] /Users/panlong/.gradle/caches/transforms-3/eb0d6ab2411b057ccc94408540e12bb1/transformed/jetified-animated-gif-1.13.0/AndroidManifest.xml:2:1-9:12
 MERGED from [com.github.bumptech.glide:glide:4.9.0] /Users/panlong/.gradle/caches/transforms-3/3576247cb2c6fd293fbb738e69635a1c/transformed/jetified-glide-4.9.0/AndroidManifest.xml:2:1-12:12
+MERGED from [com.sunmi:SunmiHttpLib:1.0.48] /Users/panlong/.gradle/caches/transforms-3/f55dd121912db9ac87fcc2bc739a0aa2/transformed/jetified-SunmiHttpLib-1.0.48/AndroidManifest.xml:2:1-14:12
 MERGED from [androidx.webkit:webkit:1.3.0] /Users/panlong/.gradle/caches/transforms-3/a685bd9084a54f47a677d0d85feddc76/transformed/webkit-1.3.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.dynamicanimation:dynamicanimation:1.0.0] /Users/panlong/.gradle/caches/transforms-3/f9c281b1fc5d800d7f8ac9adff347daa/transformed/dynamicanimation-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.room:room-runtime:2.0.0] /Users/panlong/.gradle/caches/transforms-3/a3350c4e107982e042d8ca38d192a5e8/transformed/room-runtime-2.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /Users/panlong/.gradle/caches/transforms-3/747397cefc22efc4799dfbfdfe90bfb4/transformed/legacy-support-core-utils-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /Users/panlong/.gradle/caches/transforms-3/37460cb7f42efbfdb65e2028602af923/transformed/localbroadcastmanager-1.0.0/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.appcompat:appcompat:1.1.0] /Users/panlong/.gradle/caches/transforms-3/e064caec7585c0179469b2a2da7d1d25/transformed/appcompat-1.1.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.fragment:fragment:1.1.0] /Users/panlong/.gradle/caches/transforms-3/53528eba70338390e0bf44b258bdd3b4/transformed/fragment-1.1.0/AndroidManifest.xml:17:1-24:12
-MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-30:12
-MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/panlong/.gradle/caches/transforms-3/ffca6d6e79a8a540f970ef0add983018/transformed/viewpager-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/panlong/.gradle/caches/transforms-3/e85a1f4ca2ce8dc555f031be962af973/transformed/constraintlayout-2.0.1/AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.appcompat:appcompat:1.3.1] /Users/panlong/.gradle/caches/transforms-3/4dffc93de3461adb331c58db842b937c/transformed/appcompat-1.3.1/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /Users/panlong/.gradle/caches/transforms-3/d1561d2dca512498882d0b3e2227fd0f/transformed/drawerlayout-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] /Users/panlong/.gradle/caches/transforms-3/145b35f647f2b9a0faade5f6c8af06f3/transformed/coordinatorlayout-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.fragment:fragment:1.3.6] /Users/panlong/.gradle/caches/transforms-3/4b08ebbc727a5455ca291040fd4cfed1/transformed/fragment-1.3.6/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/panlong/.gradle/caches/transforms-3/ffca6d6e79a8a540f970ef0add983018/transformed/viewpager-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.customview:customview:1.0.0] /Users/panlong/.gradle/caches/transforms-3/895bdedced961248a25a35cbd3fce1ff/transformed/customview-1.0.0/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.loader:loader:1.0.0] /Users/panlong/.gradle/caches/transforms-3/1fd747430f8de53740f9a25796ec247b/transformed/loader-1.0.0/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.activity:activity:1.0.0] /Users/panlong/.gradle/caches/transforms-3/86731ef066729f9b3916cce6ad820c94/transformed/jetified-activity-1.0.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.appcompat:appcompat-resources:1.1.0] /Users/panlong/.gradle/caches/transforms-3/d8c4d88c015b3a156ae4c047d8f51dc2/transformed/jetified-appcompat-resources-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.core:core-ktx:1.9.0] /Users/panlong/.gradle/caches/transforms-3/9b1a008edfcce24bc6a5a7e018747a5d/transformed/jetified-core-ktx-1.9.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.activity:activity:1.2.4] /Users/panlong/.gradle/caches/transforms-3/bd27619e9029cd43015270678021bb15/transformed/jetified-activity-1.2.4/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.appcompat:appcompat-resources:1.3.1] /Users/panlong/.gradle/caches/transforms-3/25e7fd960bed5e217919479c39ea56c8/transformed/jetified-appcompat-resources-1.3.1/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.transition:transition:1.2.0] /Users/panlong/.gradle/caches/transforms-3/79fd7ed5d733b98ca05ac1f70caad4c8/transformed/transition-1.2.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/panlong/.gradle/caches/transforms-3/650f9c7583979ec4a4a280f7ab4cdd65/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/panlong/.gradle/caches/transforms-3/14980e371c56a614b0df7e4c9411d42c/transformed/vectordrawable-1.1.0/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.core:core-ktx:1.9.0] /Users/panlong/.gradle/caches/transforms-3/9b1a008edfcce24bc6a5a7e018747a5d/transformed/jetified-core-ktx-1.9.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.loader:loader:1.0.0] /Users/panlong/.gradle/caches/transforms-3/1fd747430f8de53740f9a25796ec247b/transformed/loader-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.core:core:1.9.0] /Users/panlong/.gradle/caches/transforms-3/b101d2237ddd1767d9659103306eaba9/transformed/core-1.9.0/AndroidManifest.xml:17:1-30:12
+MERGED from [com.appmattus.certificatetransparency:certificatetransparency-android:1.0.0] /Users/panlong/.gradle/caches/transforms-3/5cbbcc66b3183a357967d66a26a8ad7f/transformed/jetified-certificatetransparency-android-1.0.0/AndroidManifest.xml:2:1-9:12
 MERGED from [androidx.annotation:annotation-experimental:1.3.0] /Users/panlong/.gradle/caches/transforms-3/8bcf3fb7d0d2126c9ca808fdcdb756cc/transformed/jetified-annotation-experimental-1.3.0/AndroidManifest.xml:17:1-22:12
 MERGED from [com.github.getActivity:XXPermissions:18.63] /Users/panlong/.gradle/caches/transforms-3/d31c38214b106637f21d0ae42d03b050/transformed/jetified-XXPermissions-18.63/AndroidManifest.xml:2:1-9:12
 MERGED from [:uniplugin_richalert] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_richalert/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
 MERGED from [:uniplugin_electronic] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_electronic/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
 MERGED from [:uniplugin_camera] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_camera/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
 MERGED from [:uts-toast] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uts-toast/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-19:12
 MERGED from [com.github.bumptech.glide:gifdecoder:4.9.0] /Users/panlong/.gradle/caches/transforms-3/4eeb4613763a4dd9f44621ffbc8a813c/transformed/jetified-gifdecoder-4.9.0/AndroidManifest.xml:2:1-11:12
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/panlong/.gradle/caches/transforms-3/6819ac427e14602cd9556f8d280f9b9f/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:17:1-27:12
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/panlong/.gradle/caches/transforms-3/91a3ad4a68f8d65fc59e699705f45106/transformed/cursoradapter-1.0.0/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] /Users/panlong/.gradle/caches/transforms-3/05411a2bc143aaf0c393e8c650558998/transformed/lifecycle-viewmodel-2.1.0/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.savedstate:savedstate:1.0.0] /Users/panlong/.gradle/caches/transforms-3/c343672d475d024fb938eaa4457d638c/transformed/jetified-savedstate-1.0.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.lifecycle:lifecycle-runtime:2.3.1] /Users/panlong/.gradle/caches/transforms-3/9d82f672b6eb3113692ba70e2f8b53ec/transformed/lifecycle-runtime-2.3.1/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/panlong/.gradle/caches/transforms-3/3884a32017ab213e4953a156c2938c60/transformed/interpolator-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/panlong/.gradle/caches/transforms-3/6819ac427e14602cd9556f8d280f9b9f/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.1] /Users/panlong/.gradle/caches/transforms-3/b4470958b14692e565cf341d6745890b/transformed/jetified-lifecycle-viewmodel-savedstate-2.3.1/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /Users/panlong/.gradle/caches/transforms-3/8d201c6bb966c9d6d27f914cab2a10b0/transformed/lifecycle-livedata-2.0.0/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /Users/panlong/.gradle/caches/transforms-3/d802b677693943f4abdf840a26515823/transformed/lifecycle-livedata-core-2.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.3.1] /Users/panlong/.gradle/caches/transforms-3/59b5375ecc66e37eab1b59c168660bbd/transformed/lifecycle-livedata-core-2.3.1/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.arch.core:core-runtime:2.1.0] /Users/panlong/.gradle/caches/transforms-3/91ed986037c33938299eafe621bacede/transformed/core-runtime-2.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.savedstate:savedstate:1.1.0] /Users/panlong/.gradle/caches/transforms-3/aae905938334b961d2c9f76458de62d4/transformed/jetified-savedstate-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.3.1] /Users/panlong/.gradle/caches/transforms-3/a86e4b4d61b74d90b568c5f141a3e8e3/transformed/lifecycle-viewmodel-2.3.1/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/panlong/.gradle/caches/transforms-3/91a3ad4a68f8d65fc59e699705f45106/transformed/cursoradapter-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.cardview:cardview:1.0.0] /Users/panlong/.gradle/caches/transforms-3/f4aac0c54da94bc05b2adb8268183223/transformed/cardview-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.tracing:tracing:1.0.0] /Users/panlong/.gradle/caches/transforms-3/1b9d2c4b931ec8b322916ba4bbc4ca74/transformed/jetified-tracing-1.0.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.sqlite:sqlite-framework:2.0.0] /Users/panlong/.gradle/caches/transforms-3/7b457e0d245a1d8a1575e4132e8d9e43/transformed/sqlite-framework-2.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.sqlite:sqlite:2.0.0] /Users/panlong/.gradle/caches/transforms-3/8b8964a12907e4635125aba4c9c6eca9/transformed/sqlite-2.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/panlong/.gradle/caches/transforms-3/3884a32017ab213e4953a156c2938c60/transformed/interpolator-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.documentfile:documentfile:1.0.0] /Users/panlong/.gradle/caches/transforms-3/03af4df403092c973b681f4784275ce1/transformed/documentfile-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.print:print:1.0.0] /Users/panlong/.gradle/caches/transforms-3/4d8d6a9d5b9d93ca953f9e3f4ba2e04b/transformed/print-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [com.facebook.fresco:animated-base:1.13.0] /Users/panlong/.gradle/caches/transforms-3/ff09ffd12036615e379545aad8c8f3b6/transformed/jetified-animated-base-1.13.0/AndroidManifest.xml:2:1-9:12
 MERGED from [com.facebook.fresco:animated-drawable:1.13.0] /Users/panlong/.gradle/caches/transforms-3/19038dca771f81a18c5b57047a28f5b2/transformed/jetified-animated-drawable-1.13.0/AndroidManifest.xml:2:1-9:12
 MERGED from [com.facebook.fresco:drawee:1.13.0] /Users/panlong/.gradle/caches/transforms-3/64ac74216fcd96eb11f57051e6e67c08/transformed/jetified-drawee-1.13.0/AndroidManifest.xml:2:1-9:12
@@ -61,7 +79,7 @@ MERGED from [com.facebook.fresco:fbcore:1.13.0] /Users/panlong/.gradle/caches/tr
 MERGED from [com.facebook.soloader:soloader:0.6.0] /Users/panlong/.gradle/caches/transforms-3/c612e0fe6f4bba08ea1b2b6caa3d28f6/transformed/jetified-soloader-0.6.0/AndroidManifest.xml:2:1-13:12
 MERGED from [:facelib-release:] /Users/panlong/.gradle/caches/transforms-3/4c2ec77f9a2576a5c7cfc20bd552ecec/transformed/jetified-facelib-release/AndroidManifest.xml:2:1-11:12
 MERGED from [:opencv:] /Users/panlong/.gradle/caches/transforms-3/89a9e951a54eebc4870cf4803b8e4a5f/transformed/jetified-opencv/AndroidManifest.xml:2:1-11:12
-MERGED from [:SunmiAuthorize-SDK-1.0.1:] /Users/panlong/.gradle/caches/transforms-3/0f1e7e7547266f32971b17cc066b7c3c/transformed/jetified-SunmiAuthorize-SDK-1.0.1/AndroidManifest.xml:2:1-9:12
+MERGED from [io.reactivex.rxjava2:rxandroid:2.1.0] /Users/panlong/.gradle/caches/transforms-3/02dc319480a95c8e519c9b63579ce92a/transformed/jetified-rxandroid-2.1.0/AndroidManifest.xml:15:1-20:12
 INJECTED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:2:1-96:12
 INJECTED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:2:1-96:12
 INJECTED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:2:1-96:12
@@ -193,6 +211,8 @@ MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:5-79
 MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:5-79
 MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:5-79
+MERGED from [com.sunmi:SunmiHttpLib:1.0.48] /Users/panlong/.gradle/caches/transforms-3/f55dd121912db9ac87fcc2bc739a0aa2/transformed/jetified-SunmiHttpLib-1.0.48/AndroidManifest.xml:11:5-79
+MERGED from [com.sunmi:SunmiHttpLib:1.0.48] /Users/panlong/.gradle/caches/transforms-3/f55dd121912db9ac87fcc2bc739a0aa2/transformed/jetified-SunmiHttpLib-1.0.48/AndroidManifest.xml:11:5-79
 	android:name
 		ADDED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:29:22-76
 application
@@ -203,12 +223,16 @@ MERGED from [uniapp-v8-release.aar] /Users/panlong/.gradle/caches/transforms-3/1
 MERGED from [uniapp-v8-release.aar] /Users/panlong/.gradle/caches/transforms-3/1acb99137c102ff0e6271102f9c17926/transformed/jetified-uniapp-v8-release/AndroidManifest.xml:29:5-35:19
 MERGED from [media-livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/323595daf26cb3c636165048814cfef9/transformed/jetified-media-livepusher-release/AndroidManifest.xml:7:5-20
 MERGED from [media-livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/323595daf26cb3c636165048814cfef9/transformed/jetified-media-livepusher-release/AndroidManifest.xml:7:5-20
+MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:19:5-28:19
+MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:19:5-28:19
+MERGED from [com.google.android.material:material:1.4.0] /Users/panlong/.gradle/caches/transforms-3/b0bfb7ae827debfa1ea0c60ac0911172/transformed/material-1.4.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.material:material:1.4.0] /Users/panlong/.gradle/caches/transforms-3/b0bfb7ae827debfa1ea0c60ac0911172/transformed/material-1.4.0/AndroidManifest.xml:22:5-20
 MERGED from [:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-11:19
 MERGED from [:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-11:19
 MERGED from [com.github.bumptech.glide:glide:4.9.0] /Users/panlong/.gradle/caches/transforms-3/3576247cb2c6fd293fbb738e69635a1c/transformed/jetified-glide-4.9.0/AndroidManifest.xml:10:5-20
 MERGED from [com.github.bumptech.glide:glide:4.9.0] /Users/panlong/.gradle/caches/transforms-3/3576247cb2c6fd293fbb738e69635a1c/transformed/jetified-glide-4.9.0/AndroidManifest.xml:10:5-20
-MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:19:5-28:19
-MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:19:5-28:19
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/panlong/.gradle/caches/transforms-3/e85a1f4ca2ce8dc555f031be962af973/transformed/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/panlong/.gradle/caches/transforms-3/e85a1f4ca2ce8dc555f031be962af973/transformed/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
 MERGED from [androidx.core:core:1.9.0] /Users/panlong/.gradle/caches/transforms-3/b101d2237ddd1767d9659103306eaba9/transformed/core-1.9.0/AndroidManifest.xml:28:5-89
 MERGED from [androidx.core:core:1.9.0] /Users/panlong/.gradle/caches/transforms-3/b101d2237ddd1767d9659103306eaba9/transformed/core-1.9.0/AndroidManifest.xml:28:5-89
 MERGED from [com.github.bumptech.glide:gifdecoder:4.9.0] /Users/panlong/.gradle/caches/transforms-3/4eeb4613763a4dd9f44621ffbc8a813c/transformed/jetified-gifdecoder-4.9.0/AndroidManifest.xml:9:5-20
@@ -335,6 +359,16 @@ MERGED from [media-livepusher-release.aar] /Users/panlong/.gradle/caches/transfo
 MERGED from [media-livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/323595daf26cb3c636165048814cfef9/transformed/jetified-media-livepusher-release/AndroidManifest.xml:5:5-44
 MERGED from [breakpad-build-release.aar] /Users/panlong/.gradle/caches/transforms-3/ab95f26b446353578be68bf789b526bd/transformed/jetified-breakpad-build-release/AndroidManifest.xml:5:5-7:41
 MERGED from [breakpad-build-release.aar] /Users/panlong/.gradle/caches/transforms-3/ab95f26b446353578be68bf789b526bd/transformed/jetified-breakpad-build-release/AndroidManifest.xml:5:5-7:41
+MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [com.sunmi:SunmiAuthorize-SDK:1.0.1] /Users/panlong/.gradle/caches/transforms-3/0f1e7e7547266f32971b17cc066b7c3c/transformed/jetified-SunmiAuthorize-SDK-1.0.1/AndroidManifest.xml:5:5-7:41
+MERGED from [com.sunmi:SunmiAuthorize-SDK:1.0.1] /Users/panlong/.gradle/caches/transforms-3/0f1e7e7547266f32971b17cc066b7c3c/transformed/jetified-SunmiAuthorize-SDK-1.0.1/AndroidManifest.xml:5:5-7:41
+MERGED from [com.google.android.material:material:1.4.0] /Users/panlong/.gradle/caches/transforms-3/b0bfb7ae827debfa1ea0c60ac0911172/transformed/material-1.4.0/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.material:material:1.4.0] /Users/panlong/.gradle/caches/transforms-3/b0bfb7ae827debfa1ea0c60ac0911172/transformed/material-1.4.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] /Users/panlong/.gradle/caches/transforms-3/98503d805cecb330c78d5ff47931c3ef/transformed/jetified-viewpager2-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] /Users/panlong/.gradle/caches/transforms-3/98503d805cecb330c78d5ff47931c3ef/transformed/jetified-viewpager2-1.0.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.recyclerview:recyclerview:1.1.0] /Users/panlong/.gradle/caches/transforms-3/265f2dc1c77eba035d1716b3bc41d054/transformed/recyclerview-1.1.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.recyclerview:recyclerview:1.1.0] /Users/panlong/.gradle/caches/transforms-3/265f2dc1c77eba035d1716b3bc41d054/transformed/recyclerview-1.1.0/AndroidManifest.xml:20:5-22:41
 MERGED from [:uniplugin_component] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_component/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
@@ -347,36 +381,50 @@ MERGED from [com.facebook.fresco:animated-gif:1.13.0] /Users/panlong/.gradle/cac
 MERGED from [com.facebook.fresco:animated-gif:1.13.0] /Users/panlong/.gradle/caches/transforms-3/eb0d6ab2411b057ccc94408540e12bb1/transformed/jetified-animated-gif-1.13.0/AndroidManifest.xml:5:5-7:41
 MERGED from [com.github.bumptech.glide:glide:4.9.0] /Users/panlong/.gradle/caches/transforms-3/3576247cb2c6fd293fbb738e69635a1c/transformed/jetified-glide-4.9.0/AndroidManifest.xml:6:5-8:41
 MERGED from [com.github.bumptech.glide:glide:4.9.0] /Users/panlong/.gradle/caches/transforms-3/3576247cb2c6fd293fbb738e69635a1c/transformed/jetified-glide-4.9.0/AndroidManifest.xml:6:5-8:41
+MERGED from [com.sunmi:SunmiHttpLib:1.0.48] /Users/panlong/.gradle/caches/transforms-3/f55dd121912db9ac87fcc2bc739a0aa2/transformed/jetified-SunmiHttpLib-1.0.48/AndroidManifest.xml:7:5-9:41
+MERGED from [com.sunmi:SunmiHttpLib:1.0.48] /Users/panlong/.gradle/caches/transforms-3/f55dd121912db9ac87fcc2bc739a0aa2/transformed/jetified-SunmiHttpLib-1.0.48/AndroidManifest.xml:7:5-9:41
 MERGED from [androidx.webkit:webkit:1.3.0] /Users/panlong/.gradle/caches/transforms-3/a685bd9084a54f47a677d0d85feddc76/transformed/webkit-1.3.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.webkit:webkit:1.3.0] /Users/panlong/.gradle/caches/transforms-3/a685bd9084a54f47a677d0d85feddc76/transformed/webkit-1.3.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.dynamicanimation:dynamicanimation:1.0.0] /Users/panlong/.gradle/caches/transforms-3/f9c281b1fc5d800d7f8ac9adff347daa/transformed/dynamicanimation-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.dynamicanimation:dynamicanimation:1.0.0] /Users/panlong/.gradle/caches/transforms-3/f9c281b1fc5d800d7f8ac9adff347daa/transformed/dynamicanimation-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.room:room-runtime:2.0.0] /Users/panlong/.gradle/caches/transforms-3/a3350c4e107982e042d8ca38d192a5e8/transformed/room-runtime-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.room:room-runtime:2.0.0] /Users/panlong/.gradle/caches/transforms-3/a3350c4e107982e042d8ca38d192a5e8/transformed/room-runtime-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /Users/panlong/.gradle/caches/transforms-3/747397cefc22efc4799dfbfdfe90bfb4/transformed/legacy-support-core-utils-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /Users/panlong/.gradle/caches/transforms-3/747397cefc22efc4799dfbfdfe90bfb4/transformed/legacy-support-core-utils-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /Users/panlong/.gradle/caches/transforms-3/37460cb7f42efbfdb65e2028602af923/transformed/localbroadcastmanager-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /Users/panlong/.gradle/caches/transforms-3/37460cb7f42efbfdb65e2028602af923/transformed/localbroadcastmanager-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.appcompat:appcompat:1.1.0] /Users/panlong/.gradle/caches/transforms-3/e064caec7585c0179469b2a2da7d1d25/transformed/appcompat-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.appcompat:appcompat:1.1.0] /Users/panlong/.gradle/caches/transforms-3/e064caec7585c0179469b2a2da7d1d25/transformed/appcompat-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.fragment:fragment:1.1.0] /Users/panlong/.gradle/caches/transforms-3/53528eba70338390e0bf44b258bdd3b4/transformed/fragment-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.fragment:fragment:1.1.0] /Users/panlong/.gradle/caches/transforms-3/53528eba70338390e0bf44b258bdd3b4/transformed/fragment-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
-MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
-MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/panlong/.gradle/caches/transforms-3/ffca6d6e79a8a540f970ef0add983018/transformed/viewpager-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/panlong/.gradle/caches/transforms-3/ffca6d6e79a8a540f970ef0add983018/transformed/viewpager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/panlong/.gradle/caches/transforms-3/e85a1f4ca2ce8dc555f031be962af973/transformed/constraintlayout-2.0.1/AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /Users/panlong/.gradle/caches/transforms-3/e85a1f4ca2ce8dc555f031be962af973/transformed/constraintlayout-2.0.1/AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.appcompat:appcompat:1.3.1] /Users/panlong/.gradle/caches/transforms-3/4dffc93de3461adb331c58db842b937c/transformed/appcompat-1.3.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat:1.3.1] /Users/panlong/.gradle/caches/transforms-3/4dffc93de3461adb331c58db842b937c/transformed/appcompat-1.3.1/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /Users/panlong/.gradle/caches/transforms-3/d1561d2dca512498882d0b3e2227fd0f/transformed/drawerlayout-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /Users/panlong/.gradle/caches/transforms-3/d1561d2dca512498882d0b3e2227fd0f/transformed/drawerlayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] /Users/panlong/.gradle/caches/transforms-3/145b35f647f2b9a0faade5f6c8af06f3/transformed/coordinatorlayout-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] /Users/panlong/.gradle/caches/transforms-3/145b35f647f2b9a0faade5f6c8af06f3/transformed/coordinatorlayout-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.3.6] /Users/panlong/.gradle/caches/transforms-3/4b08ebbc727a5455ca291040fd4cfed1/transformed/fragment-1.3.6/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.3.6] /Users/panlong/.gradle/caches/transforms-3/4b08ebbc727a5455ca291040fd4cfed1/transformed/fragment-1.3.6/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/panlong/.gradle/caches/transforms-3/ffca6d6e79a8a540f970ef0add983018/transformed/viewpager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/panlong/.gradle/caches/transforms-3/ffca6d6e79a8a540f970ef0add983018/transformed/viewpager-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.customview:customview:1.0.0] /Users/panlong/.gradle/caches/transforms-3/895bdedced961248a25a35cbd3fce1ff/transformed/customview-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.customview:customview:1.0.0] /Users/panlong/.gradle/caches/transforms-3/895bdedced961248a25a35cbd3fce1ff/transformed/customview-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.loader:loader:1.0.0] /Users/panlong/.gradle/caches/transforms-3/1fd747430f8de53740f9a25796ec247b/transformed/loader-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.loader:loader:1.0.0] /Users/panlong/.gradle/caches/transforms-3/1fd747430f8de53740f9a25796ec247b/transformed/loader-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.activity:activity:1.0.0] /Users/panlong/.gradle/caches/transforms-3/86731ef066729f9b3916cce6ad820c94/transformed/jetified-activity-1.0.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.activity:activity:1.0.0] /Users/panlong/.gradle/caches/transforms-3/86731ef066729f9b3916cce6ad820c94/transformed/jetified-activity-1.0.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.appcompat:appcompat-resources:1.1.0] /Users/panlong/.gradle/caches/transforms-3/d8c4d88c015b3a156ae4c047d8f51dc2/transformed/jetified-appcompat-resources-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.appcompat:appcompat-resources:1.1.0] /Users/panlong/.gradle/caches/transforms-3/d8c4d88c015b3a156ae4c047d8f51dc2/transformed/jetified-appcompat-resources-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core-ktx:1.9.0] /Users/panlong/.gradle/caches/transforms-3/9b1a008edfcce24bc6a5a7e018747a5d/transformed/jetified-core-ktx-1.9.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core-ktx:1.9.0] /Users/panlong/.gradle/caches/transforms-3/9b1a008edfcce24bc6a5a7e018747a5d/transformed/jetified-core-ktx-1.9.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity:1.2.4] /Users/panlong/.gradle/caches/transforms-3/bd27619e9029cd43015270678021bb15/transformed/jetified-activity-1.2.4/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.activity:activity:1.2.4] /Users/panlong/.gradle/caches/transforms-3/bd27619e9029cd43015270678021bb15/transformed/jetified-activity-1.2.4/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.3.1] /Users/panlong/.gradle/caches/transforms-3/25e7fd960bed5e217919479c39ea56c8/transformed/jetified-appcompat-resources-1.3.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.3.1] /Users/panlong/.gradle/caches/transforms-3/25e7fd960bed5e217919479c39ea56c8/transformed/jetified-appcompat-resources-1.3.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.transition:transition:1.2.0] /Users/panlong/.gradle/caches/transforms-3/79fd7ed5d733b98ca05ac1f70caad4c8/transformed/transition-1.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.transition:transition:1.2.0] /Users/panlong/.gradle/caches/transforms-3/79fd7ed5d733b98ca05ac1f70caad4c8/transformed/transition-1.2.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/panlong/.gradle/caches/transforms-3/650f9c7583979ec4a4a280f7ab4cdd65/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/panlong/.gradle/caches/transforms-3/650f9c7583979ec4a4a280f7ab4cdd65/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/panlong/.gradle/caches/transforms-3/14980e371c56a614b0df7e4c9411d42c/transformed/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/panlong/.gradle/caches/transforms-3/14980e371c56a614b0df7e4c9411d42c/transformed/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.core:core-ktx:1.9.0] /Users/panlong/.gradle/caches/transforms-3/9b1a008edfcce24bc6a5a7e018747a5d/transformed/jetified-core-ktx-1.9.0/AndroidManifest.xml:5:5-44
-MERGED from [androidx.core:core-ktx:1.9.0] /Users/panlong/.gradle/caches/transforms-3/9b1a008edfcce24bc6a5a7e018747a5d/transformed/jetified-core-ktx-1.9.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.loader:loader:1.0.0] /Users/panlong/.gradle/caches/transforms-3/1fd747430f8de53740f9a25796ec247b/transformed/loader-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] /Users/panlong/.gradle/caches/transforms-3/1fd747430f8de53740f9a25796ec247b/transformed/loader-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.core:core:1.9.0] /Users/panlong/.gradle/caches/transforms-3/b101d2237ddd1767d9659103306eaba9/transformed/core-1.9.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.core:core:1.9.0] /Users/panlong/.gradle/caches/transforms-3/b101d2237ddd1767d9659103306eaba9/transformed/core-1.9.0/AndroidManifest.xml:20:5-44
+MERGED from [com.appmattus.certificatetransparency:certificatetransparency-android:1.0.0] /Users/panlong/.gradle/caches/transforms-3/5cbbcc66b3183a357967d66a26a8ad7f/transformed/jetified-certificatetransparency-android-1.0.0/AndroidManifest.xml:5:5-7:41
+MERGED from [com.appmattus.certificatetransparency:certificatetransparency-android:1.0.0] /Users/panlong/.gradle/caches/transforms-3/5cbbcc66b3183a357967d66a26a8ad7f/transformed/jetified-certificatetransparency-android-1.0.0/AndroidManifest.xml:5:5-7:41
 MERGED from [androidx.annotation:annotation-experimental:1.3.0] /Users/panlong/.gradle/caches/transforms-3/8bcf3fb7d0d2126c9ca808fdcdb756cc/transformed/jetified-annotation-experimental-1.3.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.annotation:annotation-experimental:1.3.0] /Users/panlong/.gradle/caches/transforms-3/8bcf3fb7d0d2126c9ca808fdcdb756cc/transformed/jetified-annotation-experimental-1.3.0/AndroidManifest.xml:20:5-44
 MERGED from [com.github.getActivity:XXPermissions:18.63] /Users/panlong/.gradle/caches/transforms-3/d31c38214b106637f21d0ae42d03b050/transformed/jetified-XXPermissions-18.63/AndroidManifest.xml:7:5-44
@@ -389,28 +437,40 @@ MERGED from [:uniplugin_camera] /Users/panlong/AndroidStudioProjects/Android-SDK
 MERGED from [:uniplugin_camera] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_camera/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
 MERGED from [:uts-toast] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uts-toast/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
 MERGED from [:uts-toast] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uts-toast/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
 MERGED from [com.github.bumptech.glide:gifdecoder:4.9.0] /Users/panlong/.gradle/caches/transforms-3/4eeb4613763a4dd9f44621ffbc8a813c/transformed/jetified-gifdecoder-4.9.0/AndroidManifest.xml:5:5-7:41
 MERGED from [com.github.bumptech.glide:gifdecoder:4.9.0] /Users/panlong/.gradle/caches/transforms-3/4eeb4613763a4dd9f44621ffbc8a813c/transformed/jetified-gifdecoder-4.9.0/AndroidManifest.xml:5:5-7:41
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/panlong/.gradle/caches/transforms-3/6819ac427e14602cd9556f8d280f9b9f/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/panlong/.gradle/caches/transforms-3/6819ac427e14602cd9556f8d280f9b9f/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/panlong/.gradle/caches/transforms-3/91a3ad4a68f8d65fc59e699705f45106/transformed/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/panlong/.gradle/caches/transforms-3/91a3ad4a68f8d65fc59e699705f45106/transformed/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] /Users/panlong/.gradle/caches/transforms-3/05411a2bc143aaf0c393e8c650558998/transformed/lifecycle-viewmodel-2.1.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] /Users/panlong/.gradle/caches/transforms-3/05411a2bc143aaf0c393e8c650558998/transformed/lifecycle-viewmodel-2.1.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.savedstate:savedstate:1.0.0] /Users/panlong/.gradle/caches/transforms-3/c343672d475d024fb938eaa4457d638c/transformed/jetified-savedstate-1.0.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.savedstate:savedstate:1.0.0] /Users/panlong/.gradle/caches/transforms-3/c343672d475d024fb938eaa4457d638c/transformed/jetified-savedstate-1.0.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.lifecycle:lifecycle-runtime:2.3.1] /Users/panlong/.gradle/caches/transforms-3/9d82f672b6eb3113692ba70e2f8b53ec/transformed/lifecycle-runtime-2.3.1/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.lifecycle:lifecycle-runtime:2.3.1] /Users/panlong/.gradle/caches/transforms-3/9d82f672b6eb3113692ba70e2f8b53ec/transformed/lifecycle-runtime-2.3.1/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/panlong/.gradle/caches/transforms-3/3884a32017ab213e4953a156c2938c60/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/panlong/.gradle/caches/transforms-3/3884a32017ab213e4953a156c2938c60/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/panlong/.gradle/caches/transforms-3/6819ac427e14602cd9556f8d280f9b9f/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/panlong/.gradle/caches/transforms-3/6819ac427e14602cd9556f8d280f9b9f/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.1] /Users/panlong/.gradle/caches/transforms-3/b4470958b14692e565cf341d6745890b/transformed/jetified-lifecycle-viewmodel-savedstate-2.3.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.1] /Users/panlong/.gradle/caches/transforms-3/b4470958b14692e565cf341d6745890b/transformed/jetified-lifecycle-viewmodel-savedstate-2.3.1/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /Users/panlong/.gradle/caches/transforms-3/8d201c6bb966c9d6d27f914cab2a10b0/transformed/lifecycle-livedata-2.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /Users/panlong/.gradle/caches/transforms-3/8d201c6bb966c9d6d27f914cab2a10b0/transformed/lifecycle-livedata-2.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /Users/panlong/.gradle/caches/transforms-3/d802b677693943f4abdf840a26515823/transformed/lifecycle-livedata-core-2.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /Users/panlong/.gradle/caches/transforms-3/d802b677693943f4abdf840a26515823/transformed/lifecycle-livedata-core-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.3.1] /Users/panlong/.gradle/caches/transforms-3/59b5375ecc66e37eab1b59c168660bbd/transformed/lifecycle-livedata-core-2.3.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.3.1] /Users/panlong/.gradle/caches/transforms-3/59b5375ecc66e37eab1b59c168660bbd/transformed/lifecycle-livedata-core-2.3.1/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.arch.core:core-runtime:2.1.0] /Users/panlong/.gradle/caches/transforms-3/91ed986037c33938299eafe621bacede/transformed/core-runtime-2.1.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.arch.core:core-runtime:2.1.0] /Users/panlong/.gradle/caches/transforms-3/91ed986037c33938299eafe621bacede/transformed/core-runtime-2.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.savedstate:savedstate:1.1.0] /Users/panlong/.gradle/caches/transforms-3/aae905938334b961d2c9f76458de62d4/transformed/jetified-savedstate-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.savedstate:savedstate:1.1.0] /Users/panlong/.gradle/caches/transforms-3/aae905938334b961d2c9f76458de62d4/transformed/jetified-savedstate-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.3.1] /Users/panlong/.gradle/caches/transforms-3/a86e4b4d61b74d90b568c5f141a3e8e3/transformed/lifecycle-viewmodel-2.3.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.3.1] /Users/panlong/.gradle/caches/transforms-3/a86e4b4d61b74d90b568c5f141a3e8e3/transformed/lifecycle-viewmodel-2.3.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/panlong/.gradle/caches/transforms-3/91a3ad4a68f8d65fc59e699705f45106/transformed/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/panlong/.gradle/caches/transforms-3/91a3ad4a68f8d65fc59e699705f45106/transformed/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0] /Users/panlong/.gradle/caches/transforms-3/f4aac0c54da94bc05b2adb8268183223/transformed/cardview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0] /Users/panlong/.gradle/caches/transforms-3/f4aac0c54da94bc05b2adb8268183223/transformed/cardview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.tracing:tracing:1.0.0] /Users/panlong/.gradle/caches/transforms-3/1b9d2c4b931ec8b322916ba4bbc4ca74/transformed/jetified-tracing-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.tracing:tracing:1.0.0] /Users/panlong/.gradle/caches/transforms-3/1b9d2c4b931ec8b322916ba4bbc4ca74/transformed/jetified-tracing-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.sqlite:sqlite-framework:2.0.0] /Users/panlong/.gradle/caches/transforms-3/7b457e0d245a1d8a1575e4132e8d9e43/transformed/sqlite-framework-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite-framework:2.0.0] /Users/panlong/.gradle/caches/transforms-3/7b457e0d245a1d8a1575e4132e8d9e43/transformed/sqlite-framework-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite:2.0.0] /Users/panlong/.gradle/caches/transforms-3/8b8964a12907e4635125aba4c9c6eca9/transformed/sqlite-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite:2.0.0] /Users/panlong/.gradle/caches/transforms-3/8b8964a12907e4635125aba4c9c6eca9/transformed/sqlite-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/panlong/.gradle/caches/transforms-3/3884a32017ab213e4953a156c2938c60/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/panlong/.gradle/caches/transforms-3/3884a32017ab213e4953a156c2938c60/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] /Users/panlong/.gradle/caches/transforms-3/03af4df403092c973b681f4784275ce1/transformed/documentfile-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] /Users/panlong/.gradle/caches/transforms-3/03af4df403092c973b681f4784275ce1/transformed/documentfile-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] /Users/panlong/.gradle/caches/transforms-3/4d8d6a9d5b9d93ca953f9e3f4ba2e04b/transformed/print-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] /Users/panlong/.gradle/caches/transforms-3/4d8d6a9d5b9d93ca953f9e3f4ba2e04b/transformed/print-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [com.facebook.fresco:animated-base:1.13.0] /Users/panlong/.gradle/caches/transforms-3/ff09ffd12036615e379545aad8c8f3b6/transformed/jetified-animated-base-1.13.0/AndroidManifest.xml:5:5-7:41
 MERGED from [com.facebook.fresco:animated-base:1.13.0] /Users/panlong/.gradle/caches/transforms-3/ff09ffd12036615e379545aad8c8f3b6/transformed/jetified-animated-base-1.13.0/AndroidManifest.xml:5:5-7:41
 MERGED from [com.facebook.fresco:animated-drawable:1.13.0] /Users/panlong/.gradle/caches/transforms-3/19038dca771f81a18c5b57047a28f5b2/transformed/jetified-animated-drawable-1.13.0/AndroidManifest.xml:5:5-7:41
@@ -433,8 +493,8 @@ MERGED from [:facelib-release:] /Users/panlong/.gradle/caches/transforms-3/4c2ec
 MERGED from [:facelib-release:] /Users/panlong/.gradle/caches/transforms-3/4c2ec77f9a2576a5c7cfc20bd552ecec/transformed/jetified-facelib-release/AndroidManifest.xml:7:5-9:41
 MERGED from [:opencv:] /Users/panlong/.gradle/caches/transforms-3/89a9e951a54eebc4870cf4803b8e4a5f/transformed/jetified-opencv/AndroidManifest.xml:7:5-9:41
 MERGED from [:opencv:] /Users/panlong/.gradle/caches/transforms-3/89a9e951a54eebc4870cf4803b8e4a5f/transformed/jetified-opencv/AndroidManifest.xml:7:5-9:41
-MERGED from [:SunmiAuthorize-SDK-1.0.1:] /Users/panlong/.gradle/caches/transforms-3/0f1e7e7547266f32971b17cc066b7c3c/transformed/jetified-SunmiAuthorize-SDK-1.0.1/AndroidManifest.xml:5:5-7:41
-MERGED from [:SunmiAuthorize-SDK-1.0.1:] /Users/panlong/.gradle/caches/transforms-3/0f1e7e7547266f32971b17cc066b7c3c/transformed/jetified-SunmiAuthorize-SDK-1.0.1/AndroidManifest.xml:5:5-7:41
+MERGED from [io.reactivex.rxjava2:rxandroid:2.1.0] /Users/panlong/.gradle/caches/transforms-3/02dc319480a95c8e519c9b63579ce92a/transformed/jetified-rxandroid-2.1.0/AndroidManifest.xml:18:5-43
+MERGED from [io.reactivex.rxjava2:rxandroid:2.1.0] /Users/panlong/.gradle/caches/transforms-3/02dc319480a95c8e519c9b63579ce92a/transformed/jetified-rxandroid-2.1.0/AndroidManifest.xml:18:5-43
 INJECTED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml
 INJECTED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml
 	tools:overrideLibrary
@@ -637,6 +697,8 @@ ADDED from [oaid_sdk_1.0.25.aar] /Users/panlong/.gradle/caches/transforms-3/1bdf
 		ADDED from [oaid_sdk_1.0.25.aar] /Users/panlong/.gradle/caches/transforms-3/1bdfae81b2d6d9962ed73934fc4bb0e7/transformed/jetified-oaid_sdk_1.0.25/AndroidManifest.xml:15:22-59
 uses-permission#android.permission.ACCESS_WIFI_STATE
 ADDED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/bd01108cd7dcfc6208db5d288d93669d/transformed/jetified-weex_livepusher-release/AndroidManifest.xml:9:5-76
+MERGED from [com.sunmi:SunmiHttpLib:1.0.48] /Users/panlong/.gradle/caches/transforms-3/f55dd121912db9ac87fcc2bc739a0aa2/transformed/jetified-SunmiHttpLib-1.0.48/AndroidManifest.xml:12:5-76
+MERGED from [com.sunmi:SunmiHttpLib:1.0.48] /Users/panlong/.gradle/caches/transforms-3/f55dd121912db9ac87fcc2bc739a0aa2/transformed/jetified-SunmiHttpLib-1.0.48/AndroidManifest.xml:12:5-76
 	android:name
 		ADDED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/bd01108cd7dcfc6208db5d288d93669d/transformed/jetified-weex_livepusher-release/AndroidManifest.xml:9:22-73
 uses-permission#android.permission.MODIFY_AUDIO_SETTINGS
@@ -647,12 +709,6 @@ uses-permission#android.permission.BLUETOOTH
 ADDED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/bd01108cd7dcfc6208db5d288d93669d/transformed/jetified-weex_livepusher-release/AndroidManifest.xml:14:5-68
 	android:name
 		ADDED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/bd01108cd7dcfc6208db5d288d93669d/transformed/jetified-weex_livepusher-release/AndroidManifest.xml:14:22-65
-activity#io.dcloud.uniplugin.NativePageActivity
-ADDED from [:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:9-10:84
-	android:theme
-		ADDED from [:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:13-81
-	android:name
-		ADDED from [:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:13-66
 uses-permission#android.permission.FOREGROUND_SERVICE
 ADDED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:5-77
 MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:5-77
@@ -679,6 +735,12 @@ ADDED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-S
 		ADDED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:27:13-51
 	android:name
 		ADDED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:25:13-85
+activity#io.dcloud.uniplugin.NativePageActivity
+ADDED from [:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:9-10:84
+	android:theme
+		ADDED from [:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:13-81
+	android:name
+		ADDED from [:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:13-66
 permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.9.0] /Users/panlong/.gradle/caches/transforms-3/b101d2237ddd1767d9659103306eaba9/transformed/core-1.9.0/AndroidManifest.xml:22:5-24:47
 	android:protectionLevel

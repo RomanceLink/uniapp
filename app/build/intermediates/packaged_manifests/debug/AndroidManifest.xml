@@ -238,9 +238,6 @@
         </receiver>
 
         <activity
-            android:name="io.dcloud.uniplugin.NativePageActivity"
-            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" />
-        <activity
             android:name="com.example.uniplugin_sunmiface.SunmiFaceRecognizeActivity"
             android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" />
 
@@ -248,6 +245,10 @@
             android:name="com.example.uniplugin_sunmiface.SunmiFaceKeepAliveService"
             android:exported="false"
             android:foregroundServiceType="camera" />
+
+        <activity
+            android:name="io.dcloud.uniplugin.NativePageActivity"
+            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" />
     </application>
 
 </manifest>

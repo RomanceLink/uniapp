@@ -74,6 +74,7 @@ export default {
 			form: {
 				imagePath: '',
 				imageUri: '',
+				base64: '',
 				preprocess: {
 					enableGray: true,
 					enableDenoise: true,
@@ -84,7 +85,8 @@ export default {
 				}
 			},
 			resultText: '等待执行...',
-			selectedPath: ''
+			selectedPath: '',
+			isRecognizing: false
 		}
 	},
 	methods: {
@@ -95,21 +97,25 @@ export default {
 			return {
 				imagePath: this.form.imagePath || undefined,
 				imageUri: this.form.imageUri || undefined,
+				base64: this.form.base64 || undefined,
 				preprocess: this.form.preprocess
 			}
 		},
-		applySelectedImage(path, uri = '') {
+		applySelectedImage(path, uri = '', base64 = '') {
 			this.form.imagePath = path || ''
 			this.form.imageUri = uri || ''
-			this.selectedPath = uri || path || ''
+			this.form.base64 = base64 || ''
+			this.selectedPath = uri || path || (base64 ? 'base64-image' : '')
 		},
 		requestImagePermissions() {
 			// #ifdef APP-PLUS
 			const permissions = ['android.permission.READ_EXTERNAL_STORAGE']
 			if (plus.os.name === 'Android') {
-				const main = plus.android.runtimeMainActivity()
 				if (plus.android.invoke('android.os.Build$VERSION', 'SDK_INT') >= 33) {
 					permissions.push('android.permission.READ_MEDIA_IMAGES')
+				}
+				if (plus.android.invoke('android.os.Build$VERSION', 'SDK_INT') >= 34) {
+					permissions.push('android.permission.READ_MEDIA_VISUAL_USER_SELECTED')
 				}
 				plus.android.requestPermissions(
 					permissions,
@@ -134,83 +140,143 @@ export default {
 			// #endif
 		},
 		pickFromGallery() {
-			uni.chooseImage({
-				count: 1,
-				sourceType: ['album'],
-				success: (res) => {
-					const path = (res.tempFilePaths && res.tempFilePaths[0]) || ''
+			// #ifdef APP-PLUS
+			this.resultText = '正在打开图片库...'
+			plus.gallery.pick(
+				(event) => {
+					const path = typeof event === 'string' ? event : (event.files && event.files[0]) || ''
 					this.applySelectedImage(path)
-					this.runRecognizeScale()
+					this.resultText = `已选择图片，开始识别：${path}`
+					setTimeout(() => {
+						this.runRecognizeScale()
+					}, 80)
 				},
-				fail: (error) => {
+				(error) => {
 					this.resultText = JSON.stringify({
 						success: false,
 						code: -1,
 						message: '选择图片失败',
 						data: error
 					}, null, 2)
+				},
+				{
+					filter: 'image',
+					multiple: false,
+					system: true
 				}
-			})
+			)
+			// #endif
 		},
 		pickFromFile() {
-			if (typeof uni.chooseFile !== 'function') {
-				this.resultText = JSON.stringify({
-					success: false,
-					code: -1,
-					message: '当前运行环境不支持 chooseFile，请先使用“从图片库选择”',
-					data: null
-				}, null, 2)
-				return
-			}
-			uni.chooseFile({
-				count: 1,
-				type: 'image',
-				success: (res) => {
-					const file = (res.tempFiles && res.tempFiles[0]) || {}
-					const path = file.path || file.tempFilePath || ''
-					const uri = file.url || ''
-					this.applySelectedImage(path || uri, uri)
-					this.runRecognizeScale()
-				},
-				fail: (error) => {
+			const input = document.createElement('input')
+			input.type = 'file'
+			input.accept = 'image/*'
+			input.style.position = 'fixed'
+			input.style.left = '-9999px'
+			document.body.appendChild(input)
+			input.onchange = () => {
+				const file = input.files && input.files[0]
+				if (!file) {
+					document.body.removeChild(input)
+					this.resultText = '未选择文件'
+					return
+				}
+				this.resultText = `已选择文件，正在读取：${file.name}`
+				const reader = new FileReader()
+				reader.onload = () => {
+					const base64 = typeof reader.result === 'string' ? reader.result : ''
+					this.applySelectedImage(file.name, '', base64)
+					this.resultText = `文件读取完成，开始识别：${file.name}`
+					setTimeout(() => {
+						this.runRecognizeScale()
+						document.body.removeChild(input)
+					}, 80)
+				}
+				reader.onerror = (error) => {
 					this.resultText = JSON.stringify({
 						success: false,
 						code: -1,
-						message: '选择文件失败',
+						message: '文件读取失败',
 						data: error
 					}, null, 2)
+					document.body.removeChild(input)
 				}
-			})
+				reader.readAsDataURL(file)
+			}
+			input.click()
 		},
 		runCheckEnvironment() {
 			this.resultText = JSON.stringify(PhironOcr.checkEnvironment(), null, 2)
 		},
 		runPreprocess() {
+			// #ifdef APP-PLUS
 			const outputPath = `${plus.io.convertLocalFileSystemURL('_doc')}/phiron-ocr-preprocess.png`
-			const result = PhironOcr.preprocessImage({
-				imagePath: this.form.imagePath || this.form.imageUri,
-				outputPath,
-				...this.form.preprocess
-			})
-			this.resultText = JSON.stringify(result, null, 2)
+			// #endif
+			try {
+				const result = PhironOcr.preprocessImage({
+					imagePath: this.form.imagePath || this.form.imageUri,
+					base64: this.form.base64 || undefined,
+					outputPath,
+					...this.form.preprocess
+				})
+				this.resultText = JSON.stringify(result, null, 2)
+			} catch (error) {
+				this.resultText = JSON.stringify({
+					success: false,
+					code: -1,
+					message: '预处理失败',
+					data: String(error)
+				}, null, 2)
+			}
 		},
 		runRecognizeScale() {
-			const result = PhironOcr.recognizeScaleValue({
-				...this.getRecognizePayload(),
-				includeRawBlocks: true,
-			})
-			this.resultText = JSON.stringify(result, null, 2)
+			if (this.isRecognizing) {
+				return
+			}
+			if (!this.form.imagePath && !this.form.imageUri && !this.form.base64) {
+				this.resultText = '请先选择图片或文件'
+				return
+			}
+			this.isRecognizing = true
+			this.resultText = '识别中，请稍候...'
+			setTimeout(() => {
+				try {
+					const result = PhironOcr.recognizeScaleValue({
+						...this.getRecognizePayload(),
+						includeRawBlocks: true,
+					})
+					this.resultText = JSON.stringify(result, null, 2)
+				} catch (error) {
+					this.resultText = JSON.stringify({
+						success: false,
+						code: -1,
+						message: '电子称识别失败',
+						data: String(error)
+					}, null, 2)
+				} finally {
+					this.isRecognizing = false
+				}
+			}, 80)
 		},
 		runRecognizeAll() {
-			const result = PhironOcr.recognize({
-				...this.getRecognizePayload(),
-				preferDigits: true,
-				extractBestNumericCandidate: true,
-				includeRawBlocks: true,
-				allowedChars: '0123456789.-kgKG',
-				expectedRegex: '-?\\d+(?:\\.\\d+)?'
-			})
-			this.resultText = JSON.stringify(result, null, 2)
+			try {
+				const result = PhironOcr.recognize({
+					...this.getRecognizePayload(),
+					preferDigits: true,
+					extractBestNumericCandidate: true,
+					includeRawBlocks: true,
+					allowedChars: '0123456789.-kgKG',
+					expectedRegex: '-?\\d+(?:\\.\\d+)?'
+				})
+				this.resultText = JSON.stringify(result, null, 2)
+			} catch (error) {
+				this.resultText = JSON.stringify({
+					success: false,
+					code: -1,
+					message: '通用 OCR 识别失败',
+					data: String(error)
+				}, null, 2)
+			}
 		}
 	}
 }

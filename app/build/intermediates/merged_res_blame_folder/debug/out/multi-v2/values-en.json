@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.android.UniPlugin.app-mergeDebugResources-19:/values-en/values-en.xml",
+            "outputFile": "com.android.UniPlugin.app-mergeDebugResources-29:/values-en/values-en.xml",
             "map": [
                 {
                     "source": "/Users/panlong/.gradle/caches/transforms-3/d186d0c1f696a5ab4b208c8d918fc178/transformed/jetified-lib.5plus.base-release/res/values-en/values-en.xml",

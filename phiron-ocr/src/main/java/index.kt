@@ -78,6 +78,18 @@ fun preprocessImage(options: PhironOcrPreprocessOptions): PhironOcrResult = pars
 fun recognize(options: PhironOcrRecognizeOptions): PhironOcrResult = parseResult(OcrNative.recognizeJson(stringifyOptions(options)))
 fun recognizeScaleValue(options: PhironOcrRecognizeOptions): PhironOcrResult = parseResult(OcrNative.recognizeScaleValueJson(stringifyOptions(options)))
 
+fun getVersionByJs(): PhironOcrResult = getVersion()
+fun checkEnvironmentByJs(): PhironOcrResult = checkEnvironment()
+
+fun preprocessImageByJs(options: PhironOcrPreprocessOptionsJSONObject): PhironOcrResult =
+    parseResult(OcrNative.preprocessImageJson(stringifyOptions(options)))
+
+fun recognizeByJs(options: PhironOcrRecognizeOptionsJSONObject): PhironOcrResult =
+    parseResult(OcrNative.recognizeJson(stringifyOptions(options)))
+
+fun recognizeScaleValueByJs(options: PhironOcrRecognizeOptionsJSONObject): PhironOcrResult =
+    parseResult(OcrNative.recognizeScaleValueJson(stringifyOptions(options)))
+
 open class PhironOcrQuadPointJSONObject : UTSJSONObject() {
     open lateinit var x: Number
     open lateinit var y: Number

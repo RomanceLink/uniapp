@@ -123,15 +123,15 @@
 64    <uses-permission android:name="android.permission.BLUETOOTH" />
 64-->[weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/bd01108cd7dcfc6208db5d288d93669d/transformed/jetified-weex_livepusher-release/AndroidManifest.xml:14:5-68
 64-->[weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/bd01108cd7dcfc6208db5d288d93669d/transformed/jetified-weex_livepusher-release/AndroidManifest.xml:14:22-65
-65    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-65-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:5-77
-65-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:22-74
-66    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
-66-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:5-84
-66-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:22-81
-67    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-67-->[:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:5-14:40
-67-->[:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:13:9-66
+65    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+65-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:5-14:40
+65-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:13:9-66
+66    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+66-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:16:5-77
+66-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:16:22-74
+67    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
+67-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:5-84
+67-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:22-81
 68
 69    <permission
 69-->[androidx.core:core:1.9.0] /Users/panlong/.gradle/caches/transforms-3/b101d2237ddd1767d9659103306eaba9/transformed/core-1.9.0/AndroidManifest.xml:22:5-24:47
@@ -451,20 +451,20 @@
 239        </receiver>
 240
 241        <activity
-241-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:20:9-22:84
+241-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:25:9-27:84
 242            android:name="com.example.uniplugin_sunmiface.SunmiFaceRecognizeActivity"
-242-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:21:13-86
+242-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:26:13-86
 243            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" />
-243-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:22:13-81
+243-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:27:13-81
 244
 245        <service
-245-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:24:9-27:54
+245-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:29:9-32:54
 246            android:name="com.example.uniplugin_sunmiface.SunmiFaceKeepAliveService"
-246-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:25:13-85
+246-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:30:13-85
 247            android:exported="false"
-247-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:26:13-37
+247-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:31:13-37
 248            android:foregroundServiceType="camera" />
-248-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:27:13-51
+248-->[:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:32:13-51
 249
 250        <activity
 250-->[:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:9-10:84

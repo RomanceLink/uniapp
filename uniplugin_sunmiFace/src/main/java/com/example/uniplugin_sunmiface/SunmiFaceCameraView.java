@@ -260,9 +260,11 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
         detecting = false;
         int generation = ++resourceGeneration;
         clearFaceOverlay();
+        mainHandler.removeCallbacksAndMessages(null);
+        textureView.setSurfaceTextureListener(null);
         stopCameraOnly();
         scheduleSdkRelease(generation);
-        analyzerExecutor.shutdown();
+        analyzerExecutor.shutdownNow();
     }
 
     @Override

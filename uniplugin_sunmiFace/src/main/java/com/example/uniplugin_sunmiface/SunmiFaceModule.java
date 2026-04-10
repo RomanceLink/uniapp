@@ -7,11 +7,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -71,12 +74,6 @@ public class SunmiFaceModule extends UniModule {
     private static final Handler MAIN = new Handler(Looper.getMainLooper());
     private static SunmiFaceDetectOverlay activeDetectOverlay = null;
 
-    private static final String[] REQUIRED_PERMISSIONS = new String[]{
-            "android.permission.READ_EXTERNAL_STORAGE",
-            "android.permission.READ_PHONE_STATE",
-            "android.permission.WRITE_EXTERNAL_STORAGE",
-            "android.permission.CAMERA"
-    };
     // INTERNET / ACCESS_NETWORK_STATE 属于普通权限：通常无需运行时申请，但我们仍然在 checkPermissions 里展示状态
     private static final String[] NETWORK_PERMISSIONS = new String[]{
             "android.permission.INTERNET",
@@ -164,6 +161,7 @@ public class SunmiFaceModule extends UniModule {
     @UniJSMethod(uiThread = true)
     public void initAuthorizeSDK(JSONObject options, UniJSCallback callback) {
         try {
+            ensureAuthorizeRuntimeAvailable();
             Context context = getSafeContext();
             if (context == null) {
                 callback.invoke(error(ErrorCode.SDK_NOT_INIT, "context is null"));
@@ -178,7 +176,7 @@ public class SunmiFaceModule extends UniModule {
             data.put("debuggable", debuggable);
             data.put("sdkVersion", SunmiAuthorizeSDK.getSunmiAuthorizeSDKVersion());
             callback.invoke(success(data, "init authorize sdk success"));
-        } catch (Exception e) {
+        } catch (Throwable e) {
             callback.invoke(exception(e));
         }
     }
@@ -196,10 +194,11 @@ public class SunmiFaceModule extends UniModule {
     @UniJSMethod(uiThread = false)
     public void syncGetAuthorizeCode(JSONObject options, UniJSCallback callback) {
         try {
+            ensureAuthorizeRuntimeAvailable();
             ensureAuthorizeSdk();
             AuthorizeResult result = SunmiAuthorizeSDK.syncGetAuthorizeCode(buildAuthorizeParams(options));
             callback.invoke(authorizeResult(result));
-        } catch (Exception e) {
+        } catch (Throwable e) {
             callback.invoke(exception(e));
         }
     }
@@ -207,6 +206,7 @@ public class SunmiFaceModule extends UniModule {
     @UniJSMethod(uiThread = true)
     public void asyncGetAuthorizeToken(JSONObject options, UniJSCallback callback) {
         try {
+            ensureAuthorizeRuntimeAvailable();
             ensureAuthorizeSdk();
             SunmiAuthorizeSDK.asyncGetAuthorizeToken(buildAuthorizeParams(options), new AuthorizeCallBack() {
                 @Override
@@ -216,7 +216,7 @@ public class SunmiFaceModule extends UniModule {
                     }
                 }
             });
-        } catch (Exception e) {
+        } catch (Throwable e) {
             callback.invoke(exception(e));
         }
     }
@@ -224,10 +224,11 @@ public class SunmiFaceModule extends UniModule {
     @UniJSMethod(uiThread = true)
     public void clearLocalToken(UniJSCallback callback) {
         try {
+            ensureAuthorizeRuntimeAvailable();
             ensureAuthorizeSdk();
             SunmiAuthorizeSDK.clearLocalToken();
             callback.invoke(success(null, "clear local token success"));
-        } catch (Exception e) {
+        } catch (Throwable e) {
             callback.invoke(exception(e));
         }
     }
@@ -362,6 +363,7 @@ public class SunmiFaceModule extends UniModule {
     public void activateByAppId(JSONObject options, UniJSCallback callback) {
         ensureHandle();
         try {
+            ensureAuthorizeRuntimeAvailable();
             ensureAuthorizeSdk();
             AuthorizeResult authResult = SunmiAuthorizeSDK.syncGetAuthorizeCode(buildAuthorizeParams(options));
             JSONObject data = new JSONObject();
@@ -373,7 +375,7 @@ public class SunmiFaceModule extends UniModule {
             int verifyCode = SunmiFaceSDK.verifyLicense(getSafeContext(), authResult.token);
             data.put("verify", buildVerifyPayload(verifyCode, null, authResult.token));
             callback.invoke(status(verifyCode, data, verifyCode == SunmiFaceStatusCode.FACE_CODE_OK ? "activate by appId success" : null));
-        } catch (Exception e) {
+        } catch (Throwable e) {
             callback.invoke(exception(e));
         }
     }
@@ -403,13 +405,23 @@ public class SunmiFaceModule extends UniModule {
         }
 
         JSONArray missing = getMissingPermissions(context);
-        if (missing.isEmpty()) {
+        boolean allFilesAccessGranted = isAllFilesAccessGranted();
+        if (missing.isEmpty() && allFilesAccessGranted) {
             callback.invoke(success(buildPermissionPayload(context, false), "all permissions granted"));
             return;
         }
 
         permissionCallback = callback;
-        ActivityCompat.requestPermissions((Activity) context, toStringArray(missing), REQUEST_CODE_PERMISSIONS);
+        if (!missing.isEmpty()) {
+            ActivityCompat.requestPermissions((Activity) context, toStringArray(missing), REQUEST_CODE_PERMISSIONS);
+        }
+        if (!allFilesAccessGranted) {
+            openAllFilesAccessSettings((Activity) context);
+        }
+        if (missing.isEmpty()) {
+            callback.invoke(success(buildPermissionPayload(context, true), "opened all files access settings"));
+            permissionCallback = null;
+        }
     }
 
     @Override
@@ -429,7 +441,8 @@ public class SunmiFaceModule extends UniModule {
         }
 
         JSONArray missing = payload.getJSONArray("missingPermissions");
-        if (missing != null && !missing.isEmpty()) {
+        JSONArray specialMissing = payload.getJSONArray("specialMissingPermissions");
+        if ((missing != null && !missing.isEmpty()) || (specialMissing != null && !specialMissing.isEmpty())) {
             callback.invoke(errorWithData(SunmiFaceStatusCode.FACE_CODE_OTHER_ERROR, "permissions denied", payload));
             return;
         }
@@ -491,6 +504,7 @@ public class SunmiFaceModule extends UniModule {
                 license = readTextFile(new File(licensePath));
             }
             if (TextUtils.isEmpty(license) && !TextUtils.isEmpty(appId)) {
+                ensureAuthorizeRuntimeAvailable();
                 ensureAuthorizeSdk();
                 AuthorizeResult authResult = SunmiAuthorizeSDK.syncGetAuthorizeCode(buildAuthorizeParams(options));
                 JSONObject data = new JSONObject();
@@ -511,7 +525,7 @@ public class SunmiFaceModule extends UniModule {
             int code = SunmiFaceSDK.verifyLicense(getSafeContext(), license);
             JSONObject data = buildVerifyPayload(code, null, license);
             callback.invoke(status(code, data, code == SunmiFaceStatusCode.FACE_CODE_OK ? "verify license success" : null));
-        } catch (Exception e) {
+        } catch (Throwable e) {
             callback.invoke(exception(e));
         }
     }
@@ -1245,7 +1259,7 @@ public class SunmiFaceModule extends UniModule {
         return result;
     }
 
-    private JSONObject exception(Exception e) {
+    private JSONObject exception(Throwable e) {
         JSONObject result = new JSONObject();
         result.put("code", SunmiFaceStatusCode.FACE_CODE_OTHER_ERROR);
         result.put("success", false);
@@ -1276,6 +1290,28 @@ public class SunmiFaceModule extends UniModule {
             }
             SunmiAuthorizeSDK.init(context);
             authorizeSdkInitialized = true;
+        }
+    }
+
+    private void ensureAuthorizeRuntimeAvailable() {
+        String[] requiredClasses = new String[]{
+                "com.sunmilib.service.HttpConfig$Builder",
+                "com.sunmilib.http.Request",
+                "com.sunmilib.http.BaseResponse",
+                "io.reactivex.Single"
+        };
+        JSONArray missing = new JSONArray();
+        for (String name : requiredClasses) {
+            try {
+                Class.forName(name);
+            } catch (Throwable ignore) {
+                missing.add(name);
+            }
+        }
+        if (!missing.isEmpty()) {
+            throw new IllegalStateException(
+                    "SunmiAuthorize-SDK runtime dependencies are missing: " + missing.toJSONString()
+            );
         }
     }
 
@@ -1336,7 +1372,9 @@ public class SunmiFaceModule extends UniModule {
         JSONObject data = new JSONObject();
         JSONObject status = new JSONObject();
         JSONArray missing = getMissingPermissions(context);
-        for (String permission : REQUIRED_PERMISSIONS) {
+        JSONArray requiredPermissions = getRequiredPermissions();
+        for (int i = 0; i < requiredPermissions.size(); i++) {
+            String permission = requiredPermissions.getString(i);
             boolean granted = context != null
                     && ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
             status.put(permission, granted);
@@ -1346,16 +1384,36 @@ public class SunmiFaceModule extends UniModule {
                     && ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
             status.put(permission, granted);
         }
+        boolean allFilesAccessRequired = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R;
+        boolean allFilesAccessGranted = isAllFilesAccessGranted();
+        status.put("android.permission.MANAGE_EXTERNAL_STORAGE", allFilesAccessGranted);
         data.put("requested", requested);
         data.put("permissions", status);
+        data.put("permissionStatus", status);
+        data.put("requiredPermissions", requiredPermissions);
         data.put("missingPermissions", missing);
+        data.put("allGranted", missing.isEmpty());
+        data.put("allFilesAccessRequired", allFilesAccessRequired);
+        data.put("allFilesAccessGranted", allFilesAccessGranted);
+        JSONArray specialPermissions = new JSONArray();
+        JSONArray specialMissingPermissions = new JSONArray();
+        if (allFilesAccessRequired) {
+            specialPermissions.add("android.permission.MANAGE_EXTERNAL_STORAGE");
+            if (!allFilesAccessGranted) {
+                specialMissingPermissions.add("android.permission.MANAGE_EXTERNAL_STORAGE");
+            }
+        }
+        data.put("specialPermissions", specialPermissions);
+        data.put("specialMissingPermissions", specialMissingPermissions);
         data.put("networkConnected", isNetworkConnected(context));
         return data;
     }
 
     private JSONArray getMissingPermissions(Context context) {
         JSONArray missing = new JSONArray();
-        for (String permission : REQUIRED_PERMISSIONS) {
+        JSONArray requiredPermissions = getRequiredPermissions();
+        for (int i = 0; i < requiredPermissions.size(); i++) {
+            String permission = requiredPermissions.getString(i);
             boolean granted = context != null
                     && ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
             if (!granted) {
@@ -1378,6 +1436,41 @@ public class SunmiFaceModule extends UniModule {
         //noinspection deprecation
         android.net.NetworkInfo info = cm.getActiveNetworkInfo();
         return info != null && info.isConnected();
+    }
+
+    private JSONArray getRequiredPermissions() {
+        JSONArray permissions = new JSONArray();
+        permissions.add("android.permission.CAMERA");
+        permissions.add("android.permission.READ_PHONE_STATE");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions.add("android.permission.READ_MEDIA_IMAGES");
+        } else {
+            permissions.add("android.permission.READ_EXTERNAL_STORAGE");
+        }
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            permissions.add("android.permission.WRITE_EXTERNAL_STORAGE");
+        }
+        return permissions;
+    }
+
+    private boolean isAllFilesAccessGranted() {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.R || Environment.isExternalStorageManager();
+    }
+
+    private void openAllFilesAccessSettings(Activity activity) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            return;
+        }
+        try {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+            intent.setData(Uri.parse("package:" + activity.getPackageName()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(intent);
+        } catch (Exception e) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(intent);
+        }
     }
 
     private String[] toStringArray(JSONArray array) {

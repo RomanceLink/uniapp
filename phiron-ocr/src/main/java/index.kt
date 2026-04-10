@@ -53,6 +53,7 @@ open class PhironOcrPreprocessOptions(
 
 open class PhironOcrRecognizeOptions(
     open var imagePath: String? = null,
+    open var imageUri: String? = null,
     open var base64: String? = null,
     open var expectedRegex: String? = null,
     open var allowedChars: String? = null,
@@ -112,6 +113,7 @@ open class PhironOcrPreprocessOptionsJSONObject : UTSJSONObject() {
 
 open class PhironOcrRecognizeOptionsJSONObject : UTSJSONObject() {
     open var imagePath: String? = null
+    open var imageUri: String? = null
     open var base64: String? = null
     open var expectedRegex: String? = null
     open var allowedChars: String? = null

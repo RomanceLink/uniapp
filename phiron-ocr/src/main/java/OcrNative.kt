@@ -1,8 +1,10 @@
 package uts.sdk.modules.phironocr
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Rect
+import android.net.Uri
 import android.util.Base64
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
@@ -258,12 +260,19 @@ object OcrNative {
     private fun decodeBitmap(options: JSONObject): Bitmap {
         val path = options.getString("imagePath")
         if (!path.isNullOrBlank()) {
+            if (path.startsWith("content://") || path.startsWith("file://")) {
+                return decodeBitmapFromUri(requireContext(), path)
+            }
             val file = File(path)
             if (!file.exists()) {
                 throw IllegalArgumentException("imagePath not found: $path")
             }
             return BitmapFactory.decodeFile(file.absolutePath)
                 ?: throw IllegalArgumentException("failed to decode imagePath: $path")
+        }
+        val imageUri = options.getString("imageUri")
+        if (!imageUri.isNullOrBlank()) {
+            return decodeBitmapFromUri(requireContext(), imageUri)
         }
         val base64 = options.getString("base64")
         if (!base64.isNullOrBlank()) {
@@ -273,6 +282,17 @@ object OcrNative {
                 ?: throw IllegalArgumentException("failed to decode base64 image")
         }
         throw IllegalArgumentException("imagePath or base64 is required")
+    }
+
+    private fun decodeBitmapFromUri(context: Context, uriString: String): Bitmap {
+        val uri = Uri.parse(uriString)
+        context.contentResolver.openInputStream(uri).use { input ->
+            if (input == null) {
+                throw IllegalArgumentException("failed to open uri: $uriString")
+            }
+            return BitmapFactory.decodeStream(input)
+                ?: throw IllegalArgumentException("failed to decode uri: $uriString")
+        }
     }
 
     private fun writeBitmap(bitmap: Bitmap, file: File): File {

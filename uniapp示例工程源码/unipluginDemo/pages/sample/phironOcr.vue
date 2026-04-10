@@ -6,9 +6,17 @@
 		</view>
 
 		<view class="card">
-			<view class="label">图片路径</view>
-			<uni-easyinput v-model="form.imagePath" placeholder="/storage/emulated/0/DCIM/scale.jpg" />
-			<view class="tip">请先把电子称照片放到设备上，再填绝对路径。</view>
+			<view class="label">图片来源</view>
+			<view class="button-row">
+				<button class="btn" size="mini" @click="requestImagePermissions">申请图片权限</button>
+				<button class="btn primary" size="mini" @click="pickFromGallery">从图片库选择</button>
+				<button class="btn" size="mini" @click="pickFromFile">从文件选择</button>
+			</view>
+			<view class="tip">选完图片后会自动开始识别，不需要手填路径。</view>
+			<view class="path-box">
+				<text selectable>{{ selectedPath || '尚未选择图片' }}</text>
+			</view>
+			<uni-easyinput v-model="form.imagePath" placeholder="也可以手动填路径或 content:// URI" />
 		</view>
 
 		<view class="card">
@@ -65,6 +73,7 @@ export default {
 		return {
 			form: {
 				imagePath: '',
+				imageUri: '',
 				preprocess: {
 					enableGray: true,
 					enableDenoise: true,
@@ -74,12 +83,104 @@ export default {
 					enableDeskew: true
 				}
 			},
-			resultText: '等待执行...'
+			resultText: '等待执行...',
+			selectedPath: ''
 		}
 	},
 	methods: {
 		onSwitch(key, event) {
 			this.form.preprocess[key] = !!event.detail.value
+		},
+		getRecognizePayload() {
+			return {
+				imagePath: this.form.imagePath || undefined,
+				imageUri: this.form.imageUri || undefined,
+				preprocess: this.form.preprocess
+			}
+		},
+		applySelectedImage(path, uri = '') {
+			this.form.imagePath = path || ''
+			this.form.imageUri = uri || ''
+			this.selectedPath = uri || path || ''
+		},
+		requestImagePermissions() {
+			// #ifdef APP-PLUS
+			const permissions = ['android.permission.READ_EXTERNAL_STORAGE']
+			if (plus.os.name === 'Android') {
+				const main = plus.android.runtimeMainActivity()
+				if (plus.android.invoke('android.os.Build$VERSION', 'SDK_INT') >= 33) {
+					permissions.push('android.permission.READ_MEDIA_IMAGES')
+				}
+				plus.android.requestPermissions(
+					permissions,
+					(result) => {
+						this.resultText = JSON.stringify({
+							success: true,
+							code: 0,
+							message: '权限申请完成',
+							data: result
+						}, null, 2)
+					},
+					(error) => {
+						this.resultText = JSON.stringify({
+							success: false,
+							code: -1,
+							message: '权限申请失败',
+							data: error
+						}, null, 2)
+					}
+				)
+			}
+			// #endif
+		},
+		pickFromGallery() {
+			uni.chooseImage({
+				count: 1,
+				sourceType: ['album'],
+				success: (res) => {
+					const path = (res.tempFilePaths && res.tempFilePaths[0]) || ''
+					this.applySelectedImage(path)
+					this.runRecognizeScale()
+				},
+				fail: (error) => {
+					this.resultText = JSON.stringify({
+						success: false,
+						code: -1,
+						message: '选择图片失败',
+						data: error
+					}, null, 2)
+				}
+			})
+		},
+		pickFromFile() {
+			if (typeof uni.chooseFile !== 'function') {
+				this.resultText = JSON.stringify({
+					success: false,
+					code: -1,
+					message: '当前运行环境不支持 chooseFile，请先使用“从图片库选择”',
+					data: null
+				}, null, 2)
+				return
+			}
+			uni.chooseFile({
+				count: 1,
+				type: 'image',
+				success: (res) => {
+					const file = (res.tempFiles && res.tempFiles[0]) || {}
+					const path = file.path || file.tempFilePath || ''
+					const uri = file.url || ''
+					this.applySelectedImage(path || uri, uri)
+					this.runRecognizeScale()
+				},
+				fail: (error) => {
+					this.resultText = JSON.stringify({
+						success: false,
+						code: -1,
+						message: '选择文件失败',
+						data: error
+					}, null, 2)
+				}
+			})
 		},
 		runCheckEnvironment() {
 			this.resultText = JSON.stringify(PhironOcr.checkEnvironment(), null, 2)
@@ -87,7 +188,7 @@ export default {
 		runPreprocess() {
 			const outputPath = `${plus.io.convertLocalFileSystemURL('_doc')}/phiron-ocr-preprocess.png`
 			const result = PhironOcr.preprocessImage({
-				imagePath: this.form.imagePath,
+				imagePath: this.form.imagePath || this.form.imageUri,
 				outputPath,
 				...this.form.preprocess
 			})
@@ -95,21 +196,19 @@ export default {
 		},
 		runRecognizeScale() {
 			const result = PhironOcr.recognizeScaleValue({
-				imagePath: this.form.imagePath,
+				...this.getRecognizePayload(),
 				includeRawBlocks: true,
-				preprocess: this.form.preprocess
 			})
 			this.resultText = JSON.stringify(result, null, 2)
 		},
 		runRecognizeAll() {
 			const result = PhironOcr.recognize({
-				imagePath: this.form.imagePath,
+				...this.getRecognizePayload(),
 				preferDigits: true,
 				extractBestNumericCandidate: true,
 				includeRawBlocks: true,
 				allowedChars: '0123456789.-kgKG',
-				expectedRegex: '-?\\d+(?:\\.\\d+)?',
-				preprocess: this.form.preprocess
+				expectedRegex: '-?\\d+(?:\\.\\d+)?'
 			})
 			this.resultText = JSON.stringify(result, null, 2)
 		}
@@ -167,6 +266,15 @@ export default {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 16rpx;
+}
+
+.path-box {
+	margin-top: 16rpx;
+	padding: 18rpx 20rpx;
+	border-radius: 16rpx;
+	background: #eff6ff;
+	color: #1e3a8a;
+	word-break: break-all;
 }
 
 .btn {

@@ -35,6 +35,7 @@ export type PhironOcrPreprocessOptions = {
 
 export type PhironOcrRecognizeOptions = {
   imagePath?: string
+  imageUri?: string
   base64?: string
   expectedRegex?: string
   allowedChars?: string

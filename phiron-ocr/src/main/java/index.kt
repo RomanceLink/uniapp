@@ -31,6 +31,7 @@ open class PhironOcrRoi(
 ) : UTSObject()
 
 open class PhironOcrPreprocessOptions(
+    open var colorFilterMode: String? = null,
     open var enableGray: Boolean? = null,
     open var enableDenoise: Boolean? = null,
     open var enableSharpen: Boolean? = null,
@@ -77,6 +78,8 @@ fun checkEnvironment(): PhironOcrResult = parseResult(OcrNative.checkEnvironment
 fun preprocessImage(options: PhironOcrPreprocessOptions): PhironOcrResult = parseResult(OcrNative.preprocessImageJson(stringifyOptions(options)))
 fun recognize(options: PhironOcrRecognizeOptions): PhironOcrResult = parseResult(OcrNative.recognizeJson(stringifyOptions(options)))
 fun recognizeScaleValue(options: PhironOcrRecognizeOptions): PhironOcrResult = parseResult(OcrNative.recognizeScaleValueJson(stringifyOptions(options)))
+fun recognizeLedDisplay(options: PhironOcrRecognizeOptions): PhironOcrResult = parseResult(OcrNative.recognizeLedDisplayJson(stringifyOptions(options)))
+fun recognizeWaterMeter(options: PhironOcrRecognizeOptions): PhironOcrResult = parseResult(OcrNative.recognizeWaterMeterJson(stringifyOptions(options)))
 
 fun getVersionByJs(): PhironOcrResult = getVersion()
 fun checkEnvironmentByJs(): PhironOcrResult = checkEnvironment()
@@ -89,6 +92,12 @@ fun recognizeByJs(options: PhironOcrRecognizeOptionsJSONObject): PhironOcrResult
 
 fun recognizeScaleValueByJs(options: PhironOcrRecognizeOptionsJSONObject): PhironOcrResult =
     parseResult(OcrNative.recognizeScaleValueJson(stringifyOptions(options)))
+
+fun recognizeLedDisplayByJs(options: PhironOcrRecognizeOptionsJSONObject): PhironOcrResult =
+    parseResult(OcrNative.recognizeLedDisplayJson(stringifyOptions(options)))
+
+fun recognizeWaterMeterByJs(options: PhironOcrRecognizeOptionsJSONObject): PhironOcrResult =
+    parseResult(OcrNative.recognizeWaterMeterJson(stringifyOptions(options)))
 
 open class PhironOcrQuadPointJSONObject : UTSJSONObject() {
     open lateinit var x: Number
@@ -103,6 +112,7 @@ open class PhironOcrRoiJSONObject : UTSJSONObject() {
 }
 
 open class PhironOcrPreprocessOptionsJSONObject : UTSJSONObject() {
+    open var colorFilterMode: String? = null
     open var enableGray: Boolean? = null
     open var enableDenoise: Boolean? = null
     open var enableSharpen: Boolean? = null

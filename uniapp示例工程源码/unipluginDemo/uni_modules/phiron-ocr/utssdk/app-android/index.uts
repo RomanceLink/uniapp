@@ -28,3 +28,11 @@ export function recognize(options : PhironOcrRecognizeOptions) : PhironOcrResult
 export function recognizeScaleValue(options : PhironOcrRecognizeOptions) : PhironOcrResult {
 	return parseResult(OcrNative.recognizeScaleValueJson(stringifyOptions(options)))
 }
+
+export function recognizeLedDisplay(options : PhironOcrRecognizeOptions) : PhironOcrResult {
+	return parseResult(OcrNative.recognizeLedDisplayJson(stringifyOptions(options)))
+}
+
+export function recognizeWaterMeter(options : PhironOcrRecognizeOptions) : PhironOcrResult {
+	return parseResult(OcrNative.recognizeWaterMeterJson(stringifyOptions(options)))
+}

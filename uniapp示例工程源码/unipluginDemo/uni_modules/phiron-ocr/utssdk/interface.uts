@@ -13,6 +13,7 @@ export type PhironOcrRoi = {
 }
 
 export type PhironOcrPreprocessOptions = {
+  colorFilterMode?: string
   enableGray?: boolean
   enableDenoise?: boolean
   enableSharpen?: boolean

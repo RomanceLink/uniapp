@@ -9,6 +9,7 @@ import org.opencv.android.Utils
 import org.opencv.core.Core
 import org.opencv.core.CvType
 import org.opencv.core.Mat
+import org.opencv.core.MatOfInt
 import org.opencv.core.MatOfPoint
 import org.opencv.core.MatOfPoint2f
 import org.opencv.core.Point
@@ -60,6 +61,11 @@ object OpenCvImageProcessor {
             val deskewResult = deskew(working)
             working = deskewResult.first
             metadata["deskewAngle"] = deskewResult.second
+        }
+
+        options.getString("colorFilterMode")?.takeIf { it.isNotBlank() }?.let { mode ->
+            working = isolateLedDigits(working, mode)
+            metadata["colorFilterMode"] = mode
         }
 
         if (options.getBooleanValue("enableGray")) {
@@ -214,6 +220,60 @@ object OpenCvImageProcessor {
         src.release()
         blurred.release()
         return output
+    }
+
+    private fun isolateLedDigits(src: Mat, mode: String): Mat {
+        val rgba = if (src.channels() == 4) src.clone() else {
+            val temp = Mat()
+            when (src.channels()) {
+                1 -> Imgproc.cvtColor(src, temp, Imgproc.COLOR_GRAY2RGBA)
+                3 -> Imgproc.cvtColor(src, temp, Imgproc.COLOR_BGR2RGBA)
+            }
+            temp
+        }
+        val rgb = Mat()
+        Imgproc.cvtColor(rgba, rgb, Imgproc.COLOR_RGBA2RGB)
+        val hsv = Mat()
+        Imgproc.cvtColor(rgb, hsv, Imgproc.COLOR_RGB2HSV)
+        val redMask1 = Mat()
+        val redMask2 = Mat()
+        val redMask = Mat()
+        val greenMask = Mat()
+        Core.inRange(hsv, Scalar(0.0, 80.0, 70.0), Scalar(15.0, 255.0, 255.0), redMask1)
+        Core.inRange(hsv, Scalar(160.0, 80.0, 70.0), Scalar(180.0, 255.0, 255.0), redMask2)
+        Core.bitwise_or(redMask1, redMask2, redMask)
+        Core.inRange(hsv, Scalar(35.0, 50.0, 50.0), Scalar(95.0, 255.0, 255.0), greenMask)
+
+        val selected = Mat()
+        when (mode.lowercase()) {
+            "red" -> redMask.copyTo(selected)
+            "green" -> greenMask.copyTo(selected)
+            else -> {
+                val redScore = Core.countNonZero(redMask)
+                val greenScore = Core.countNonZero(greenMask)
+                if (redScore >= greenScore) {
+                    redMask.copyTo(selected)
+                } else {
+                    greenMask.copyTo(selected)
+                }
+            }
+        }
+
+        val kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(3.0, 3.0))
+        Imgproc.morphologyEx(selected, selected, Imgproc.MORPH_CLOSE, kernel)
+        Imgproc.morphologyEx(selected, selected, Imgproc.MORPH_OPEN, kernel)
+        Core.bitwise_not(selected, selected)
+
+        rgba.release()
+        rgb.release()
+        hsv.release()
+        redMask1.release()
+        redMask2.release()
+        redMask.release()
+        greenMask.release()
+        kernel.release()
+        src.release()
+        return selected
     }
 
     private fun deskew(src: Mat): Pair<Mat, Double> {

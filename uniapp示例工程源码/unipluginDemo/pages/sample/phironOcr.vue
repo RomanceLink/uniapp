@@ -51,7 +51,9 @@
 			<view class="button-row">
 				<button class="btn" size="mini" @click="runCheckEnvironment">检查环境</button>
 				<button class="btn" size="mini" @click="runPreprocess">仅预处理</button>
-				<button class="btn primary" size="mini" @click="runRecognizeScale">识别电子称数值</button>
+				<button class="btn primary" size="mini" @click="runRecognizeLed">识别电子称/LED</button>
+				<button class="btn primary" size="mini" @click="runRecognizeWaterMeter">识别水表</button>
+				<button class="btn" size="mini" @click="runRecognizeScale">通用数值识别</button>
 				<button class="btn" size="mini" @click="runRecognizeAll">通用 OCR</button>
 			</view>
 		</view>
@@ -266,6 +268,15 @@ export default {
 			}
 		},
 		runRecognizeScale() {
+			this.runRecognizeWith((payload) => PhironOcr.recognizeScaleValue(payload), '通用数值识别失败')
+		},
+		runRecognizeLed() {
+			this.runRecognizeWith((payload) => PhironOcr.recognizeLedDisplay(payload), '电子称/LED 识别失败')
+		},
+		runRecognizeWaterMeter() {
+			this.runRecognizeWith((payload) => PhironOcr.recognizeWaterMeter(payload), '水表识别失败')
+		},
+		runRecognizeWith(executor, errorMessage) {
 			if (this.isRecognizing) {
 				return
 			}
@@ -277,7 +288,7 @@ export default {
 			this.resultText = '识别中，请稍候...'
 			setTimeout(() => {
 				try {
-					const result = PhironOcr.recognizeScaleValue({
+					const result = executor({
 						...this.getRecognizePayload(),
 						includeRawBlocks: true,
 					})
@@ -287,7 +298,7 @@ export default {
 					this.resultText = JSON.stringify({
 						success: false,
 						code: -1,
-						message: '电子称识别失败',
+						message: errorMessage,
 						data: String(error)
 					}, null, 2)
 					this.updateResultSummary(null)

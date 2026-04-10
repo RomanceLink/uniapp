@@ -95,6 +95,52 @@ object OcrNative {
         }
     }
 
+    @JvmStatic
+    fun recognizeLedDisplayJson(optionsJson: String?): String {
+        return wrap {
+            val options = parseOptions(optionsJson)
+            options["preferDigits"] = true
+            options["extractBestNumericCandidate"] = true
+            if (!options.containsKey("allowedChars")) {
+                options["allowedChars"] = "0123456789.-"
+            }
+            if (!options.containsKey("expectedRegex")) {
+                options["expectedRegex"] = "-?\\d+(?:\\.\\d+)?"
+            }
+            val preprocess = mergePreprocess(options.getJSONObject("preprocess"), false)
+            val ledPreset = defaultLedPreprocess()
+            ledPreset.forEach { key, value -> preprocess[key] = value }
+            options.getJSONObject("preprocess")?.forEach { key, value -> preprocess[key] = value }
+            options["preprocess"] = preprocess
+            val result = doRecognize(options, false)
+            result["scene"] = "led-display"
+            success(result, "recognize led display success")
+        }
+    }
+
+    @JvmStatic
+    fun recognizeWaterMeterJson(optionsJson: String?): String {
+        return wrap {
+            val options = parseOptions(optionsJson)
+            options["preferDigits"] = true
+            options["extractBestNumericCandidate"] = true
+            if (!options.containsKey("allowedChars")) {
+                options["allowedChars"] = "0123456789."
+            }
+            if (!options.containsKey("expectedRegex")) {
+                options["expectedRegex"] = "\\d+(?:\\.\\d+)?"
+            }
+            val preprocess = mergePreprocess(options.getJSONObject("preprocess"), false)
+            val meterPreset = defaultWaterMeterPreprocess()
+            meterPreset.forEach { key, value -> preprocess[key] = value }
+            options.getJSONObject("preprocess")?.forEach { key, value -> preprocess[key] = value }
+            options["preprocess"] = preprocess
+            val result = doRecognize(options, false)
+            result["scene"] = "water-meter"
+            success(result, "recognize water meter success")
+        }
+    }
+
     private fun doRecognize(options: JSONObject, scaleMode: Boolean): JSONObject {
         val preprocessOptions = mergePreprocess(options.getJSONObject("preprocess"), scaleMode)
         val originalBitmap = decodeBitmap(options)
@@ -214,6 +260,41 @@ object OcrNative {
             this["adaptiveC"] = 10
             this["denoiseKernelSize"] = 3
             this["sharpenSigma"] = 1.0
+        }
+    }
+
+    private fun defaultLedPreprocess(): JSONObject {
+        return JSONObject().apply {
+            this["enableGray"] = false
+            this["enableDenoise"] = true
+            this["enableSharpen"] = true
+            this["enableContrast"] = true
+            this["enableAdaptiveThreshold"] = true
+            this["enableDeskew"] = false
+            this["colorFilterMode"] = "auto"
+            this["contrastAlpha"] = 1.85
+            this["contrastBeta"] = 12
+            this["adaptiveBlockSize"] = 25
+            this["adaptiveC"] = 8
+            this["denoiseKernelSize"] = 3
+            this["sharpenSigma"] = 0.8
+        }
+    }
+
+    private fun defaultWaterMeterPreprocess(): JSONObject {
+        return JSONObject().apply {
+            this["enableGray"] = true
+            this["enableDenoise"] = true
+            this["enableSharpen"] = true
+            this["enableContrast"] = true
+            this["enableAdaptiveThreshold"] = true
+            this["enableDeskew"] = false
+            this["contrastAlpha"] = 1.75
+            this["contrastBeta"] = 14
+            this["adaptiveBlockSize"] = 41
+            this["adaptiveC"] = 11
+            this["denoiseKernelSize"] = 3
+            this["sharpenSigma"] = 1.1
         }
     }
 

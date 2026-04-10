@@ -1,0 +1,46 @@
+export type PhironOcrResult = any
+
+export type PhironOcrQuadPoint = {
+  x: number
+  y: number
+}
+
+export type PhironOcrRoi = {
+  left?: number
+  top?: number
+  width?: number
+  height?: number
+}
+
+export type PhironOcrPreprocessOptions = {
+  enableGray?: boolean
+  enableDenoise?: boolean
+  enableSharpen?: boolean
+  enableContrast?: boolean
+  enableAdaptiveThreshold?: boolean
+  enableDeskew?: boolean
+  enablePerspectiveCorrection?: boolean
+  manualRotateDegrees?: number
+  cropRoi?: PhironOcrRoi
+  perspectivePoints?: Array<PhironOcrQuadPoint>
+  contrastAlpha?: number
+  contrastBeta?: number
+  adaptiveBlockSize?: number
+  adaptiveC?: number
+  denoiseKernelSize?: number
+  sharpenSigma?: number
+  outputPath?: string
+  returnBase64?: boolean
+}
+
+export type PhironOcrRecognizeOptions = {
+  imagePath?: string
+  base64?: string
+  expectedRegex?: string
+  allowedChars?: string
+  maxResultCount?: number
+  preferDigits?: boolean
+  extractBestNumericCandidate?: boolean
+  includeRawBlocks?: boolean
+  preprocess?: PhironOcrPreprocessOptions
+}

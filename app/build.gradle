@@ -100,4 +100,5 @@ dependencies {
     // uts原生插件
     implementation project(':uts-toast')
     implementation project(':phiron-sunmiFace')
+    implementation project(':phiron-ocr')
 }

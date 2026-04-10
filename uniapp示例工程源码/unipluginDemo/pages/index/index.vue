@@ -44,6 +44,12 @@
 					name:'插件示例SunmiFace UTS',
 					open:false,
 					url:'/pages/sample/sunmiFaceUTS'
+				},
+				{
+					id:'phironOcr',
+					name:'插件示例Phiron OCR',
+					open:false,
+					url:'/pages/sample/phironOcr'
 				}],
 				navigateFlag: false
 			}

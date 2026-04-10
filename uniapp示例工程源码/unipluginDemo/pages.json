@@ -35,6 +35,12 @@
 			"style": {
 				"navigationBarTitleText": "SunmiFace UTS"
 			}
+		},
+		{
+			"path": "pages/sample/phironOcr",
+			"style": {
+				"navigationBarTitleText": "Phiron OCR"
+			}
 		}
 	],
 	"globalStyle": {

@@ -1,0 +1,8 @@
+export function getVersion() : any {
+	return {
+		success: false,
+		code: -1,
+		message: 'phiron-ocr 暂未实现 iOS',
+		data: null
+	}
+}

@@ -1,0 +1,30 @@
+import { PhironOcrPreprocessOptions, PhironOcrRecognizeOptions, PhironOcrResult } from "../interface.uts"
+import OcrNative from "uts.sdk.modules.phironocr.OcrNative"
+
+function parseResult(resultJson : string) : PhironOcrResult {
+	return JSON.parse(resultJson) as any
+}
+
+function stringifyOptions(options : any | null) : string | null {
+	return options == null ? null : JSON.stringify(options)
+}
+
+export function getVersion() : PhironOcrResult {
+	return parseResult(OcrNative.getVersionJson())
+}
+
+export function checkEnvironment() : PhironOcrResult {
+	return parseResult(OcrNative.checkEnvironmentJson())
+}
+
+export function preprocessImage(options : PhironOcrPreprocessOptions) : PhironOcrResult {
+	return parseResult(OcrNative.preprocessImageJson(stringifyOptions(options)))
+}
+
+export function recognize(options : PhironOcrRecognizeOptions) : PhironOcrResult {
+	return parseResult(OcrNative.recognizeJson(stringifyOptions(options)))
+}
+
+export function recognizeScaleValue(options : PhironOcrRecognizeOptions) : PhironOcrResult {
+	return parseResult(OcrNative.recognizeScaleValueJson(stringifyOptions(options)))
+}

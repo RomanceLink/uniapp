@@ -1,0 +1,4 @@
+images/led/scale_0001.jpg	0.23|989.4
+images/led/scale_0002.jpg	12.80|35.6
+images/water_meter/meter_0001.jpg	462796.7589
+images/water_meter/meter_0002.jpg	12038.42

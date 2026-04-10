@@ -57,6 +57,20 @@
 		</view>
 
 		<view class="card">
+			<view class="label">识别结果</view>
+			<view class="result-summary">
+				<view class="summary-item">
+					<view class="summary-label">主识别值</view>
+					<view class="summary-value">{{ resultSummary.primaryValue || '暂无' }}</view>
+				</view>
+				<view class="summary-item">
+					<view class="summary-label">识别到的数值列表</view>
+					<view class="summary-list">{{ resultSummary.valuesText || '暂无' }}</view>
+				</view>
+			</view>
+		</view>
+
+		<view class="card">
 			<view class="label">结果</view>
 			<scroll-view scroll-y class="result-box">
 				<text selectable>{{ resultText }}</text>
@@ -86,10 +100,24 @@ export default {
 			},
 			resultText: '等待执行...',
 			selectedPath: '',
-			isRecognizing: false
+			isRecognizing: false,
+			resultSummary: {
+				primaryValue: '',
+				values: [],
+				valuesText: ''
+			}
 		}
 	},
 	methods: {
+		updateResultSummary(result) {
+			const data = (result && result.data) || {}
+			const values = Array.isArray(data.values) ? data.values.filter(Boolean) : []
+			this.resultSummary = {
+				primaryValue: data.primaryValue || values[0] || '',
+				values,
+				valuesText: values.join(', ')
+			}
+		},
 		onSwitch(key, event) {
 			this.form.preprocess[key] = !!event.detail.value
 		},
@@ -120,12 +148,13 @@ export default {
 				plus.android.requestPermissions(
 					permissions,
 					(result) => {
-						this.resultText = JSON.stringify({
-							success: true,
-							code: 0,
-							message: '权限申请完成',
+					this.resultText = JSON.stringify({
+						success: true,
+						code: 0,
+						message: '权限申请完成',
 							data: result
 						}, null, 2)
+						this.updateResultSummary(null)
 					},
 					(error) => {
 						this.resultText = JSON.stringify({
@@ -134,6 +163,7 @@ export default {
 							message: '权限申请失败',
 							data: error
 						}, null, 2)
+						this.updateResultSummary(null)
 					}
 				)
 			}
@@ -158,6 +188,7 @@ export default {
 						message: '选择图片失败',
 						data: error
 					}, null, 2)
+					this.updateResultSummary(null)
 				},
 				{
 					filter: 'image',
@@ -199,6 +230,7 @@ export default {
 						message: '文件读取失败',
 						data: error
 					}, null, 2)
+					this.updateResultSummary(null)
 					document.body.removeChild(input)
 				}
 				reader.readAsDataURL(file)
@@ -206,7 +238,9 @@ export default {
 			input.click()
 		},
 		runCheckEnvironment() {
-			this.resultText = JSON.stringify(PhironOcr.checkEnvironment(), null, 2)
+			const result = PhironOcr.checkEnvironment()
+			this.resultText = JSON.stringify(result, null, 2)
+			this.updateResultSummary(null)
 		},
 		runPreprocess() {
 			// #ifdef APP-PLUS
@@ -220,6 +254,7 @@ export default {
 					...this.form.preprocess
 				})
 				this.resultText = JSON.stringify(result, null, 2)
+				this.updateResultSummary(null)
 			} catch (error) {
 				this.resultText = JSON.stringify({
 					success: false,
@@ -227,6 +262,7 @@ export default {
 					message: '预处理失败',
 					data: String(error)
 				}, null, 2)
+				this.updateResultSummary(null)
 			}
 		},
 		runRecognizeScale() {
@@ -246,6 +282,7 @@ export default {
 						includeRawBlocks: true,
 					})
 					this.resultText = JSON.stringify(result, null, 2)
+					this.updateResultSummary(result)
 				} catch (error) {
 					this.resultText = JSON.stringify({
 						success: false,
@@ -253,6 +290,7 @@ export default {
 						message: '电子称识别失败',
 						data: String(error)
 					}, null, 2)
+					this.updateResultSummary(null)
 				} finally {
 					this.isRecognizing = false
 				}
@@ -269,13 +307,15 @@ export default {
 					expectedRegex: '-?\\d+(?:\\.\\d+)?'
 				})
 				this.resultText = JSON.stringify(result, null, 2)
+				this.updateResultSummary(result)
 			} catch (error) {
 				this.resultText = JSON.stringify({
 					success: false,
 					code: -1,
 					message: '通用 OCR 识别失败',
-					data: String(error)
-				}, null, 2)
+						data: String(error)
+					}, null, 2)
+				this.updateResultSummary(null)
 			}
 		}
 	}
@@ -360,5 +400,36 @@ export default {
 	border-radius: 16rpx;
 	padding: 20rpx;
 	box-sizing: border-box;
+}
+
+.result-summary {
+	display: flex;
+	flex-direction: column;
+	gap: 18rpx;
+}
+
+.summary-item {
+	padding: 18rpx 20rpx;
+	background: #f8fafc;
+	border-radius: 16rpx;
+}
+
+.summary-label {
+	font-size: 24rpx;
+	color: #64748b;
+	margin-bottom: 10rpx;
+}
+
+.summary-value {
+	font-size: 42rpx;
+	font-weight: 700;
+	color: #dc2626;
+}
+
+.summary-list {
+	font-size: 30rpx;
+	font-weight: 600;
+	color: #0f172a;
+	word-break: break-all;
 }
 </style>

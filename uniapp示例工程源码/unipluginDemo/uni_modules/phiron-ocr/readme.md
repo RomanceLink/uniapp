@@ -4,7 +4,7 @@
 
 - OpenCV 图片预处理：灰度化、降噪、锐化、对比度增强、自适应二值化、透视矫正、旋转矫正
 - OCR 识别：返回文字、启发式置信度、文本框坐标
-- 电子称预设：自动偏向数字、支持数值候选提取
+- 电子称预设：自动偏向数字、支持数值候选提取，直接返回数值数组
 
 ## 调用示例
 
@@ -18,7 +18,16 @@ const result = PhironOcr.recognizeScaleValue({
     enableAdaptiveThreshold: true
   }
 })
+
+console.log(result.data.primaryValue)
+console.log(result.data.values)
 ```
+
+## 返回结果重点字段
+
+- `data.primaryValue`: 主识别值，优先取最可信的数值
+- `data.values`: 当前图片中识别到的数值列表
+- `data.recognizedValues`: 带 `value/confidence/box/sourceText` 的完整结构
 
 ## 当前说明
 

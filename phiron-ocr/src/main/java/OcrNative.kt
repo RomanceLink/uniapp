@@ -126,19 +126,32 @@ object OcrNative {
         val limited = JSONArray()
         val maxCount = max(1, options.getIntValue("maxResultCount").let { if (it <= 0) 5 else it })
         sorted.take(maxCount).forEach { limited.add(it.toJson()) }
+        val numericValues = extractNumericValues(sorted, options, maxCount)
 
         val data = JSONObject()
         data["text"] = sorted.firstOrNull()?.text ?: ""
         data["confidence"] = sorted.firstOrNull()?.confidence ?: 0.0
         data["confidenceSource"] = "heuristic"
         data["lines"] = limited
+        data["recognizedValues"] = numericValues
+        data["values"] = JSONArray().apply {
+            numericValues.forEach { item ->
+                add((item as? JSONObject)?.getString("value"))
+            }
+        }
+        data["primaryValue"] = (numericValues.firstOrNull() as? JSONObject)?.getString("value")
+        data["secondaryValues"] = JSONArray().apply {
+            numericValues.drop(1).forEach { item ->
+                add((item as? JSONObject)?.getString("value"))
+            }
+        }
         data["preprocess"] = processed.metadata
         data["rawText"] = textResult.text ?: ""
         if (options.getBooleanValue("includeRawBlocks")) {
             data["blocks"] = blocks
         }
         if (scaleMode || options.getBooleanValue("extractBestNumericCandidate")) {
-            data["bestNumericCandidate"] = pickBestNumericCandidate(sorted, options)
+            data["bestNumericCandidate"] = (numericValues.firstOrNull() as? JSONObject) ?: pickBestNumericCandidate(sorted, options)
         }
         preprocessOptions.getString("outputPath")?.takeIf { it.isNotBlank() }?.let { outputPath ->
             val file = writeBitmap(processed.bitmap, File(outputPath))
@@ -232,6 +245,61 @@ object OcrNative {
             }
         }
         return null
+    }
+
+    private fun extractNumericValues(candidates: List<Candidate>, options: JSONObject, maxCount: Int): JSONArray {
+        val regex = options.getString("expectedRegex")?.takeIf { it.isNotBlank() } ?: "-?\\d+(?:\\.\\d+)?"
+        val pattern = Pattern.compile(regex)
+        val dedup = LinkedHashMap<String, JSONObject>()
+        candidates.forEach { candidate ->
+            val matcher = pattern.matcher(candidate.text)
+            while (matcher.find()) {
+                val value = normalizeNumericValue(matcher.group())
+                if (value.isBlank()) {
+                    continue
+                }
+                val key = "${value}@${candidate.box?.toJSONString() ?: "no-box"}"
+                val existing = dedup[key]
+                if (existing == null || candidate.confidence > existing.getDoubleValue("confidence")) {
+                    dedup[key] = JSONObject().apply {
+                        this["value"] = value
+                        this["confidence"] = candidate.confidence
+                        this["box"] = candidate.box
+                        this["sourceText"] = candidate.text
+                    }
+                }
+            }
+        }
+        val results = dedup.values
+            .sortedWith(compareByDescending<JSONObject> { it.getDoubleValue("confidence") }
+                .thenBy { it.getJSONObject("box")?.getIntValue("top") ?: Int.MAX_VALUE })
+            .take(maxCount)
+        return JSONArray().apply {
+            results.forEach { add(it) }
+        }
+    }
+
+    private fun normalizeNumericValue(raw: String?): String {
+        if (raw.isNullOrBlank()) return ""
+        var value = raw.trim()
+            .replace('，', ',')
+            .replace('。', '.')
+            .replace('：', '.')
+            .replace(" ", "")
+        value = value.replace(Regex("[^0-9+\\-.]"), "")
+        value = value.replace(Regex("(?<!^)-"), "")
+        val dotCount = value.count { it == '.' }
+        if (dotCount > 1) {
+            val firstDot = value.indexOf('.')
+            value = buildString {
+                value.forEachIndexed { index, ch ->
+                    if (ch != '.' || index == firstDot) {
+                        append(ch)
+                    }
+                }
+            }
+        }
+        return value.trim('.')
     }
 
     private fun normalizeText(text: String?, options: JSONObject): String {

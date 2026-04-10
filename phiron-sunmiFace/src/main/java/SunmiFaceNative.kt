@@ -3,12 +3,16 @@ package uts.sdk.modules.phironsunmiFace
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
+import android.os.Environment
+import android.provider.Settings
 import android.text.TextUtils
 import android.util.Base64
+import android.net.Uri
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.alibaba.fastjson.JSON
@@ -244,20 +248,46 @@ object SunmiFaceNative {
                 ContextCompat.checkSelfPermission(activity, it) != PackageManager.PERMISSION_GRANTED
             }
             val data = JSONObject()
+            val permissionStatus = JSONObject()
+            requiredPermissions.forEach { permission ->
+                permissionStatus[permission] =
+                    ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED
+            }
             data["requiredPermissions"] = JSONArray().apply { addAll(requiredPermissions) }
             data["missingPermissions"] = JSONArray().apply { addAll(missingPermissions) }
             data["allGranted"] = missingPermissions.isEmpty()
             data["requested"] = false
-            if (missingPermissions.isEmpty()) {
+            val allFilesAccessRequired = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+            val allFilesAccessGranted = !allFilesAccessRequired || Environment.isExternalStorageManager()
+            permissionStatus["android.permission.MANAGE_EXTERNAL_STORAGE"] = allFilesAccessGranted
+            data["allFilesAccessRequired"] = allFilesAccessRequired
+            data["allFilesAccessGranted"] = allFilesAccessGranted
+            data["specialPermissions"] = JSONArray().apply {
+                if (allFilesAccessRequired) {
+                    add("android.permission.MANAGE_EXTERNAL_STORAGE")
+                }
+            }
+            data["specialMissingPermissions"] = JSONArray().apply {
+                if (allFilesAccessRequired && !allFilesAccessGranted) {
+                    add("android.permission.MANAGE_EXTERNAL_STORAGE")
+                }
+            }
+            data["permissionStatus"] = permissionStatus
+            if (missingPermissions.isEmpty() && allFilesAccessGranted) {
                 success(data, "权限已全部授予")
             } else {
-                ActivityCompat.requestPermissions(
-                    activity,
-                    missingPermissions.toTypedArray(),
-                    FACE_PERMISSION_REQUEST_CODE
-                )
+                if (missingPermissions.isNotEmpty()) {
+                    ActivityCompat.requestPermissions(
+                        activity,
+                        missingPermissions.toTypedArray(),
+                        FACE_PERMISSION_REQUEST_CODE
+                    )
+                }
+                if (!allFilesAccessGranted) {
+                    openAllFilesAccessSettings(activity)
+                }
                 data["requested"] = true
-                success(data, "已拉起系统权限授权弹窗")
+                success(data, if (!allFilesAccessGranted) "已拉起系统权限授权弹窗和文件管理权限设置页" else "已拉起系统权限授权弹窗")
             }
         }
     }
@@ -896,6 +926,24 @@ object SunmiFaceNative {
             permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
         return permissions.distinct()
+    }
+
+    private fun openAllFilesAccessSettings(activity: Activity) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            return
+        }
+        try {
+            val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+                data = Uri.parse("package:${activity.packageName}")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            activity.startActivity(intent)
+        } catch (_: Exception) {
+            val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            activity.startActivity(intent)
+        }
     }
 
     private fun ensureConfigDirectory(context: Context, options: JSONObject): File {

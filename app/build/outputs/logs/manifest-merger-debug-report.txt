@@ -13,7 +13,7 @@ MERGED from [utsplugin-release.aar] /Users/panlong/.gradle/caches/transforms-3/e
 MERGED from [media-livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/323595daf26cb3c636165048814cfef9/transformed/jetified-media-livepusher-release/AndroidManifest.xml:2:1-9:12
 MERGED from [breakpad-build-release.aar] /Users/panlong/.gradle/caches/transforms-3/ab95f26b446353578be68bf789b526bd/transformed/jetified-breakpad-build-release/AndroidManifest.xml:2:1-9:12
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-30:12
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-19:12
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-23:12
 MERGED from [com.sunmi:SunmiAuthorize-SDK:1.0.1] /Users/panlong/.gradle/caches/transforms-3/0f1e7e7547266f32971b17cc066b7c3c/transformed/jetified-SunmiAuthorize-SDK-1.0.1/AndroidManifest.xml:2:1-9:12
 MERGED from [com.google.android.material:material:1.4.0] /Users/panlong/.gradle/caches/transforms-3/b0bfb7ae827debfa1ea0c60ac0911172/transformed/material-1.4.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.viewpager2:viewpager2:1.0.0] /Users/panlong/.gradle/caches/transforms-3/98503d805cecb330c78d5ff47931c3ef/transformed/jetified-viewpager2-1.0.0/AndroidManifest.xml:17:1-24:12
@@ -119,8 +119,8 @@ MERGED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transfor
 MERGED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/bd01108cd7dcfc6208db5d288d93669d/transformed/jetified-weex_livepusher-release/AndroidManifest.xml:15:5-65
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:5-65
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:5-65
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:5-65
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:5-65
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:5-65
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:5-65
 	android:name
 		ADDED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:14:22-62
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
@@ -131,8 +131,8 @@ MERGED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transfor
 MERGED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/bd01108cd7dcfc6208db5d288d93669d/transformed/jetified-weex_livepusher-release/AndroidManifest.xml:10:5-81
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-81
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-81
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:5-81
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:5-81
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:5-81
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:5-81
 	android:name
 		ADDED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:15:22-78
 uses-permission#com.sunmi.permission.ELECTRONIC_SCALE
@@ -145,8 +145,8 @@ MERGED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transfor
 MERGED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/bd01108cd7dcfc6208db5d288d93669d/transformed/jetified-weex_livepusher-release/AndroidManifest.xml:18:5-60
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:5-60
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:5-60
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:5-60
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:5-60
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:21:5-60
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:21:5-60
 	android:name
 		ADDED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:17:19-57
 uses-feature#android.hardware.camera.autofocus
@@ -169,8 +169,8 @@ MERGED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transfor
 MERGED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/bd01108cd7dcfc6208db5d288d93669d/transformed/jetified-weex_livepusher-release/AndroidManifest.xml:11:5-80
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-80
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-80
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-80
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-80
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:5-80
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:5-80
 	android:name
 		ADDED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:24:22-77
 uses-permission#android.permission.READ_PHONE_STATE
@@ -179,8 +179,8 @@ MERGED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transfor
 MERGED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/bd01108cd7dcfc6208db5d288d93669d/transformed/jetified-weex_livepusher-release/AndroidManifest.xml:16:5-75
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:5-75
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:5-75
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-75
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-75
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:5-75
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:5-75
 	android:name
 		ADDED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:25:22-72
 uses-permission#android.permission.RECORD_AUDIO
@@ -197,8 +197,8 @@ MERGED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transfor
 MERGED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/bd01108cd7dcfc6208db5d288d93669d/transformed/jetified-weex_livepusher-release/AndroidManifest.xml:7:5-67
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:5-67
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:5-67
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:5-67
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:5-67
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:18:5-67
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:18:5-67
 	android:name
 		ADDED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml:28:22-64
 uses-permission#android.permission.ACCESS_NETWORK_STATE
@@ -209,8 +209,8 @@ MERGED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transfor
 MERGED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/bd01108cd7dcfc6208db5d288d93669d/transformed/jetified-weex_livepusher-release/AndroidManifest.xml:8:5-79
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:5-79
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:5-79
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:5-79
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:5-79
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:19:5-79
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:19:5-79
 MERGED from [com.sunmi:SunmiHttpLib:1.0.48] /Users/panlong/.gradle/caches/transforms-3/f55dd121912db9ac87fcc2bc739a0aa2/transformed/jetified-SunmiHttpLib-1.0.48/AndroidManifest.xml:11:5-79
 MERGED from [com.sunmi:SunmiHttpLib:1.0.48] /Users/panlong/.gradle/caches/transforms-3/f55dd121912db9ac87fcc2bc739a0aa2/transformed/jetified-SunmiHttpLib-1.0.48/AndroidManifest.xml:11:5-79
 	android:name
@@ -361,8 +361,8 @@ MERGED from [breakpad-build-release.aar] /Users/panlong/.gradle/caches/transform
 MERGED from [breakpad-build-release.aar] /Users/panlong/.gradle/caches/transforms-3/ab95f26b446353578be68bf789b526bd/transformed/jetified-breakpad-build-release/AndroidManifest.xml:5:5-7:41
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
 MERGED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:6:5-44
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:6:5-44
 MERGED from [com.sunmi:SunmiAuthorize-SDK:1.0.1] /Users/panlong/.gradle/caches/transforms-3/0f1e7e7547266f32971b17cc066b7c3c/transformed/jetified-SunmiAuthorize-SDK-1.0.1/AndroidManifest.xml:5:5-7:41
 MERGED from [com.sunmi:SunmiAuthorize-SDK:1.0.1] /Users/panlong/.gradle/caches/transforms-3/0f1e7e7547266f32971b17cc066b7c3c/transformed/jetified-SunmiAuthorize-SDK-1.0.1/AndroidManifest.xml:5:5-7:41
 MERGED from [com.google.android.material:material:1.4.0] /Users/panlong/.gradle/caches/transforms-3/b0bfb7ae827debfa1ea0c60ac0911172/transformed/material-1.4.0/AndroidManifest.xml:20:5-44
@@ -509,8 +509,8 @@ INJECTED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-A
 		INJECTED from /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/app/src/main/AndroidManifest.xml
 uses-permission#android.permission.READ_MEDIA_IMAGES
 ADDED from [lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/d186d0c1f696a5ab4b208c8d918fc178/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:17:5-76
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:5-76
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:5-76
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-76
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:5-76
 	android:name
 		ADDED from [lib.5plus.base-release.aar] /Users/panlong/.gradle/caches/transforms-3/d186d0c1f696a5ab4b208c8d918fc178/transformed/jetified-lib.5plus.base-release/AndroidManifest.xml:17:22-73
 uses-permission#android.permission.READ_MEDIA_VIDEO
@@ -711,14 +711,14 @@ ADDED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transform
 		ADDED from [weex_livepusher-release.aar] /Users/panlong/.gradle/caches/transforms-3/bd01108cd7dcfc6208db5d288d93669d/transformed/jetified-weex_livepusher-release/AndroidManifest.xml:14:22-65
 uses-permission#android.permission.FOREGROUND_SERVICE
 ADDED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:5-77
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:5-77
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:5-77
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:16:5-77
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:16:5-77
 	android:name
 		ADDED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:22-74
 uses-permission#android.permission.FOREGROUND_SERVICE_CAMERA
 ADDED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:5-84
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:13:5-84
-MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:13:5-84
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:5-84
+MERGED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:5-84
 	android:name
 		ADDED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:22-81
 activity#com.example.uniplugin_sunmiface.SunmiFaceRecognizeActivity
@@ -735,6 +735,12 @@ ADDED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-S
 		ADDED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:27:13-51
 	android:name
 		ADDED from [:uniplugin_sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:25:13-85
+uses-permission#android.permission.MANAGE_EXTERNAL_STORAGE
+ADDED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:5-14:40
+	tools:ignore
+		ADDED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:9-37
+	android:name
+		ADDED from [:phiron-sunmiFace] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/phiron-sunmiFace/build/intermediates/merged_manifest/debug/AndroidManifest.xml:13:9-66
 activity#io.dcloud.uniplugin.NativePageActivity
 ADDED from [:uniplugin_module] /Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/uniplugin_module/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:9-10:84
 	android:theme

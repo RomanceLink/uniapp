@@ -487,6 +487,11 @@ public class SunmiFaceModule extends UniModule {
                 }
             } else if (!TextUtils.isEmpty(configPath)) {
                 configPath = resolveConfigPath(configPath);
+                File configFile = new File(configPath);
+                File configDir = configFile.getParentFile();
+                if (configDir != null && configFile.exists()) {
+                    rewriteConfigJson(configDir);
+                }
             }
             int code = SunmiFaceSDK.init(configPath);
             JSONObject data = new JSONObject();

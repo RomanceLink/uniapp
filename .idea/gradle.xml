@@ -11,6 +11,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/phiron-ocr" />
             <option value="$PROJECT_DIR$/phiron-sunmiFace" />
             <option value="$PROJECT_DIR$/uniplugin_camera" />
             <option value="$PROJECT_DIR$/uniplugin_component" />

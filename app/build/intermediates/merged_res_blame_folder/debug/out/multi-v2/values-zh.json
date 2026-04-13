@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.android.UniPlugin.app-mergeDebugResources-29:/values-zh/values-zh.xml",
+            "outputFile": "com.android.UniPlugin.app-mergeDebugResources-38:/values-zh/values-zh.xml",
             "map": [
                 {
                     "source": "/Users/panlong/.gradle/caches/transforms-3/323595daf26cb3c636165048814cfef9/transformed/jetified-media-livepusher-release/res/values-zh/values-zh.xml",

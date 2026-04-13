@@ -1,14 +1,14 @@
 [
     {
-        "merged": "com.android.UniPlugin.app-merged_res-31:/drawable-xxhdpi_push.png.flat",
-        "source": "com.android.UniPlugin.app-main-33:/drawable-xxhdpi/push.png"
+        "merged": "com.android.UniPlugin.app-merged_res-40:/drawable-xxhdpi_icon.png.flat",
+        "source": "com.android.UniPlugin.app-main-42:/drawable-xxhdpi/icon.png"
     },
     {
-        "merged": "com.android.UniPlugin.app-merged_res-31:/drawable-xxhdpi_icon.png.flat",
-        "source": "com.android.UniPlugin.app-main-33:/drawable-xxhdpi/icon.png"
+        "merged": "com.android.UniPlugin.app-merged_res-40:/drawable-xxhdpi_push.png.flat",
+        "source": "com.android.UniPlugin.app-main-42:/drawable-xxhdpi/push.png"
     },
     {
-        "merged": "com.android.UniPlugin.app-merged_res-31:/drawable-xxhdpi_splash.png.flat",
-        "source": "com.android.UniPlugin.app-main-33:/drawable-xxhdpi/splash.png"
+        "merged": "com.android.UniPlugin.app-merged_res-40:/drawable-xxhdpi_splash.png.flat",
+        "source": "com.android.UniPlugin.app-main-42:/drawable-xxhdpi/splash.png"
     }
 ]

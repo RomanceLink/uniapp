@@ -77,3 +77,18 @@
 ## 当前最重要的事
 
 不是继续调 UI 里的预处理开关，而是开始攒样本。
+
+## 演示数据快速跑通
+
+如果你只是想先验证训练流程能不能跑通，可以用：
+
+[duplicate_demo_samples.sh](/Users/panlong/AndroidStudioProjects/Android-SDK/UniPlugin-Hello-AS/training/meter_ocr/scripts/duplicate_demo_samples.sh)
+
+它会把当前两张样本各复制 100 份，并自动生成：
+
+- `training/meter_ocr/annotations/labels.txt`
+
+注意：
+
+- 这只能验证训练命令和数据链路
+- 不能训练出真正可用的模型

@@ -66,6 +66,8 @@ import io.dcloud.feature.uniapp.AbsSDKInstance;
 
 public class SunmiFaceModule extends UniModule {
     private static final String METADATA_FILE_NAME = "face_records_meta.json";
+    private static final String DEFAULT_DB_FILE_NAME = "sunmi_face.db";
+    private static final String DEFAULT_EXTERNAL_CONFIG_DIR = "/storage/emulated/0/SunmiRemoteFiles/config";
     private static final int REQUEST_CODE_PERMISSIONS = 40961;
     private static final int REQUEST_CODE_FACE_RECOGNIZE = 40962;
     // 用全局事件推送实时状态（比多次回调 UniJSCallback 更稳定）
@@ -476,8 +478,13 @@ public class SunmiFaceModule extends UniModule {
         try {
             String configPath = getString(options, "configPath");
             boolean useAssetConfig = options == null || !options.containsKey("useAssetConfig") || options.getBooleanValue("useAssetConfig");
-            if (TextUtils.isEmpty(configPath) && useAssetConfig) {
-                configPath = new File(ensureConfigDirectory(context, options), "config.json").getAbsolutePath();
+            if (TextUtils.isEmpty(configPath)) {
+                File externalConfigFile = findExternalConfigFile(options);
+                if (externalConfigFile != null) {
+                    configPath = externalConfigFile.getAbsolutePath();
+                } else if (useAssetConfig) {
+                    configPath = new File(ensureConfigDirectory(context, options), "config.json").getAbsolutePath();
+                }
             } else if (!TextUtils.isEmpty(configPath)) {
                 configPath = resolveConfigPath(configPath);
             }
@@ -1561,7 +1568,7 @@ public class SunmiFaceModule extends UniModule {
             File target = new File(normalizePath(dbPath));
             return target.isDirectory() ? target : target.getParentFile();
         }
-        return new File("/storage/emulated/0", "config");
+        return new File(DEFAULT_EXTERNAL_CONFIG_DIR);
     }
 
     private String resolveConfigPath(String configPath) {
@@ -1589,16 +1596,37 @@ public class SunmiFaceModule extends UniModule {
     private String resolveConfiguredDbFileName(File storageDir) throws IOException {
         File configFile = new File(storageDir, "config.json");
         if (!configFile.exists()) {
-            String assetValue = readAssetConfigValue("face_db_file");
-            return TextUtils.isEmpty(assetValue) ? "sunmi_face.db" : new File(normalizePath(assetValue)).getName();
+            File externalConfigFile = findExternalConfigFile(null);
+            if (externalConfigFile != null && externalConfigFile.exists()) {
+                JSONObject jsonObject = JSONObject.parseObject(readTextFile(externalConfigFile));
+                String value = jsonObject.getString("face_db_file");
+                if (!TextUtils.isEmpty(value)) {
+                    return new File(normalizePath(value)).getName();
+                }
+            }
+            String assetValue = readAssetConfigValueSafely("face_db_file");
+            return TextUtils.isEmpty(assetValue) ? DEFAULT_DB_FILE_NAME : new File(normalizePath(assetValue)).getName();
         }
         JSONObject jsonObject = JSONObject.parseObject(readTextFile(configFile));
         String value = jsonObject.getString("face_db_file");
         if (TextUtils.isEmpty(value)) {
-            String assetValue = readAssetConfigValue("face_db_file");
-            return TextUtils.isEmpty(assetValue) ? "sunmi_face.db" : new File(normalizePath(assetValue)).getName();
+            String assetValue = readAssetConfigValueSafely("face_db_file");
+            return TextUtils.isEmpty(assetValue) ? DEFAULT_DB_FILE_NAME : new File(normalizePath(assetValue)).getName();
         }
         return new File(normalizePath(value)).getName();
+    }
+
+    private File findExternalConfigFile(JSONObject options) {
+        String configPath = getString(options, "configPath");
+        if (!TextUtils.isEmpty(configPath)) {
+            File configFile = new File(normalizePath(configPath));
+            if (configFile.isDirectory()) {
+                configFile = new File(configFile, "config.json");
+            }
+            return configFile.exists() ? configFile : null;
+        }
+        File defaultConfigFile = new File(DEFAULT_EXTERNAL_CONFIG_DIR, "config.json");
+        return defaultConfigFile.exists() ? defaultConfigFile : null;
     }
 
     private File resolveMetadataFile(JSONObject options) throws IOException {
@@ -1735,6 +1763,14 @@ public class SunmiFaceModule extends UniModule {
             }
             JSONObject jsonObject = JSONObject.parseObject(new String(bytes, 0, offset, StandardCharsets.UTF_8));
             return jsonObject.getString(key);
+        }
+    }
+
+    private String readAssetConfigValueSafely(String key) {
+        try {
+            return readAssetConfigValue(key);
+        } catch (IOException ignored) {
+            return null;
         }
     }
 

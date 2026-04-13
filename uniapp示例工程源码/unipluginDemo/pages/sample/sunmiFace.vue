@@ -17,6 +17,7 @@
 					<button class="btn" size="mini" @click="runGetVersion">获取 SDK 版本</button>
 					<button class="btn" size="mini" @click="runCheckPermissions">申请权限</button>
 					<button class="btn" size="mini" @click="runCreateHandle">创建句柄</button>
+					<button class="btn" size="mini" @click="runExtractStaticConfig">释放静态模型</button>
 					<button class="btn" size="mini" @click="runInit">初始化模型</button>
 					<button class="btn warn" size="mini" @click="runReleaseHandle">释放句柄</button>
 				</view>
@@ -42,6 +43,14 @@
 						<view class="label">forceRefresh</view>
 						<switch :checked="form.forceRefresh" color="#2563eb" @change="onSwitch('forceRefresh', $event)" />
 					</view>
+				</view>
+				<view class="field">
+					<view class="label">configPath</view>
+					<uni-easyinput v-model="form.configPath" class="easy-input" placeholder="/storage/emulated/0/SunmiRemoteFiles/config/config.json" />
+				</view>
+				<view class="field">
+					<view class="label">dbPath</view>
+					<uni-easyinput v-model="form.dbPath" class="easy-input" placeholder="/storage/emulated/0/SunmiRemoteFiles/config/sunmi_face.db" />
 				</view>
 				<view class="button-row">
 					<button class="btn" size="mini" @click="runInitAuthorizeSDK">初始化授权 SDK</button>
@@ -412,6 +421,21 @@ const pluginName = 'sunmiFace'
 let sunmiFace = null
 
 const AUTO_ROTATION = 360
+const PACKAGED_CONFIG_DIR = '_www/static/config'
+const DEFAULT_EXTERNAL_CONFIG_DIR = '/storage/emulated/0/SunmiRemoteFiles/config'
+const DEFAULT_DB_PATH = `${DEFAULT_EXTERNAL_CONFIG_DIR}/sunmi_face.db`
+const MODEL_CONFIG_FILES = [
+	'attribute.model',
+	'config.json',
+	'depth_detector.yml',
+	'detect.model',
+	'detect_new.model',
+	'face.model',
+	'face_occlusion.model',
+	'head_pose.model',
+	'nir_liveness.model',
+	'rgb_liveness.model'
+]
 
 // #ifdef APP-PLUS
 sunmiFace = uni.requireNativePlugin(pluginName)
@@ -438,7 +462,8 @@ export default {
 			form: {
 				appId: '',
 				licensePath: '/storage/emulated/0/SunmiRemoteFiles/license_face.txt',
-				useAssetConfig: true,
+				configPath: `${DEFAULT_EXTERNAL_CONFIG_DIR}/config.json`,
+				useAssetConfig: false,
 				forceRefresh: false,
 				floatingWindowMode: true,
 				containerBackgroundColor: 'transparent',
@@ -477,7 +502,7 @@ export default {
 				distanceThreshold: '',
 				minFaceSize: '',
 				decodeMaxSize: 640,
-				dbPath: '',
+				dbPath: DEFAULT_DB_PATH,
 				dbRecord: {
 					id: 'test-user-001',
 					name: '测试用户',
@@ -675,9 +700,114 @@ export default {
 			})
 		},
 		buildInitPayload() {
-			return {
+			const payload = {
 				useAssetConfig: !!this.form.useAssetConfig
 			}
+			if (this.form.configPath) {
+				payload.configPath = this.form.configPath
+			}
+			if (this.form.dbPath) {
+				payload.dbPath = this.form.dbPath
+			}
+			return payload
+		},
+		getConfigDirectory() {
+			const inputPath = (this.form.configPath || '').trim()
+			if (!inputPath) {
+				return DEFAULT_EXTERNAL_CONFIG_DIR
+			}
+			return inputPath.endsWith('.json') ? inputPath.replace(/\/config\.json$/i, '') : inputPath
+		},
+		resolveFsEntry(path) {
+			return new Promise((resolve, reject) => {
+				plus.io.resolveLocalFileSystemURL(path, resolve, (err) => {
+					reject(new Error((err && err.message) || `无法访问路径: ${path}`))
+				})
+			})
+		},
+		getDirectoryEntry(parent, name, create = true) {
+			return new Promise((resolve, reject) => {
+				parent.getDirectory(name, { create }, resolve, (err) => {
+					reject(new Error((err && err.message) || `创建目录失败: ${name}`))
+				})
+			})
+		},
+		getFileEntry(parent, name, create = false) {
+			return new Promise((resolve, reject) => {
+				parent.getFile(name, { create }, resolve, (err) => {
+					reject(new Error((err && err.message) || `访问文件失败: ${name}`))
+				})
+			})
+		},
+		removeEntry(entry) {
+			return new Promise((resolve, reject) => {
+				entry.remove(resolve, (err) => {
+					reject(new Error((err && err.message) || `删除文件失败: ${entry.name || ''}`))
+				})
+			})
+		},
+		copyEntryTo(entry, targetDir, newName) {
+			return new Promise((resolve, reject) => {
+				entry.copyTo(targetDir, newName, resolve, (err) => {
+					reject(new Error((err && err.message) || `复制文件失败: ${newName}`))
+				})
+			})
+		},
+		async removeTargetFileIfExists(targetDir, fileName) {
+			try {
+				const existing = await this.getFileEntry(targetDir, fileName, false)
+				await this.removeEntry(existing)
+			} catch (e) {
+				return
+			}
+		},
+		async ensureExternalConfigDirectory(targetDir) {
+			const normalizedDir = (targetDir || DEFAULT_EXTERNAL_CONFIG_DIR).trim().replace(/\/+$/, '')
+			const root = await this.resolveFsEntry('file:///storage/emulated/0/')
+			const relativePath = normalizedDir.replace(/^\/storage\/emulated\/0\/?/, '')
+			const segments = relativePath.split('/').filter(Boolean)
+			let current = root
+			for (const segment of segments) {
+				current = await this.getDirectoryEntry(current, segment, true)
+			}
+			return current
+		},
+		async runExtractStaticConfig() {
+			if (!this.checkRuntime()) return
+			// #ifdef APP-PLUS
+			const targetDirPath = this.getConfigDirectory()
+			uni.showLoading({ title: '释放中...', mask: true })
+			try {
+				const sourceDir = await this.resolveFsEntry(PACKAGED_CONFIG_DIR)
+				const targetDir = await this.ensureExternalConfigDirectory(targetDirPath)
+				const copiedFiles = []
+				for (const fileName of MODEL_CONFIG_FILES) {
+					const sourceFile = await this.resolveFsEntry(`${PACKAGED_CONFIG_DIR}/${fileName}`)
+					await this.removeTargetFileIfExists(targetDir, fileName)
+					await this.copyEntryTo(sourceFile, targetDir, fileName)
+					copiedFiles.push(fileName)
+				}
+				this.form.configPath = `${targetDirPath}/config.json`
+				if (!this.form.dbPath) {
+					this.form.dbPath = `${targetDirPath}/sunmi_face.db`
+				}
+				this.setResult('释放静态模型', {
+					source: sourceDir.fullPath || PACKAGED_CONFIG_DIR,
+					targetDir: targetDirPath,
+					files: copiedFiles
+				})
+				uni.showToast({ title: '释放完成', icon: 'none' })
+			} catch (e) {
+				this.setResult('释放静态模型失败', {
+					source: PACKAGED_CONFIG_DIR,
+					targetDir: targetDirPath,
+					error: e.message || String(e)
+				})
+				uni.showToast({ title: '释放失败', icon: 'none' })
+			} finally {
+				uni.hideLoading()
+			}
+			// #endif
 		},
 		buildAuthorizePayload() {
 			return {

@@ -1,0 +1,23 @@
+{
+    "name": "uniplugin-sunmiFace",
+    "id": "uniplugin-sunmiFace",
+    "version": "1.0.0",
+    "description": "SUNMI人脸识别uniapp插件",
+    "_dp_type":"nativeplugin",
+    "_dp_nativeplugin":{
+        "android": {
+			"integrateType":"aar",
+            "dependencies": [
+                "com.sunmi:SunmiAuthorize-SDK:1.0.1"
+            ],
+            "plugins": [
+                {
+                    "type": "module",
+                    "name": "uniplugin-sunmiFace",
+                    "class": "com.example.uniplugin_sunmiface.SunmiFaceModule"
+                }
+                
+            ]
+        }
+    }
+}

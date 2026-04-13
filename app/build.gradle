@@ -89,15 +89,16 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1"
     implementation "com.github.getActivity:XXPermissions:18.63"
-    implementation files('libs/utsplugin-release.aar')
+    //implementation files('libs/utsplugin-release.aar')
     // 添加uni-app插件
     implementation project(':uniplugin_component')
     implementation project(':uniplugin_module')
     implementation project(':uniplugin_richalert')
     implementation project(':uniplugin_electronic')
     implementation project(':uniplugin_camera')
+    // sunmiFace 已由 uni 原生插件包 uniplugin-sunmiFace 接入，避免与本地 module 重复打包
     implementation project(':uniplugin_sunmiFace')
     // uts原生插件
-    implementation project(':uts-toast')
-    implementation project(':phiron-sunmiFace')
+    //implementation project(':uts-toast')
+    //implementation project(':phiron-sunmiFace')
 }

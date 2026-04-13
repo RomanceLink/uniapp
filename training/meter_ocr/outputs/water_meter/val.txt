@@ -1,0 +1,10 @@
+images/water_meter/meter_0087.jpg	462796.7589
+images/water_meter/meter_0014.jpg	462796.7589
+images/water_meter/meter_0018.jpg	462796.7589
+images/water_meter/meter_0029.jpg	462796.7589
+images/water_meter/meter_0032.jpg	462796.7589
+images/water_meter/meter_0036.jpg	462796.7589
+images/water_meter/meter_0095.jpg	462796.7589
+images/water_meter/meter_0004.jpg	462796.7589
+images/water_meter/meter_0015.jpg	462796.7589
+images/water_meter/meter_0082.jpg	462796.7589

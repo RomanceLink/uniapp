@@ -53,6 +53,7 @@ import java.util.concurrent.Executors;
 
 public class SunmiFaceCameraView extends FrameLayout implements TextureView.SurfaceTextureListener, Camera.PreviewCallback {
     private static final Object SDK_LOCK = new Object();
+    private static final String METADATA_FILE_NAME = "face_records_meta.json";
     private static boolean sharedSdkHandleReady = false;
     private static boolean sharedSdkLicenseVerified = false;
     private static boolean sharedAuthorizeSdkReady = false;
@@ -386,6 +387,12 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
                     recognizeData.put("id", info.getId());
                     recognizeData.put("name", info.getName());
                     recognizeData.put("distance", info.getDistance());
+                    JSONObject metadata = findMetadataById(info.getId());
+                    if (metadata != null) {
+                        recognizeData.put("phone", metadata.getString("phone"));
+                        recognizeData.put("imgId", metadata.getString("imgId"));
+                        recognizeData.put("photoPath", metadata.getString("photoPath"));
+                    }
                     emitRecognize("recognize_success", "人脸识别成功", recognizeData);
                     if (autoStopOnRecognize) {
                         scheduleAutoStopAfterRecognize();
@@ -531,6 +538,36 @@ public class SunmiFaceCameraView extends FrameLayout implements TextureView.Surf
         } catch (IOException e) {
             throw new IllegalStateException("read license file failed: " + safeMessage(e), e);
         }
+    }
+
+    private JSONObject findMetadataById(String id) {
+        if (TextUtils.isEmpty(id) || TextUtils.isEmpty(dbPath)) {
+            return null;
+        }
+        File dbFile = new File(dbPath);
+        File parentDir = dbFile.isDirectory() ? dbFile : dbFile.getParentFile();
+        if (parentDir == null) {
+            return null;
+        }
+        File metadataFile = new File(parentDir, METADATA_FILE_NAME);
+        if (!metadataFile.exists() || metadataFile.length() <= 0) {
+            return null;
+        }
+        try {
+            JSONArray records = JSONArray.parseArray(readTextFile(metadataFile));
+            if (records == null) {
+                return null;
+            }
+            for (int i = 0; i < records.size(); i++) {
+                JSONObject item = records.getJSONObject(i);
+                if (item != null && TextUtils.equals(id, item.getString("id"))) {
+                    return item;
+                }
+            }
+        } catch (Exception ignored) {
+            return null;
+        }
+        return null;
     }
 
     private Bitmap decodePreviewBitmap(byte[] data, int width, int height) throws Exception {
